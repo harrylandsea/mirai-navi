@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>未来の安心シミュレーター</title>
+<style>
+:root {
+  --pink: #c0587a;
+  --pink-light: #fdeef3;
+  --pink-border: #f0a8c0;
+  --purple: #6a2a98;
+  --purple-light: #f3eef8;
+  --purple-border: #c4a8d8;
+  --green: #2f855a;
+  --green-light: #f0fff4;
+  --green-border: #68d391;
+  --yellow: #8a6000;
+  --yellow-light: #fff8e8;
+  --yellow-border: #f0c060;
+  --red: #9b2c2c;
+  --red-light: #fff5f5;
+  --red-border: #fc8181;
+  --blue: #1a4a7a;
+  --blue-light: #f0f6ff;
+  --bg: #fdf6f8;
+  --card: #fff;
+  --text: #2d1a25;
+  --sub: #8a6070;
+  --border: #f0d0dc;
+  --radius: 14px;
+  --shadow: 0 2px 12px rgba(192,88,122,.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ヘッダー */
+.header {
+  background: linear-gradient(135deg, #fdeef3, #f3eef8);
+  border-bottom: 1.5px solid var(--border);
+  padding: 18px 20px 14px;
+  text-align: center;
+}
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--pink);
+  margin-bottom: 3px;
+}
+.header-sub {
+  font-size: .78rem;
+  color: var(--sub);
+}
+
+/* レイアウト */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+@media (min-width: 700px) {
+  .layout {
+    grid-template-columns: 1fr 300px;
+    gap: 16px;
+    align-items: start;
+  }
+}
+
+/* 入力パネル */
+.input-panel { display: flex; flex-direction: column; gap: 12px; }
+
+/* セクションカード */
+.sec {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+}
+.sec-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 10px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, #fdf8fa, #fff);
+}
+.sec-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--pink);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.sec-title {
+  font-size: .88rem;
+  font-weight: 700;
+  color: var(--text);
+  flex: 1;
+}
+.sec-badge {
+  font-size: .72rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.badge-red { background: var(--red-light); color: var(--red); border: 1px solid var(--red-border); }
+.badge-yellow { background: var(--yellow-light); color: var(--yellow); border: 1px solid var(--yellow-border); }
+.badge-green { background: var(--green-light); color: var(--green); border: 1px solid var(--green-border); }
+.badge-gray { background: #f0f0f0; color: #666; border: 1px solid #ddd; }
+
+.sec-body {
+  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.sec-body.triple { grid-template-columns: 1fr 1fr 1fr; }
+
+.field label {
+  display: block;
+  font-size: .75rem;
+  color: var(--sub);
+  margin-bottom: 4px;
+  min-height: 2em;
+  line-height: 1.3;
+}
+.field select, .field input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: .88rem;
+  background: #fafafa;
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s;
+}
+.field select:focus, .field input:focus {
+  border-color: var(--pink);
+  background: #fff;
+}
+
+/* 意向セクション */
+.intent-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+}
+.intent-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .15s;
+  font-size: .85rem;
+  background: #fafafa;
+  line-height: 1.5;
+}
+.intent-option:hover { border-color: var(--pink); background: var(--pink-light); }
+.intent-option.selected { border-color: var(--pink); background: var(--pink-light); font-weight: 700; color: var(--pink); }
+.intent-option input[type=radio] {
+  accent-color: var(--pink);
+  flex-shrink: 0;
+  margin-top: 3px;
+  width: 16px;
+  height: 16px;
+}
+
+/* 診断ボタン */
+.run-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #d4698a, #c0587a);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: .05em;
+  transition: opacity .2s;
+  margin-top: 4px;
+}
+.run-btn:hover { opacity: .9; }
+
+/* 結果パネル */
+.result-panel {
+  background: var(--card);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  margin-top: 12px;
+  overflow: hidden;
+}
+@media (min-width: 700px) {
+  .result-panel {
+    margin-top: 0;
+    position: sticky;
+    top: 16px;
+  }
+}
+.result-head {
+  background: linear-gradient(135deg, #fdeef3, #f3eef8);
+  padding: 12px 14px;
+  font-size: .88rem;
+  font-weight: 800;
+  color: var(--pink);
+  border-bottom: 1.5px solid var(--border);
+}
+.result-body { padding: 14px; }
+.result-placeholder {
+  text-align: center;
+  color: var(--sub);
+  font-size: .82rem;
+  padding: 30px 0;
+}
+
+/* リスク行 */
+.risk-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5e8ee;
+  font-size: .85rem;
+}
+.risk-row:last-child { border-bottom: none; }
+.risk-label { color: var(--sub); }
+.risk-val { font-weight: 700; }
+.risk-val.red { color: var(--red); }
+.risk-val.yellow { color: #b07a00; }
+.risk-val.green { color: var(--green); }
+
+/* 推奨ルート */
+.route-box {
+  margin-top: 12px;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1.5px solid;
+}
+.route-box.green { border-color: var(--green-border); background: var(--green-light); }
+.route-box.blue { border-color: #a8c8e8; background: var(--blue-light); }
+.route-box.yellow { border-color: var(--yellow-border); background: var(--yellow-light); }
+.route-title {
+  font-size: .88rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+.route-title.green { color: var(--green); }
+.route-title.blue { color: var(--blue); }
+.route-title.yellow { color: var(--yellow); }
+.route-item {
+  font-size: .8rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+.route-item::before { content: '・'; }
+
+/* リアルタイムバッジ更新 */
+.live-tag {
+  font-size: .68rem;
+  padding: 1px 6px;
+  border-radius: 8px;
+  font-weight: 700;
+  margin-left: 4px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">🧭 未来の安心シミュレーター</div>
+  <div class="header-sub">親なきあとの資産・生活リスク診断</div>
+</div>
+
+<div style="max-width:900px;margin:12px auto 0;padding:0 16px;">
+  <div style="font-size:.78rem;color:#8a4a00;padding:12px 14px;background:#fff8e8;border-radius:10px;border:1.5px solid #f0c060;">
+    <div style="font-weight:800;margin-bottom:8px;">⚠️ ご利用前にお読みください</div>
+    <p style="line-height:1.7;margin-bottom:8px;">このシミュレーターはあくまでも目安です。表示される結果は「考えるきっかけ」を提供するものであり、ご家庭ごとに最適な方法は異なります。</p>
+    <p style="line-height:1.7;margin-bottom:8px;">具体的な手続きや判断は、必ず司法書士・社会福祉士・ファイナンシャルプランナー等の専門家にご相談ください。</p>
+    <p style="line-height:1.7;">また、診断結果に関わらず、ご家族で話し合うきっかけとしてご活用ください。</p>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- 入力パネル -->
+  <div class="input-panel">
+
+    <!-- ① 本人の状態 -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-num">1</div>
+        <div class="sec-title">🧍 本人の状態</div>
+        <span class="sec-badge badge-gray" id="badge-person">未入力</span>
+      </div>
+      <div class="sec-body triple">
+        <div class="field">
+          <label>判断能力</label>
+          <select id="p-judgment" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="none">なし</option>
+            <option value="low">低い</option>
+            <option value="mid">一部あり</option>
+            <option value="full">あり</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>身体状況</label>
+          <select id="p-body" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="full">全介助</option>
+            <option value="partial">一部介助</option>
+            <option value="mild">軽度サポート</option>
+            <option value="none">自立</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>医療ケア</label>
+          <select id="p-medical" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="heavy">気管切開・人工呼吸器</option>
+            <option value="heavy2">胃ろう・経管栄養</option>
+            <option value="mid">吸引・酸素療法</option>
+            <option value="light">服薬管理のみ</option>
+            <option value="none">医療ケアなし</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 資産構造 -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-num">2</div>
+        <div class="sec-title">💰 資産構造</div>
+        <span class="sec-badge badge-gray" id="badge-asset">未入力</span>
+      </div>
+      <div class="sec-body triple">
+        <div class="field">
+          <label>総資産（万円）</label>
+          <input type="number" id="a-total" placeholder="例：3000（万円単位）" oninput="liveUpdate()">
+        </div>
+        <div class="field">
+          <label>現預金（万円）</label>
+          <input type="number" id="a-cash" placeholder="例：1000（万円単位）" oninput="liveUpdate()">
+        </div>
+        <div class="field">
+          <label>不動産<br>　</label>
+          <select id="a-estate" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="none">なし</option>
+            <option value="home">自宅のみ</option>
+            <option value="multi">複数あり</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 親のタイムライン -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-num" style="background:var(--purple);">⏱</div>
+        <div class="sec-title">👨‍👩‍👧 親のタイムリミット</div>
+        <span class="sec-badge badge-gray" id="badge-parent">未入力</span>
+      </div>
+      <div class="sec-body" style="grid-template-columns:1fr 1fr;">
+        <div class="field">
+          <label>管理者の<br>現在の年齢</label>
+          <input type="number" id="parent-age" placeholder="例：58" min="30" max="100" oninput="liveUpdate()">
+        </div>
+        <div class="field">
+          <label>健康状態<br>（管理者）</label>
+          <select id="parent-health" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="good">良好</option>
+            <option value="some">持病あり</option>
+            <option value="poor">要注意</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 家族・管理体制 -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-num">3</div>
+        <div class="sec-title">👨‍👩‍👧‍👦 家族・管理体制</div>
+        <span class="sec-badge badge-gray" id="badge-family">未入力</span>
+      </div>
+      <div class="sec-body triple">
+        <div class="field">
+          <label>キーパーソン</label>
+          <select id="f-key" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="stable">信頼できる人がいる</option>
+            <option value="unstable">候補はいるが未確定</option>
+            <option value="none">いない</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>家族の関与</label>
+          <select id="f-involve" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="strong">強い</option>
+            <option value="mid">中程度</option>
+            <option value="weak">弱い</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>きょうだい関係</label>
+          <select id="f-sibling" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="coop">協力型</option>
+            <option value="neutral">中立</option>
+            <option value="conflict">対立あり</option>
+            <option value="none">いない</option>
+          </select>
+        </div>
+      </div>
+      <div class="sec-body triple" style="border-top:1px solid var(--border);padding-top:10px;">
+        <div class="field">
+          <label>きょうだい①<br>年齢</label>
+          <input type="number" id="f-sib1" placeholder="例：25" min="0" max="80" oninput="liveUpdate()">
+        </div>
+        <div class="field">
+          <label>きょうだい②<br>年齢</label>
+          <input type="number" id="f-sib2" placeholder="任意" min="0" max="80" oninput="liveUpdate()">
+        </div>
+        <div class="field">
+          <label>きょうだい③<br>年齢</label>
+          <input type="number" id="f-sib3" placeholder="任意" min="0" max="80" oninput="liveUpdate()">
+        </div>
+      </div>
+    </div>
+
+    <!-- ④ 生活設計 -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-num">4</div>
+        <div class="sec-title">🏠 生活設計</div>
+        <span class="sec-badge badge-gray" id="badge-life">未入力</span>
+      </div>
+      <div class="sec-body triple">
+        <div class="field">
+          <label>居住<br>（場所）</label>
+          <select id="l-home" onchange="filterCost();liveUpdate()">
+            <option value="">選択</option>
+            <option value="home">在宅</option>
+            <option value="gh">グループホーム</option>
+            <option value="facility">施設入所</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>子の月<br>生活費</label>
+          <select id="l-cost" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="5">〜5万円</option>
+            <option value="10">5〜10万円</option>
+            <option value="15">10〜15万円</option>
+            <option value="20">15〜20万円</option>
+            <option value="25">20万円以上</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>子の月収入<br>（年金等）</label>
+          <select id="l-income" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="6">〜6万円</option>
+            <option value="8">6〜8万円</option>
+            <option value="10">8〜10万円</option>
+            <option value="12">10万円以上</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑤ 法的準備 -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-num">5</div>
+        <div class="sec-title">⚖️ 法的準備</div>
+        <span class="sec-badge badge-gray" id="badge-legal">未入力</span>
+      </div>
+      <div class="sec-body triple">
+        <div class="field">
+          <label>遺言書<br>　</label>
+          <select id="lg-will" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="yes">作成済み</option>
+            <option value="plan">作成を検討</option>
+            <option value="no">書くつもりはない</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>家族信託<br>　</label>
+          <select id="lg-trust" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="yes">利用したい</option>
+            <option value="no">利用するつもりはない</option>
+            <option value="plan">よくわからない</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>後見人制度<br>の理解</label>
+          <select id="lg-guardian" onchange="liveUpdate()">
+            <option value="">選択</option>
+            <option value="well">よく知っている</option>
+            <option value="some">少し知っている</option>
+            <option value="none">ほぼ知らない</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ⑥ 意向 -->
+    <div class="sec">
+      <div class="sec-head">
+        <div class="sec-num">6</div>
+        <div class="sec-title">🎯 優先したいこと</div>
+      </div>
+      <div class="intent-row">
+        <label class="intent-option" id="intent-safe">
+          <input type="radio" name="intent" value="safe" onchange="liveUpdate()">
+          🛡️ 安全最優先（本人保護・制度に頼る）
+        </label>
+        <label class="intent-option" id="intent-family">
+          <input type="radio" name="intent" value="family" onchange="liveUpdate()">
+          👨‍👩‍👧 家族負担軽減（きょうだい・親族中心）
+        </label>
+        <label class="intent-option" id="intent-flex">
+          <input type="radio" name="intent" value="flex" onchange="liveUpdate()">
+          🔓 自由度優先（柔軟な運用・信託活用）
+        </label>
+      </div>
+    </div>
+
+    <button class="run-btn" onclick="runDiagnosis()">🧭 診断する</button>
+
+  </div>
+
+  <!-- 結果パネル -->
+  <div class="result-panel" id="result-panel">
+    <div class="result-head">📊 診断結果</div>
+    <div class="result-body">
+      <div class="result-placeholder" id="result-placeholder">
+        項目を入力すると<br>ここにリスク評価が表示されます
+      </div>
+      <div id="result-content" style="display:none;"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ---- 親年齢ステージ共通判定 ----
+function getParentStage(age, health) {
+  const ageNum = parseInt(age, 10);
+  if (!age || isNaN(ageNum) || ageNum <= 0) return null;
+  const safeAge = Math.min(ageNum, 100); // 100歳上限で安全処理
+  if (health === 'poor' || safeAge >= 75) return 'urgent';
+  if (health === 'some' || safeAge >= 65) return 'transition';
+  return 'ready';
+}
+
+// ---- 居住連動で生活費選択肢を絞る ----
+const costOptions = {
+  home:     [ ['5','〜5万円'], ['10','5〜10万円'], ['15','10〜15万円'] ],
+  gh:       [ ['10','5〜10万円'], ['15','10〜15万円'], ['20','15〜20万円'] ],
+  facility: [ ['15','10〜15万円'], ['20','15〜20万円'], ['25','20万円以上'] ],
+  '':       [ ['5','〜5万円'], ['10','5〜10万円'], ['15','10〜15万円'], ['20','15〜20万円'], ['25','20万円以上'] ]
+};
+function filterCost() {
+  const home = document.getElementById('l-home').value;
+  const costSel = document.getElementById('l-cost');
+  const opts = costOptions[home] || costOptions[''];
+  costSel.innerHTML = '<option value="">選択</option>'
+    + opts.map(([v, t]) => `<option value="${v}">${t}</option>`).join('');
+  // 居住変更時に先頭の推奨値を自動選択
+  if (opts.length > 0) costSel.value = opts[Math.floor(opts.length / 2)][0];
+  liveUpdate();
+}
+
+// ---- スコア計算 ----
+function calcScores() {
+  const judgment = document.getElementById('p-judgment').value;
+  const body = document.getElementById('p-body').value;
+  const medical = document.getElementById('p-medical').value;
+  const totalAsset = parseFloat(document.getElementById('a-total').value) || 0;
+  const cashAsset = parseFloat(document.getElementById('a-cash').value) || 0;
+  const estate = document.getElementById('a-estate').value;
+  const keyPerson = document.getElementById('f-key').value;
+  const involve = document.getElementById('f-involve').value;
+  const sibling = document.getElementById('f-sibling').value;
+  const sibAges = [
+    parseInt(document.getElementById('f-sib1').value, 10),
+    parseInt(document.getElementById('f-sib2').value, 10),
+    parseInt(document.getElementById('f-sib3').value, 10)
+  ].filter(a => !isNaN(a) && a > 0);
+  const cost = parseFloat(document.getElementById('l-cost').value) || 0;
+  const income = parseFloat(document.getElementById('l-income').value) || 0;
+  const will = document.getElementById('lg-will').value;
+  const trust = document.getElementById('lg-trust').value;
+  const guardian = document.getElementById('lg-guardian').value;
+  const intent = document.querySelector('input[name=intent]:checked')?.value || '';
+  const parentAge = parseInt(document.getElementById('parent-age').value) || 0;
+  const parentHealth = document.getElementById('parent-health').value;
+
+  // 後見リスク（0〜10）
+  // ※ 金額の多寡に関わらず、判断能力がない場合は後見人が必要（法律上の原則）
+  // ここでの「リスク」は「後見手続きの複雑さ・準備不足による混乱リスク」を指す
+  let kokenRisk = 0;
+  if (judgment === 'none') kokenRisk += 4;   // 判断能力なし→後見確実に必要
+  else if (judgment === 'low') kokenRisk += 3; // 判断能力低い→ほぼ後見必要
+  else if (judgment === 'mid') kokenRisk += 1; // 一部あり→状況次第
+  if (medical === 'heavy' || medical === 'heavy2') kokenRisk += 1; // 重度医療→後見負担増
+  if (will === 'no') kokenRisk += 2;   // 遺言なし→相続時に後見人必須
+  else if (will === 'plan') kokenRisk += 1;
+  if (trust === 'no') kokenRisk += 1;  // 信託なし→後見依存度が高まる
+  else if (trust === 'plan') kokenRisk += 1;
+  if (sibling === 'conflict') kokenRisk += 1; // きょうだい対立→後見人選任が紛争化
+  if (keyPerson === 'none') kokenRisk += 1;   // キーパーソン不在→後見人頼みに
+
+  // 財産拘束度（0〜10）
+  let lockRisk = 0;
+  if (totalAsset > 3000) lockRisk += 3;
+  else if (totalAsset > 1000) lockRisk += 2;
+  else if (totalAsset > 0) lockRisk += 1;
+  if (estate !== 'none' && estate !== '') lockRisk += 2;
+  if (trust === 'no') lockRisk += 2;
+  else if (trust === 'plan') lockRisk += 1;
+  if (guardian === 'none') lockRisk += 2;
+  else if (guardian === 'some') lockRisk += 1;
+  // ※ 現預金は総資産に含まれるため二重カウント回避のため削除
+  // 代わりに「現預金が総資産の大部分を占める」＝流動性リスクとして加点
+  if (totalAsset > 0 && cashAsset / totalAsset > 0.7) lockRisk += 1;
+
+  // 家族自由度（0〜10）
+  let familyFreedom = 0;
+  if (keyPerson === 'stable') familyFreedom += 3;
+  else if (keyPerson === 'unstable') familyFreedom += 1;
+  if (involve === 'strong') familyFreedom += 3;
+  else if (involve === 'mid') familyFreedom += 1;
+  if (sibling === 'coop') familyFreedom += 2;
+  else if (sibling === 'neutral') familyFreedom += 1;
+  if (trust === 'yes') familyFreedom += 2;
+
+  // 資金持続性
+  const deficit = cost - income;
+  const yearlyDeficit = deficit > 0 ? deficit * 12 : 0;
+  const years = yearlyDeficit > 0 ? Math.round((totalAsset / yearlyDeficit) * 10) / 10 : null;
+
+  // 推奨ルート
+  let route = 'hybrid';
+  if (intent === 'safe' || (judgment === 'none' && trust !== 'yes')) route = 'guardian';
+  else if (intent === 'flex' || trust === 'yes' || trust === 'plan') route = 'trust';
+  else if (keyPerson === 'stable' && involve === 'strong') route = 'hybrid';
+  else if (keyPerson === 'none' || sibling === 'conflict') route = 'guardian';
+
+  return { kokenRisk, lockRisk, familyFreedom, years, deficit, route, totalAsset, parentAge, parentHealth, sibAges };
+}
+
+function riskLabel(score, max=10) {
+  const r = score / max;
+  if (r >= 0.7) return { text: '高い', cls: 'red' };
+  if (r >= 0.4) return { text: '中程度', cls: 'yellow' };
+  return { text: '低い', cls: 'green' };
+}
+function freedomLabel(score, max=10) {
+  const r = score / max;
+  if (r >= 0.6) return { text: '高い', cls: 'green' };
+  if (r >= 0.3) return { text: '中程度', cls: 'yellow' };
+  return { text: '低い', cls: 'red' };
+}
+
+// ---- リアルタイム更新（バッジのみ） ----
+function liveUpdate() {
+  // 意向ボタンのスタイル更新
+  document.querySelectorAll('.intent-option').forEach(el => el.classList.remove('selected'));
+  const checked = document.querySelector('input[name=intent]:checked');
+  if (checked) checked.closest('.intent-option').classList.add('selected');
+
+  const s = calcScores();
+
+  // ① 本人の状態バッジ
+  const judgmentVal = document.getElementById('p-judgment').value;
+  if (!judgmentVal) {
+    setBadge('badge-person', '未入力', 'gray');
+  } else {
+    const kr = riskLabel(s.kokenRisk);
+    setBadge('badge-person', kr.text === '高い' ? '後見リスク：高' : kr.text === '中程度' ? '後見リスク：中' : '後見リスク：低', kr.cls);
+  }
+
+  // ② 資産構造バッジ
+  const totalAssetVal = document.getElementById('a-total').value;
+  if (!totalAssetVal) {
+    setBadge('badge-asset', '未入力', 'gray');
+  } else {
+    const ar = riskLabel(s.lockRisk);
+    setBadge('badge-asset', ar.text === '高い' ? '管理負荷：高' : ar.text === '中程度' ? '管理負荷：中' : '管理負荷：低', ar.cls);
+  }
+
+  // ③ 親のタイムリミットバッジ（共通関数で統一判定）
+  const parentAgeRaw = document.getElementById('parent-age').value;
+  const parentHealth = document.getElementById('parent-health').value;
+  const parentStage = getParentStage(parentAgeRaw, parentHealth);
+  if (!parentStage) {
+    setBadge('badge-parent', '未入力', 'gray');
+  } else if (parentStage === 'urgent') {
+    setBadge('badge-parent', '⚠️ 今すぐ動く', 'red');
+  } else if (parentStage === 'transition') {
+    setBadge('badge-parent', '📋 移行準備期', 'yellow');
+  } else {
+    setBadge('badge-parent', '✅ 準備できる時期', 'green');
+  }
+
+  // ④ 家族・管理体制バッジ
+  const keyVal = document.getElementById('f-key').value;
+  if (!keyVal) {
+    setBadge('badge-family', '未入力', 'gray');
+  } else {
+    const ff = freedomLabel(s.familyFreedom);
+    setBadge('badge-family', '家族力：' + ff.text, ff.cls);
+  }
+
+  // ⑤ 生活設計バッジ（selectのvalueは文字列→数値変換して計算）
+  const homeVal = document.getElementById('l-home').value;
+  const costVal = document.getElementById('l-cost').value;
+  const incomeVal = document.getElementById('l-income').value;
+  if (!homeVal || !costVal) {
+    setBadge('badge-life', '未入力', 'gray');
+  } else {
+    const costNum = parseFloat(costVal) || 0;
+    const incomeNum = parseFloat(incomeVal) || 0;
+    const deficit = costNum - incomeNum;
+    const yearlyDeficit = deficit > 0 ? deficit * 12 : 0;
+    if (yearlyDeficit > 0 && s.totalAsset > 0) {
+      const yrs = Math.round((s.totalAsset / yearlyDeficit) * 10) / 10;
+      const ll = yrs < 10 ? 'red' : yrs < 20 ? 'yellow' : 'green';
+      setBadge('badge-life', '資金：約' + yrs + '年', ll);
+    } else if (s.totalAsset > 0) {
+      setBadge('badge-life', '資金：長期', 'green');
+    } else {
+      setBadge('badge-life', '収支確認中', 'yellow');
+    }
+  }
+
+  // ⑥ 法的準備バッジ
+  const willVal = document.getElementById('lg-will').value;
+  const trustVal = document.getElementById('lg-trust').value;
+  const guardianVal = document.getElementById('lg-guardian').value;
+  if (!willVal && !trustVal && !guardianVal) {
+    setBadge('badge-legal', '未入力', 'gray');
+  } else {
+    const legalScore = (willVal === 'yes' ? 2 : 0)
+      + (trustVal === 'yes' ? 3 : 0)
+      + (guardianVal === 'well' ? 2 : guardianVal === 'some' ? 1 : 0);
+    const ll2 = legalScore >= 4 ? 'green' : legalScore >= 2 ? 'yellow' : 'red';
+    setBadge('badge-legal', legalScore >= 4 ? '準備：良好' : legalScore >= 2 ? '準備：一部' : '準備：不足', ll2);
+  }
+}
+
+function setBadge(id, text, cls) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  el.className = `sec-badge badge-${cls}`;
+}
+
+// ---- 診断実行 ----
+function runDiagnosis() {
+  const s = calcScores();
+  const kr = riskLabel(s.kokenRisk);
+  const ar = riskLabel(s.lockRisk);
+  const ff = freedomLabel(s.familyFreedom);
+
+  const routeConfig = {
+    guardian: {
+      cls: 'yellow',
+      title: '⚖️ ルートA：後見中心型',
+      items: ['成年後見人による資産管理を想定した設計', '本人保護を最優先にした制度利用', '家族信託の検討は引き続き有効', '後見人報酬（月1〜数万）を資産計画に含める'],
+      steps: [
+        { phase: '今すぐ', color: '#9b2c2c', bg: '#fff5f5', border: '#fc8181', list: [
+          '遺言書を作成する（遺言執行者も指定）',
+          '後見人候補を家族で話し合っておく',
+          '本人の医療・生活情報をノートにまとめる'
+        ]},
+        { phase: '1〜2年以内', color: '#8a6000', bg: '#fff8e8', border: '#f0c060', list: [
+          '任意後見契約の検討（本人に判断能力がある場合）',
+          '後見人報酬を含めた資産計画を見直す',
+          '家族信託の専門家（司法書士等）に相談'
+        ]},
+        { phase: '長期で考える', color: '#2f855a', bg: '#f0fff4', border: '#68d391', list: [
+          '施設・グループホームの候補を絞っておく',
+          '後見人と家族の連携ルールを決める',
+          '定期的な資産状況の確認体制を作る'
+        ]}
+      ]
+    },
+    trust: {
+      cls: 'blue',
+      title: '🏦 ルートB：家族信託型',
+      items: ['家族信託の早期設計が最も有効', '信頼できる受託者の選定が鍵', '遺言書＋信託のセット設計を推奨', '後見は補助的・限定的な利用に留める'],
+      steps: [
+        { phase: '今すぐ', color: '#9b2c2c', bg: '#fff5f5', border: '#fc8181', list: [
+          '遺言書を作成する（遺言執行者も指定）',
+          '受託者候補（きょうだい・親族）と話し合う',
+          '家族信託の専門家（司法書士等）に相談予約'
+        ]},
+        { phase: '1〜2年以内', color: '#8a6000', bg: '#fff8e8', border: '#f0c060', list: [
+          '家族信託契約の設計・締結',
+          '本人名義の資産を安全圏（500万円以下）に整理',
+          '信託口座の開設と管理フローの確認'
+        ]},
+        { phase: '長期で考える', color: '#2f855a', bg: '#f0fff4', border: '#68d391', list: [
+          '受託者の負担を定期的に確認・見直す',
+          '信託財産の運用状況を年1回レビュー',
+          '後見が必要になった場合の想定を共有しておく'
+        ]}
+      ]
+    },
+    hybrid: {
+      cls: 'green',
+      title: '🔀 ルートC：ハイブリッド型',
+      items: ['本人名義を500万円以下に抑え、後見人の管理負担・報酬を最小化', '残りはきょうだい・信託で柔軟に管理', '遺言書＋遺言執行者の指定で相続手続きを円滑に', '※ 判断能力がない場合、金額に関わらず後見人は必要です', '※ 500万円の意味・資産の分け方は専門家にご相談ください'],
+      steps: [
+        { phase: '今すぐ', color: '#9b2c2c', bg: '#fff5f5', border: '#fc8181', list: [
+          '遺言書を作成する（遺言執行者も指定）',
+          '本人名義を500万円以下に抑え、後見人の管理コストを最小化',
+          'きょうだいと役割・管理方針を話し合う'
+        ]},
+        { phase: '1〜2年以内', color: '#8a6000', bg: '#fff8e8', border: '#f0c060', list: [
+          '家族信託の検討・専門家に相談',
+          '残りの資産のきょうだい管理ルールを文書化',
+          '障害者扶養共済の加入状況を確認・見直す'
+        ]},
+        { phase: '長期で考える', color: '#2f855a', bg: '#f0fff4', border: '#68d391', list: [
+          '年1回、家族で資産・生活状況を確認する場を作る',
+          '施設・グループホームの候補を絞っておく',
+          '後見が必要になった時の想定を家族で共有'
+        ]}
+      ]
+    }
+  };
+  const rc = routeConfig[s.route];
+
+  const stepsHtml = rc.steps.map(s => `
+    <div style="margin-top:10px;border:1.5px solid ${s.border};border-radius:10px;overflow:hidden;">
+      <div style="background:${s.bg};padding:6px 12px;font-size:.75rem;font-weight:800;color:${s.color};">▼ ${s.phase}</div>
+      <div style="padding:8px 12px;">
+        ${s.list.map((item, i) => `<div style="font-size:.8rem;line-height:1.8;color:var(--text);display:flex;gap:6px;"><span style="color:${s.color};font-weight:800;flex-shrink:0;">0${i+1}</span><span>${item}</span></div>`).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  // ① 総合判定ボックス
+  const medicalVal = document.getElementById('p-medical').value;
+  const judgmentVal3 = document.getElementById('p-judgment').value;
+  const keyVal2 = document.getElementById('f-key').value;
+  const trustVal3 = document.getElementById('lg-trust').value;
+  const willVal3 = document.getElementById('lg-will').value;
+
+  // 総合タイプ判定
+  let summaryType, summaryColor, summaryBg, summaryBorder, summaryIcon;
+  if (kr.cls === 'red' && ar.cls === 'red') {
+    summaryType = '早急な法的準備が必要なタイプ';
+    summaryColor = '#9b2c2c'; summaryBg = '#fff5f5'; summaryBorder = '#fc8181'; summaryIcon = '⚠️';
+  } else if (kr.cls === 'red' || ar.cls === 'red') {
+    summaryType = '部分的な準備が急がれるタイプ';
+    summaryColor = '#8a6000'; summaryBg = '#fff8e8'; summaryBorder = '#f0c060'; summaryIcon = '📋';
+  } else if (ff.cls === 'green' && kr.cls === 'green') {
+    summaryType = '準備が整っているタイプ';
+    summaryColor = '#2f855a'; summaryBg = '#f0fff4'; summaryBorder = '#68d391'; summaryIcon = '✅';
+  } else {
+    summaryType = '計画的に準備を進めるタイプ';
+    summaryColor = '#1a4a7a'; summaryBg = '#f0f6ff'; summaryBorder = '#a8c8e8'; summaryIcon = '🔵';
+  }
+
+  // 優先順位TOP3
+  const top3 = [];
+  if (willVal3 !== 'yes') top3.push('遺言書（公正証書）を作成する');
+  if (trustVal3 !== 'yes') top3.push('家族信託について専門家に相談する');
+  if (keyVal2 === 'none' || keyVal2 === '') top3.push('キーパーソン（信頼できる管理者）を決める');
+  if (top3.length < 3) top3.push('きょうだいと役割・方針を話し合う');
+  if (top3.length < 3) top3.push('本人の医療・生活情報を文書化する');
+  const top3Html = top3.slice(0, 3).map((t, i) =>
+    '<div style="font-size:.8rem;line-height:1.9;display:flex;gap:8px;align-items:flex-start;">'
+    + '<span style="color:' + summaryColor + ';font-weight:800;flex-shrink:0;font-size:.9rem;">0' + (i+1) + '</span>'
+    + '<span>' + t + '</span></div>'
+  ).join('');
+
+  // ② ルート選定理由
+  const routeReasons = [];
+  if (judgmentVal3 === 'none') routeReasons.push('判断能力がない');
+  else if (judgmentVal3 === 'low') routeReasons.push('判断能力が低い');
+  if (keyVal2 === 'none') routeReasons.push('キーパーソンがいない');
+  else if (keyVal2 === 'unstable') routeReasons.push('キーパーソンが不安定');
+  if (trustVal3 === 'no') routeReasons.push('家族信託が未準備');
+  else if (trustVal3 === 'plan') routeReasons.push('家族信託がよくわからない状態');
+  if (willVal3 === 'no') routeReasons.push('遺言書がない');
+  else if (willVal3 === 'plan') routeReasons.push('遺言書が未作成');
+  if (document.getElementById('f-sibling').value === 'conflict') routeReasons.push('きょうだい間に対立がある');
+  const reasonsHtml = routeReasons.length > 0
+    ? routeReasons.map(r => '<div style="font-size:.75rem;line-height:1.8;">✓ ' + r + '</div>').join('')
+    : '<div style="font-size:.75rem;line-height:1.8;">✓ 総合的な状況から判断</div>';
+
+  // ④ 医療的ケア分岐
+  let medicalHtml = '';
+  if (medicalVal === 'heavy' || medicalVal === 'heavy2') {
+    medicalHtml = '<div style="margin-top:14px;border:2px solid #a8c8e8;border-radius:10px;overflow:hidden;">'
+      + '<div style="background:#f0f6ff;padding:8px 12px;font-size:.8rem;font-weight:800;color:#1a4a7a;">🏥 医療的ケア継続体制の確認が必要です</div>'
+      + '<div style="padding:10px 12px;">'
+      + '<div style="font-size:.75rem;color:var(--sub);margin-bottom:8px;line-height:1.6;">重度の医療的ケアがある場合、親なきあとも継続できる体制を今から整えておく必要があります。</div>'
+      + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">01</span><span>訪問看護・訪問介護の継続契約を確認する</span></div>'
+      + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">02</span><span>医療対応グループホーム・入所施設を早めにリサーチ</span></div>'
+      + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">03</span><span>短期入所（医療型）の利用実績を作っておく</span></div>'
+      + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">04</span><span>緊急時の受け入れ先・連絡体制を文書化する</span></div>'
+      + '</div></div>';
+  }
+
+  // 総合判定ボックスHTML
+  const summaryHtml = '<div style="margin-bottom:16px;border:2px solid ' + summaryBorder + ';border-radius:12px;overflow:hidden;">'
+    + '<div style="background:' + summaryBg + ';padding:10px 14px;">'
+    + '<div style="font-size:.72rem;color:' + summaryColor + ';font-weight:700;margin-bottom:2px;">あなたの家庭は</div>'
+    + '<div style="font-size:.95rem;font-weight:800;color:' + summaryColor + ';">' + summaryIcon + '「' + summaryType + '」</div>'
+    + '</div>'
+    + '<div style="padding:12px 14px;border-top:1px solid ' + summaryBorder + ';">'
+    + '<div style="font-size:.78rem;font-weight:800;color:var(--text);margin-bottom:6px;">🎯 まず最初にやること TOP3</div>'
+    + top3Html
+    + '</div>'
+    + '</div>';
+
+  // ルート理由ボックス
+  const routeReasonHtml = '<div style="margin-top:8px;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:1px solid #eee;">'
+    + '<div style="font-size:.72rem;color:var(--sub);font-weight:700;margin-bottom:4px;">このルートを提案する理由</div>'
+    + reasonsHtml
+    + '</div>';
+
+  // 遺言・信託未準備の警告メッセージ
+  const willVal2 = document.getElementById('lg-will').value;
+  const trustVal2 = document.getElementById('lg-trust').value;
+  const judgmentVal2 = document.getElementById('p-judgment').value;
+  let warningHtml = '';
+  const noWill = willVal2 === 'no' || willVal2 === '';
+  const noTrust = trustVal2 === 'no' || trustVal2 === 'plan' || trustVal2 === '';
+  const lowJudgment = judgmentVal2 === 'none' || judgmentVal2 === 'low';
+  if (lowJudgment && noWill && noTrust) {
+    warningHtml = '<div style="margin-bottom:14px;padding:12px;background:#fff5f5;border:2px solid #fc8181;border-radius:10px;line-height:1.8;">'
+      + '<div style="font-size:.82rem;font-weight:800;color:#9b2c2c;margin-bottom:6px;">⚠️ 今すぐ準備が必要な状況です</div>'
+      + '<div style="font-size:.75rem;color:#9b2c2c;line-height:1.8;">'
+      + '判断能力がない場合、<strong>金額に関わらず相続手続きに後見人が必要</strong>になります。遺言書や家族信託がない状態で親が亡くなると、たとえ10万円の遺産でも法律上「遺産分割協議」が成立せず、家族が困難な状況に陥ります。<br>'
+      + '<strong>今すぐ遺言書・家族信託の準備を始めることが、親ができる最大の愛情です。</strong>'
+      + '</div>'
+      + '</div>';
+  } else if (lowJudgment && noWill) {
+    warningHtml = '<div style="margin-bottom:14px;padding:12px;background:#fff8e8;border:2px solid #f0c060;border-radius:10px;line-height:1.8;">'
+      + '<div style="font-size:.82rem;font-weight:800;color:#8a6000;margin-bottom:6px;">📋 遺言書の準備を優先してください</div>'
+      + '<div style="font-size:.75rem;color:#8a6000;line-height:1.8;">'
+      + '家族信託は準備中でも、<strong>遺言書がなければ相続時に後見人が必要になる可能性</strong>があります。遺言書＋遺言執行者の指定で、相続時の遺産分割協議を回避できます。'
+      + '</div>'
+      + '</div>';
+  }
+
+  let yearsHtml = '';
+  if (s.years !== null) {
+    const yc = s.years < 10 ? 'red' : s.years < 20 ? 'yellow' : 'green';
+    yearsHtml = `<div class="risk-row"><span class="risk-label">💴 資金持続年数</span><span class="risk-val ${yc}">約 ${s.years} 年</span></div>`;
+  } else if (s.totalAsset > 0) {
+    yearsHtml = `<div class="risk-row"><span class="risk-label">💴 資金持続年数</span><span class="risk-val green">収支均衡 / 長期</span></div>`;
+  }
+
+  // 親年齢ステージ
+  let parentStageHtml = '';
+  const diagStage = getParentStage(s.parentAge > 0 ? String(s.parentAge) : '', s.parentHealth);
+  if (diagStage) {
+    let stageColor, stageBg, stageBorder, stageTitle, stageDesc, stageActions;
+    if (diagStage === 'ready') {
+      stageColor = '#2f855a'; stageBg = '#f0fff4'; stageBorder = '#68d391';
+      stageTitle = '✅ 準備できる時期（緊急度：低）';
+      stageDesc = '判断力・体力ともに充分。複雑な法的手続きが可能な今が最大のチャンスです。';
+      stageActions = ['遺言書・公正証書の作成（執行者も指定）', '家族信託の設計・専門家相談', '本人名義資産を500万円以下に整理する計画'];
+    } else if (diagStage === 'transition') {
+      stageColor = '#8a6000'; stageBg = '#fff8e8'; stageBorder = '#f0c060';
+      stageTitle = '📋 移行準備期（緊急度：中）';
+      stageDesc = '認知症・大病のリスクが現実的になる前に「自動運転」の仕組みを完成させる時期。';
+      stageActions = ['受託者（きょうだい等）への管理バトンタッチを実行', '資産整理の実行（計画から実行へ）', '施設・グループホームの候補を絞り込む'];
+    } else {
+      stageColor = '#9b2c2c'; stageBg = '#fff5f5'; stageBorder = '#fc8181';
+      stageTitle = '⚠️ 今すぐ動く（緊急度：高）';
+      stageDesc = '法的手続きに必要な判断能力が失われるリスクがある時期。できることが限られます。';
+      stageActions = ['任意後見契約を今すぐ締結（まだなら最優先）', '遺言書が未作成なら公正証書で今すぐ', '家族で現状の役割・管理ルールを文書化'];
+    }
+    const actionsHtml = stageActions.map((a, i) => {
+      const num = '0' + (i + 1);
+      return '<div style="font-size:.78rem;line-height:1.8;display:flex;gap:6px;"><span style="color:' + stageColor + ';font-weight:800;flex-shrink:0;">' + num + '</span><span>' + a + '</span></div>';
+    }).join('');
+    parentStageHtml = '<div style="margin-top:14px;border:2px solid ' + stageBorder + ';border-radius:10px;overflow:hidden;">'
+      + '<div style="background:' + stageBg + ';padding:8px 12px;font-size:.8rem;font-weight:800;color:' + stageColor + ';">'
+      + '👨‍👩‍👧 親の年齢からみた優先アクション（現在 ' + s.parentAge + '歳）'
+      + '</div>'
+      + '<div style="padding:10px 12px;">'
+      + '<div style="font-size:.78rem;color:' + stageColor + ';font-weight:700;margin-bottom:4px;">' + stageTitle + '</div>'
+      + '<div style="font-size:.75rem;color:var(--sub);margin-bottom:8px;line-height:1.5;">' + stageDesc + '</div>'
+      + actionsHtml
+      + '</div></div>';
+  }
+
+  // きょうだい話し合いタイムラインHTML
+  let sibHtml = '';
+  if (s.sibAges.length > 0) {
+    const minAge = Math.min(...s.sibAges);
+    const maxAge = Math.max(...s.sibAges);
+    const allAdult = s.sibAges.every(a => a >= 18);
+    const anyMinor = s.sibAges.some(a => a < 18);
+    const anyYoungAdult = s.sibAges.some(a => a >= 18 && a < 25);
+
+    let sibColor, sibBg, sibBorder, sibMsg, sibItems;
+    if (anyMinor) {
+      sibColor = '#9b2c2c'; sibBg = '#fff5f5'; sibBorder = '#fc8181';
+      const minorYears = 18 - minAge;
+      const minors = s.sibAges.filter(a => a < 18).map(a => a + '歳').join('・');
+      const adults = s.sibAges.filter(a => a >= 18).map(a => a + '歳').join('・');
+      const sibStatus = adults
+        ? '未成年（' + minors + '）・成人（' + adults + '）のきょうだいがいます。最年少が18歳になるまであと約' + minorYears + '年です。'
+        : '未成年（' + minors + '）のきょうだいがいます。最年少が18歳になるまであと約' + minorYears + '年です。';
+      sibMsg = sibStatus + '受託者・管理者への就任は18歳以降です。';
+      sibItems = [
+        '今は親が全ての管理を担う時期',
+        '約' + minorYears + '年後（最年少が18歳時）に役割の話し合いを開始',
+        'それまでに親側の法的準備（遺言・信託）を完成させておく'
+      ];
+    } else if (anyYoungAdult) {
+      sibColor = '#8a6000'; sibBg = '#fff8e8'; sibBorder = '#f0c060';
+      sibMsg = '成人のきょうだいがいますが、社会的に安定する25歳前後が話し合いの本格スタートに向いています。';
+      sibItems = [
+        '就職・生活基盤が固まる時期に役割を相談',
+        '受託者候補として家族信託の説明をしておく',
+        '今は「伝える準備」の時期'
+      ];
+    } else {
+      sibColor = '#2f855a'; sibBg = '#f0fff4'; sibBorder = '#68d391';
+      sibMsg = 'きょうだい全員が成人・社会的に安定している時期です。具体的な役割分担の話し合いが可能です。';
+      sibItems = [
+        '受託者・後見人候補として正式に打診できる',
+        '定期的な家族会議（年1回程度）の設定を検討',
+        '将来の生活場所・支援方針を文書で共有する'
+      ];
+    }
+    const sibItemsHtml = sibItems.map((a, i) => {
+      return '<div style="font-size:.78rem;line-height:1.8;display:flex;gap:6px;"><span style="color:' + sibColor + ';font-weight:800;flex-shrink:0;">0' + (i+1) + '</span><span>' + a + '</span></div>';
+    }).join('');
+    const sibAgeStr = s.sibAges.join('歳・') + '歳';
+    sibHtml = '<div style="margin-top:14px;border:2px solid ' + sibBorder + ';border-radius:10px;overflow:hidden;">'
+      + '<div style="background:' + sibBg + ';padding:8px 12px;font-size:.8rem;font-weight:800;color:' + sibColor + ';">'
+      + '👫 きょうだいとの話し合いタイミング（' + sibAgeStr + '）'
+      + '</div>'
+      + '<div style="padding:10px 12px;">'
+      + '<div style="font-size:.75rem;color:var(--sub);margin-bottom:8px;line-height:1.5;">' + sibMsg + '</div>'
+      + sibItemsHtml
+      + '</div></div>';
+  }
+
+  const html = `
+    ${summaryHtml}
+    ${warningHtml}
+    <div class="risk-row"><span class="risk-label">⚖️ 後見リスク</span><span class="risk-val ${kr.cls}">${kr.text}</span></div>
+    <div class="risk-row"><span class="risk-label">🔒 財産拘束度</span><span class="risk-val ${ar.cls}">${ar.text}</span></div>
+    <div class="risk-row"><span class="risk-label">👨‍👩‍👧 家族自由度</span><span class="risk-val ${ff.cls}">${ff.text}</span></div>
+    ${yearsHtml}
+    <div class="route-box ${rc.cls}" style="margin-top:14px;">
+      <div class="route-title ${rc.cls}">${rc.title}</div>
+      ${rc.items.map(i => `<div class="route-item">${i}</div>`).join('')}
+      ${routeReasonHtml}
+    </div>
+    ${medicalHtml}
+    ${parentStageHtml}
+    ${sibHtml}
+    <div style="margin-top:14px;font-size:.82rem;font-weight:800;color:var(--text);">🗓️ こんな流れがおすすめ</div>
+    ${stepsHtml}
+  `;
+
+
+  document.getElementById('result-placeholder').style.display = 'none';
+  document.getElementById('result-content').style.display = 'block';
+  document.getElementById('result-content').innerHTML = html;
+
+  // スマホ対応：診断結果へスムーズスクロール
+  setTimeout(() => {
+    document.getElementById('result-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
+}
+</script>
+</body>
+</html>
