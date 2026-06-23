@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>みらいシミュレーター｜将来の資産計算</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+  background: #fdf6f8;
+  color: #2d1a25;
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* ヘッダー */
+.header {
+  background: linear-gradient(135deg, #fdeef3, #f3eef8);
+  border-bottom: 1.5px solid #f0d0dc;
+  padding: 18px 20px 14px;
+  text-align: center;
+  margin: -16px -16px 20px;
+}
+.header-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #c0587a;
+  margin-bottom: 3px;
+}
+.header-sub {
+  font-size: .78rem;
+  color: #8a6070;
+}
+
+.hs-widget .wrap {max-width:480px;margin:0 auto;}
+.hs-widget .title {font-size:1.05em;font-weight:900;margin-bottom:4px;}
+.hs-widget .subtitle {font-size:0.78em;color:#7a8088;margin-bottom:16px;}
+
+.hs-widget .input-card {background:#fff;border:1.5px solid #e8e2d8;border-radius:18px;padding:16px 14px;margin-bottom:14px;}
+.hs-widget .input-card h3 {font-size:12.5px;font-weight:800;color:#b85e10;margin-bottom:10px;}
+.hs-widget .input-row {margin-bottom:12px;}
+.hs-widget .input-row:last-child {margin-bottom:0;}
+.hs-widget .input-label {display:block;font-size:11.5px;color:#7a8088;margin-bottom:5px;}
+.hs-widget input[type=number] {
+  width:100%;background:#f7f5f0;border:1.4px solid #e0dcd0;border-radius:10px;
+  padding:9px 12px;font-size:14px;box-sizing:border-box;color:#2a2a2a;
+}
+.hs-widget .seg-btns {display:flex;gap:6px;}
+.hs-widget .seg-btn {
+  flex:1;padding:8px 4px;border-radius:10px;border:1.4px solid #e0dcd0;
+  background:#f7f5f0;color:#7a8088;font-size:12.5px;text-align:center;cursor:pointer;
+}
+.hs-widget .seg-btn.active {border-color:#c79a3f;color:#c79a3f;background:rgba(199,154,63,.08);font-weight:800;}
+.hs-widget .divider {border-top:1px dashed #e0dcd0;margin:14px 0;}
+
+.hs-widget .kart-card {
+  background:linear-gradient(135deg,#fff5ee,#fffaf3);border:1.5px solid #e8b878;border-radius:18px;
+  padding:16px 16px 18px;margin-top:10px;
+}
+.hs-widget .kart-head {
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  padding-bottom:12px;border-bottom:1px solid #f0d8b8;
+}
+.hs-widget .kart-icon {
+  width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#e07b39,#b85e10);
+  box-shadow:0 5px 14px rgba(224,123,57,.4);
+  display:flex;align-items:center;justify-content:center;font-size:1.3em;flex:none;
+}
+.hs-widget .kart-name {font-size:1em;font-weight:900;color:#2a2a2a;}
+.hs-widget .kart-sub {font-size:11px;color:#7a8088;margin-top:2px;}
+
+.hs-widget .stat-row {margin-bottom:11px;}
+.hs-widget .stat-row:last-child {margin-bottom:0;}
+.hs-widget .stat-label {display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:#5a6a7a;margin-bottom:4px;}
+.hs-widget .stat-value {font-weight:900;font-size:12.5px;}
+
+.hs-widget .bar-segments {display:flex;gap:3px;}
+.hs-widget .period-story {
+  margin-top:8px;background:#f0f4f7;border-radius:10px;padding:9px 11px;
+  font-size:11px;color:#3a5a70;line-height:1.7;
+}
+
+.hs-widget .amount-box {
+  background:linear-gradient(135deg,#fdeef3,#fff8fa);border:1.5px solid #f0a8c0;
+  border-radius:12px;padding:10px 14px;text-align:center;
+}
+.hs-widget .amount-box-gold {
+  background:linear-gradient(135deg,#fff5ee,#fffaf3);border-color:#e8b878;
+}
+.hs-widget .amount-big {font-size:1.15em;font-weight:900;color:#a83a60;}
+.hs-widget .amount-box-gold .amount-big {color:#b85e10;}
+.hs-widget .seg {flex:1;height:12px;border-radius:4px;background:#f0ede6;transition:background .25s;}
+
+.hs-widget .message-box {
+  margin-top:14px;background:linear-gradient(135deg,#1a7a6e,#0f5a50);border-radius:16px;
+  padding:18px 16px;text-align:center;font-size:0.92em;font-weight:700;color:#fff;line-height:1.9;
+  box-shadow:0 8px 20px rgba(26,122,110,.25);
+}
+.hs-widget .message-box strong {font-size:1.05em;}
+
+.hs-widget .print-btn {
+  display:block;width:100%;margin-top:16px;background:linear-gradient(135deg,#5fa8e0,#3a7ca5);
+  border:none;border-radius:14px;padding:13px;color:#fff;font-size:0.92em;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 16px rgba(58,124,165,.3);
+}
+.hs-widget .print-hint {text-align:center;font-size:10.5px;color:#9aa5c9;margin-top:6px;}
+
+@media print{
+.hs-widget .input-card, .hs-widget .print-btn, .hs-widget .print-hint {display:none !important;}
+.hs-widget .kart-card, .hs-widget .message-box {box-shadow:none;border-width:1px;}
+}
+
+.hs-widget .footer-note {
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-title">📊 みらいシミュレーター</div>
+  <div class="header-sub">将来の資産計算｜みらいナビ</div>
+</div>
+
+<div class="hs-widget">
+<div class="wrap">
+
+<div class="title">📊 みらいシミュレーター（将来の資産計算）</div>
+<div class="subtitle">入れた数字で、家計のバランスを5つのステータスで見てみましょう</div>
+
+<div class="input-card">
+  <h3>💰 投資・貯蓄</h3>
+  <div class="input-row">
+    <label class="input-label">今の投資資産（NISA等・万円）</label>
+    <input type="number" id="hsPrincipal" value="0" inputmode="numeric">
+  </div>
+  <div class="input-row">
+    <label class="input-label">月の積立額（投資・万円）</label>
+    <input type="number" id="hsMonthly" value="3" step="0.1" inputmode="decimal">
+  </div>
+  <div class="input-row">
+    <label class="input-label">積立を続ける年数</label>
+    <input type="number" id="hsContributeYears" value="20" inputmode="numeric">
+  </div>
+  <div class="input-row">
+    <label class="input-label">想定年利（%）</label>
+    <input type="number" id="hsRate" value="7" step="0.1" inputmode="decimal">
+  </div>
+  <div class="input-row">
+    <label class="input-label">現金・貯蓄のみで持つ額（万円）</label>
+    <input type="number" id="hsSavings" value="100" inputmode="numeric">
+  </div>
+  <div class="input-row">
+    <label class="input-label">何年後を想定するか</label>
+    <input type="number" id="hsYears" value="20" inputmode="numeric">
+  </div>
+
+  <div class="divider"></div>
+  <h3>🛡️ 共済</h3>
+  <div class="input-row">
+    <label class="input-label">加入時の年齢（親）</label>
+    <input type="number" id="hsAge" value="42" inputmode="numeric">
+  </div>
+  <div class="input-row">
+    <label class="input-label">お子さんの現在の年齢</label>
+    <input type="number" id="hsChildAge" value="9" inputmode="numeric">
+  </div>
+  <div class="input-row">
+    <label class="input-label">親の保障開始の目安年齢（何歳で発動と想定するか）</label>
+    <input type="number" id="hsParentLifeExpect" value="85" inputmode="numeric">
+  </div>
+  <div class="input-row">
+    <label class="input-label">お子さんの想定年齢（何歳まで保障が続くと見るか）</label>
+    <input type="number" id="hsChildLifeExpect" value="80" inputmode="numeric">
+  </div>
+  <div class="input-row">
+    <label class="input-label">加入口数</label>
+    <div class="seg-btns" id="hsKuchiBtns">
+      <div class="seg-btn" data-kuchi="0">なし</div>
+      <div class="seg-btn active" data-kuchi="1">1口</div>
+      <div class="seg-btn" data-kuchi="2">2口</div>
+    </div>
+  </div>
+</div>
+
+<div class="kart-card">
+  <div class="kart-head">
+    <div class="kart-icon">🏎️</div>
+    <div>
+      <div class="kart-name">あなたの家計ステータス</div>
+      <div class="kart-sub" id="hsSub">—</div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-label"><span>📈 増やす重視</span><span class="stat-value" id="hsGrowValue">—</span></div>
+    <div class="bar-segments" id="hsGrowBar"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-label"><span>🛡️ 保障期間</span><span class="stat-value" id="hsPeriodValue">—</span></div>
+    <div class="bar-segments" id="hsPeriodBar"></div>
+    <div class="period-story" id="hsPeriodStory"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-label"><span>🤝 託しやすさ（安心度）</span><span class="stat-value" id="hsSafeValue">—</span></div>
+    <div class="bar-segments" id="hsSafeBar"></div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-label"><span>⚠️ リスク</span><span class="stat-value" id="hsRiskValue">—</span></div>
+    <div class="bar-segments" id="hsRiskBar"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="stat-row">
+    <div class="stat-label"><span>👧 お子さんに渡る共済の総額</span></div>
+    <div class="amount-box" id="hsChildTotalBox">
+      <div class="amount-big" id="hsChildTotalValue">—</div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-label"><span id="hsAmountLabel">💰 20年後のトータル想定資産</span></div>
+    <div class="amount-box amount-box-gold" id="hsAmountBox">
+      <div class="amount-big" id="hsAmountValue">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="message-box">
+  共済は損益ではなく、<br>
+  <strong>確実にその子の通帳にお金が届く仕組み作り</strong><br>
+  が重要なのです。
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨️ この結果を印刷・PDF保存する</button>
+<div class="print-hint">※ 印刷画面で「PDFに保存」を選ぶと、専門家や家族との共有に使えます</div>
+
+<div class="footer-note">
+  ※ 各ステータスは入力値をもとにした相対的な目安（5段階）です。優劣を示すものではなく、家計のバランスを把握するための参考情報です。<br>
+  ※ 保障期間は「親が入力した年齢で亡くなった」と仮定した場合に、お子さんが何歳から何歳まで給付を受けられるかの目安です。共済は実際には終身（お子さんが生きている限り）給付されます。<br>
+  ※ 「掛金」（親が払う額・加入年齢で変動）と「給付額」（子が受け取る額・口数のみで決まり、目安は1口あたり月20,000円）は別物です。お子さんへの総額は給付額をもとに計算しています。<br>
+  将来の運用成果を保証するものではありません。実際の給付額は最新の制度情報でご確認ください。
+</div>
+
+</div>
+</div>
+
+    </div>
+  </details>
+
+  <script>
+(function(){
+  const elPrincipal = document.getElementById('hsPrincipal');
+  const elMonthly = document.getElementById('hsMonthly');
+  const elContributeYears = document.getElementById('hsContributeYears');
+  const elSavings = document.getElementById('hsSavings');
+  const elYears = document.getElementById('hsYears');
+  const elAge = document.getElementById('hsAge');
+  const elParentLife = document.getElementById('hsParentLifeExpect');
+  const elChildAge = document.getElementById('hsChildAge');
+  const elChildLife = document.getElementById('hsChildLifeExpect');
+  const elRate = document.getElementById('hsRate');
+  const kuchiBtns = document.querySelectorAll('#hsKuchiBtns .seg-btn');
+  let kuchi = 1;
+
+  const PREMIUM_TABLE = [
+    {max:35, premium:9300},{max:40, premium:11400},{max:45, premium:14300},
+    {max:50, premium:17300},{max:55, premium:18800},{max:60, premium:20700},
+    {max:65, premium:23300},{max:Infinity, premium:23300},
+  ];
+  function getPremium(age){
+    for(const row of PREMIUM_TABLE){ if(age < row.max) return row.premium; }
+    return PREMIUM_TABLE[PREMIUM_TABLE.length-1].premium;
+  }
+
+  function fmtMan(n){ return Math.round(n/10000).toLocaleString() + '万円'; }
+
+  const LEVEL_WORDS = ['とても低い','低い','普通','高い','とても高い'];
+  function levelWord(seg){
+    const idx = Math.max(1, Math.min(5, seg)) - 1;
+    return LEVEL_WORDS[idx];
+  }
+
+  function futureValuePrincipal(p, r, years){ return p * Math.pow(1+r, years); }
+  function futureValueMonthly(m, r, months){
+    const rm = r/12; let fv=0;
+    for(let i=0;i<months;i++){ fv = (fv+m)*(1+rm); }
+    return fv;
+  }
+
+  const BAR_COLORS = {
+    grow:'linear-gradient(90deg,#e0b860,#c79a3f)',
+    period:'linear-gradient(90deg,#2a9a8a,#1a7a6e)',
+    childTotal:'linear-gradient(90deg,#f0a8c0,#a83a60)',
+    safe:'linear-gradient(90deg,#5fa8e0,#3a7ca5)',
+    risk:'linear-gradient(90deg,#e08fa8,#a83a60)',
+    amount:'linear-gradient(90deg,#e0b860,#c79a3f)',
+  };
+
+  function makeBar(containerId, filledCount, colorKey, total=5){
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    for(let i=0;i<total;i++){
+      const seg = document.createElement('div');
+      seg.className = 'seg';
+      if(i < filledCount) seg.style.background = BAR_COLORS[colorKey];
+      el.appendChild(seg);
+    }
+  }
+
+  function calc(){
+    const principal = (parseFloat(elPrincipal.value) || 0) * 10000;
+    const monthly = (parseFloat(elMonthly.value) || 0) * 10000;
+    const savings = (parseFloat(elSavings.value) || 0) * 10000;
+    const age = Math.max(20, Math.min(64, parseFloat(elAge.value) || 42));
+    const r = (parseFloat(elRate.value) || 7) / 100;
+    const years = Math.max(1, parseFloat(elYears.value) || 20);
+    const months = years * 12;
+
+    const premiumPerKuchi = kuchi > 0 ? getPremium(age) : 0;
+    const kyosaiMonthly = premiumPerKuchi * kuchi; // 掛金(払う額・年齢で変動)
+    const kyosaiYearlyTotal = kyosaiMonthly * 12 * years;
+    const BENEFIT_PER_KUCHI = 20000; // 給付額(受け取る額・1口あたり固定)
+    const kyosaiBenefitMonthly = BENEFIT_PER_KUCHI * kuchi; // 子が受け取る月額(口数のみで決まる)
+
+    // NISA投資の将来評価額: 積立期間中は積立+複利、積立終了後は据え置きで複利のみ継続
+    const contributeYears = Math.max(0, Math.min(years, parseFloat(elContributeYears.value) || 20));
+    const contributeMonths = Math.round(contributeYears * 12);
+    const restYears = Math.max(0, years - contributeYears);
+
+    const fvPrincipalAtContributeEnd = futureValuePrincipal(principal, r, contributeYears);
+    const fvMonthlyAtContributeEnd = futureValueMonthly(monthly, r, contributeMonths);
+    const valueAtContributeEnd = fvPrincipalAtContributeEnd + fvMonthlyAtContributeEnd;
+
+    // 積立終了後は据え置きで複利のみ継続
+    const nisaFV = futureValuePrincipal(valueAtContributeEnd, r, restYears);
+
+    // 全体の資金配分(現在投入ベース): 投資 / 貯蓄 / 共済
+    const totalMonthlyAllocation = monthly + kyosaiMonthly + (savings>0 ? savings/months : 0); // ざっくり比率用
+    const investRatio = (monthly) / Math.max(1, monthly + kyosaiMonthly + (savings/24)); // 簡易比率(貯蓄は24ヶ月分按分の重みで)
+
+    // ① 増やす重視: 毎月の投資フロー比率(共済との比較のみ。貯蓄ストックは含めない)＋年利の高さで判定
+    const investFlowRatio = monthly / Math.max(1, monthly + kyosaiMonthly);
+    let growSeg = Math.round(investFlowRatio * 3) + (r>=0.10?2:r>=0.07?1:0) + 1;
+    growSeg = Math.max(1, Math.min(5, growSeg));
+
+    // ② 保障期間: 親が保障開始想定年齢で亡くなった後、子が想定年齢まで生きた場合の給付年数
+    let periodSeg = 0;
+    let periodYears = 0;
+    let childAgeAtStart = 0;
+    const parentLifeExpect = parseFloat(elParentLife.value) || 85;
+    const childLifeExpect = parseFloat(elChildLife.value) || 80;
+    if(kuchi > 0){
+      const childAge = parseFloat(elChildAge.value) || 0;
+      const yearsUntilParentPasses = Math.max(0, parentLifeExpect - age);
+      childAgeAtStart = childAge + yearsUntilParentPasses;
+      periodYears = Math.max(0, childLifeExpect - childAgeAtStart);
+      periodSeg = Math.max(1, Math.min(5, Math.round((periodYears/70)*5)));
+    }
+
+    // ③ 託しやすさ(安心度): 共済+貯蓄の比率が高いほど高得点
+    const safeRatio = (kyosaiMonthly + (savings/24)) / Math.max(1, monthly + kyosaiMonthly + (savings/24));
+    let safeSeg = Math.max(1, Math.min(5, Math.round(safeRatio * 5) || (kuchi>0?2:1)));
+    if(kuchi===0 && savings===0) safeSeg = 1;
+
+    // ④ リスク: 投資比率が高いほど高得点(リスクは良し悪しでなく特性)
+    let riskSeg = Math.max(1, Math.min(5, Math.round(investRatio * 5)));
+
+    // ⑤ 20年後のトータル想定資産: NISA評価額 + 貯蓄(そのまま)
+    const totalAmount = nisaFV + savings;
+
+    document.getElementById('hsSub').textContent =
+      kuchi>0 ? `共済 月${kyosaiMonthly.toLocaleString()}円（${age}歳加入・${kuchi}口）` : '共済未加入';
+
+    document.getElementById('hsGrowValue').textContent = levelWord(growSeg);
+    makeBar('hsGrowBar', growSeg, 'grow');
+
+    document.getElementById('hsPeriodValue').textContent =
+      kuchi>0 ? `お子さん${Math.round(childAgeAtStart)}歳〜 ${periodYears}年間` : 'なし';
+    makeBar('hsPeriodBar', periodSeg, 'period');
+
+    const storyEl = document.getElementById('hsPeriodStory');
+    if(kuchi > 0){
+      storyEl.textContent =
+        `親が${parentLifeExpect}歳で亡くなった場合、お子さんは${Math.round(childAgeAtStart)}歳になっています。` +
+        `そこから${Math.round(childLifeExpect)}歳まで、毎月${kyosaiBenefitMonthly.toLocaleString()}円を受け取れる見込みです。`;
+    } else {
+      storyEl.textContent = '共済に加入すると、ここに受給スケジュールが表示されます。';
+    }
+
+    // 子供に渡る共済の総額(給付額×12ヶ月×保障期間。掛金ではなく給付額を使用)
+    const childTotalAmount = kyosaiBenefitMonthly * 12 * periodYears;
+    if(kuchi > 0){
+      document.getElementById('hsChildTotalValue').textContent =
+        `総額 約${fmtMan(childTotalAmount)}（月${kyosaiBenefitMonthly.toLocaleString()}円）`;
+    } else {
+      document.getElementById('hsChildTotalValue').textContent = '共済未加入のため0円';
+    }
+
+    document.getElementById('hsSafeValue').textContent = levelWord(safeSeg);
+    makeBar('hsSafeBar', safeSeg, 'safe');
+
+    document.getElementById('hsRiskValue').textContent = levelWord(riskSeg);
+    makeBar('hsRiskBar', riskSeg, 'risk');
+
+    document.getElementById('hsAmountLabel').textContent = `💰 ${years}年後のトータル想定資産`;
+    document.getElementById('hsAmountValue').textContent = fmtMan(totalAmount);
+  }
+
+  kuchiBtns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      kuchiBtns.forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      kuchi = parseInt(btn.dataset.kuchi);
+      calc();
+    });
+  });
+  [elPrincipal, elMonthly, elContributeYears, elSavings, elAge, elRate, elParentLife, elChildAge, elChildLife, elYears].forEach(el=> el.addEventListener('input', calc));
+
+  calc();
+})();
+
+  </script>
+
+
+</body>
+</html>
