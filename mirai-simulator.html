@@ -362,7 +362,7 @@ body {
           <input type="number" id="a-cash" placeholder="例：1000（万円単位）" oninput="liveUpdate()">
         </div>
         <div class="field">
-          <label>不動産<br>　</label>
+          <label>不動産</label>
           <select id="a-estate" onchange="liveUpdate()">
             <option value="">選択</option>
             <option value="none">なし</option>
@@ -373,10 +373,10 @@ body {
       </div>
     </div>
 
-    <!-- ② 親のタイムライン -->
+    <!-- ⏱ 親のタイムライン -->
     <div class="sec">
       <div class="sec-head">
-        <div class="sec-num" style="background:var(--purple);">⏱</div>
+        <div class="sec-num" style="background:var(--purple); font-size:.65rem;">⏱</div>
         <div class="sec-title">👨‍👩‍👧 親のタイムリミット</div>
         <span class="sec-badge badge-gray" id="badge-parent">未入力</span>
       </div>
@@ -500,7 +500,7 @@ body {
       </div>
       <div class="sec-body triple">
         <div class="field">
-          <label>遺言書<br>　</label>
+          <label>遺言書</label>
           <select id="lg-will" onchange="liveUpdate()">
             <option value="">選択</option>
             <option value="yes">作成済み</option>
@@ -509,7 +509,7 @@ body {
           </select>
         </div>
         <div class="field">
-          <label>家族信託<br>　</label>
+          <label>家族信託</label>
           <select id="lg-trust" onchange="liveUpdate()">
             <option value="">選択</option>
             <option value="yes">利用したい</option>
@@ -518,7 +518,7 @@ body {
           </select>
         </div>
         <div class="field">
-          <label>後見人制度<br>の理解</label>
+          <label>後見制度の理解</label>
           <select id="lg-guardian" onchange="liveUpdate()">
             <option value="">選択</option>
             <option value="well">よく知っている</option>
@@ -860,11 +860,11 @@ function runDiagnosis() {
   };
   const rc = routeConfig[s.route];
 
-  const stepsHtml = rc.steps.map(s => `
-    <div style="margin-top:10px;border:1.5px solid ${s.border};border-radius:10px;overflow:hidden;">
-      <div style="background:${s.bg};padding:6px 12px;font-size:.75rem;font-weight:800;color:${s.color};">▼ ${s.phase}</div>
+  const stepsHtml = rc.steps.map(step => `
+    <div style="margin-top:10px;border:1.5px solid ${step.border};border-radius:10px;overflow:hidden;">
+      <div style="background:${step.bg};padding:6px 12px;font-size:.75rem;font-weight:800;color:${step.color};">▼ ${step.phase}</div>
       <div style="padding:8px 12px;">
-        ${s.list.map((item, i) => `<div style="font-size:.8rem;line-height:1.8;color:var(--text);display:flex;gap:6px;"><span style="color:${s.color};font-weight:800;flex-shrink:0;">0${i+1}</span><span>${item}</span></div>`).join('')}
+        ${step.list.map((item, i) => `<div style="font-size:.8rem;line-height:1.8;color:var(--text);display:flex;gap:6px;"><span style="color:${step.color};font-weight:800;flex-shrink:0;">0${i+1}</span><span>${item}</span></div>`).join('')}
       </div>
     </div>
   `).join('');
@@ -892,13 +892,15 @@ function runDiagnosis() {
     summaryColor = '#1a4a7a'; summaryBg = '#f0f6ff'; summaryBorder = '#a8c8e8'; summaryIcon = '🔵';
   }
 
-  // 優先順位TOP3
-  const top3 = [];
-  if (willVal3 !== 'yes') top3.push('遺言書（公正証書）を作成する');
-  if (trustVal3 !== 'yes') top3.push('家族信託について専門家に相談する');
-  if (keyVal2 === 'none' || keyVal2 === '') top3.push('キーパーソン（信頼できる管理者）を決める');
-  if (top3.length < 3) top3.push('きょうだいと役割・方針を話し合う');
-  if (top3.length < 3) top3.push('本人の医療・生活情報を文書化する');
+  // 優先順位TOP3（重複なし・優先度順に最大3件）
+  const top3Candidates = [];
+  if (willVal3 !== 'yes') top3Candidates.push('遺言書（公正証書）を作成する');
+  if (trustVal3 !== 'yes') top3Candidates.push('家族信託について専門家に相談する');
+  if (keyVal2 === 'none' || keyVal2 === '') top3Candidates.push('キーパーソン（信頼できる管理者）を決める');
+  top3Candidates.push('きょうだいと役割・方針を話し合う');
+  top3Candidates.push('本人の医療・生活情報を文書化する');
+  // 重複排除して上位3件
+  const top3 = [...new Set(top3Candidates)].slice(0, 3);
   const top3Html = top3.slice(0, 3).map((t, i) =>
     '<div style="font-size:.8rem;line-height:1.9;display:flex;gap:8px;align-items:flex-start;">'
     + '<span style="color:' + summaryColor + ';font-weight:800;flex-shrink:0;font-size:.9rem;">0' + (i+1) + '</span>'

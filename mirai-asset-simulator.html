@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>みらいシミュレーター｜将来の資産計算</title>
+<title>みらいマネーシミュレーター｜みらいナビ</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -94,11 +94,11 @@ body {
 .hs-widget .seg {flex:1;height:12px;border-radius:4px;background:#f0ede6;transition:background .25s;}
 
 .hs-widget .message-box {
-  margin-top:14px;background:linear-gradient(135deg,#1a7a6e,#0f5a50);border-radius:16px;
-  padding:18px 16px;text-align:center;font-size:0.92em;font-weight:700;color:#fff;line-height:1.9;
-  box-shadow:0 8px 20px rgba(26,122,110,.25);
+  margin-top:14px;background:#f0fff4;border:2px solid #68d391;
+  border-radius:16px;padding:16px;text-align:left;
+  font-size:0.85em;color:#2f855a;line-height:1.8;
 }
-.hs-widget .message-box strong {font-size:1.05em;}
+.hs-widget .message-box strong {font-weight:900;color:#22543d;}
 
 .hs-widget .print-btn {
   display:block;width:100%;margin-top:16px;background:linear-gradient(135deg,#5fa8e0,#3a7ca5);
@@ -113,23 +113,35 @@ body {
 }
 
 .hs-widget .footer-note {
+  font-size: .75rem;
+  color: #8a8a8a;
+  line-height: 1.7;
+}
 
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-title">📊 みらいシミュレーター</div>
+  <div class="header-title">📊 みらいマネーシミュレーター</div>
   <div class="header-sub">将来の資産計算｜みらいナビ</div>
 </div>
 
 <div class="hs-widget">
 <div class="wrap">
 
-<div class="title">📊 みらいシミュレーター（将来の資産計算）</div>
 <div class="subtitle">入れた数字で、家計のバランスを5つのステータスで見てみましょう</div>
 
-<div class="input-card">
+<div style="margin-top:14px;background:#fff5f5;border:2px solid #fc8181;border-radius:16px;padding:16px;">
+  <div style="font-size:.9em;font-weight:900;color:#9b2c2c;margin-bottom:8px;">⚠️ 大きなお金を残す前に知っておきたいこと</div>
+  <div style="font-size:.9em;color:#742a2a;line-height:1.8;font-weight:600;">
+    判断能力がない場合、<strong>金額に関わらず遺産相続には成年後見人が必要</strong>になります。法律上、「いくら以上なら後見人が必要」という基準はありません。<br><br>
+    本人名義の資産が多いほど後見人の管理対象が増え、<strong>家族が自由にお金を動かせなくなる・毎年数十万円の後見報酬がかかり続ける</strong>というリスクが高まります。<br><br>
+    だからこそ「本人名義は生活費分だけ・残りは家族信託や遺言で管理」という設計が重要です。お金を<strong>増やすだけでなく、届く仕組みを作ること</strong>がゴールです。
+  </div>
+</div>
+
+<div class="input-card" style="margin-top:14px;">
   <h3>💰 投資・貯蓄</h3>
   <div class="input-row">
     <label class="input-label">今の投資資産（NISA等・万円）</label>
@@ -184,7 +196,9 @@ body {
   </div>
 </div>
 
-<div class="kart-card">
+<button onclick="runCalc()" style="width:100%;padding:14px;background:linear-gradient(135deg,#d4698a,#c0587a);color:#fff;border:none;border-radius:14px;font-size:1rem;font-weight:800;cursor:pointer;margin-bottom:14px;">🧭 診断する</button>
+
+<div class="kart-card" id="result-card" style="display:none;">
   <div class="kart-head">
     <div class="kart-icon">🏎️</div>
     <div>
@@ -232,9 +246,10 @@ body {
 </div>
 
 <div class="message-box">
-  共済は損益ではなく、<br>
-  <strong>確実にその子の通帳にお金が届く仕組み作り</strong><br>
-  が重要なのです。
+  <div style="font-size:1.05em;font-weight:900;color:#2f855a;margin-bottom:6px;">💡 共済を使うポイント</div>
+  <div style="font-size:1.0em;color:#276749;line-height:1.8;font-weight:600;">
+    NISAや投資は<strong>「増やす」</strong>、心身扶養共済は<strong>「確実に届ける」</strong>。この2つは競合ではなく役割分担です。<br><br>共済の最大の強みは、毎月自動で子どもの口座に給付される点にあります。後見人の判断も家族の手続きも不要で、親が亡くなった後も生活費が絶対に途切れません。共済は「貯金の代わり」ではなく、<strong>親なきあとの生活を支えるインフラ</strong>です。
+  </div>
 </div>
 
 <button class="print-btn" onclick="window.print()">🖨️ この結果を印刷・PDF保存する</button>
@@ -249,9 +264,6 @@ body {
 
 </div>
 </div>
-
-    </div>
-  </details>
 
   <script>
 (function(){
@@ -420,9 +432,17 @@ body {
       calc();
     });
   });
-  [elPrincipal, elMonthly, elContributeYears, elSavings, elAge, elRate, elParentLife, elChildAge, elChildLife, elYears].forEach(el=> el.addEventListener('input', calc));
-
-  calc();
+  // 診断ボタン用の関数
+  window.runCalc = function() {
+    calc();
+    const card = document.getElementById('result-card');
+    if (card) {
+      card.style.display = 'block';
+      setTimeout(() => {
+        card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  };
 })();
 
   </script>
