@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>みらいナビ ツール集｜親なきあとを準備する4つのツール</title>
+<style>
+:root {
+  --pink: #c0587a;
+  --pink-light: #fdeef3;
+  --purple: #6a2a98;
+  --purple-light: #f3eef8;
+  --green: #2f855a;
+  --green-light: #f0fff4;
+  --blue: #1a4a7a;
+  --blue-light: #f0f6ff;
+  --red: #9b2c2c;
+  --red-light: #fff5f5;
+  --text: #2d1a25;
+  --sub: #8a6070;
+  --border: #f0d0dc;
+  --bg: #fdf6f8;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.hero {
+  background: linear-gradient(160deg, #2d1a25 0%, #6a2a98 60%, #c0587a 100%);
+  padding: 48px 20px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.04);
+}
+.hero-eyebrow {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  color: rgba(255,255,255,.6);
+  margin-bottom: 10px;
+}
+.hero-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.hero-title span { color: #f9a8c9; }
+.hero-sub {
+  font-size: .85rem;
+  color: rgba(255,255,255,.75);
+  line-height: 1.7;
+  max-width: 320px;
+  margin: 0 auto 24px;
+}
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.2);
+  color: rgba(255,255,255,.85);
+  font-size: .72rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 700;
+}
+.main { max-width: 480px; margin: 0 auto; padding: 28px 16px 48px; }
+
+.flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-bottom: 24px;
+  font-size: .72rem;
+  color: var(--sub);
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+.flow-step {
+  background: #fff;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 10px;
+  white-space: nowrap;
+}
+.flow-arrow { color: var(--border); }
+
+.tool-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.tool-card-head { padding: 16px 18px 14px; border-bottom: 1px solid var(--border); }
+.tool-tag {
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.tag-pink { background: var(--pink-light); color: var(--pink); }
+.tag-green { background: var(--green-light); color: var(--green); }
+.tag-purple { background: var(--purple-light); color: var(--purple); }
+.tag-red { background: var(--red-light); color: var(--red); }
+
+.tool-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.tool-desc { font-size: .80rem; color: var(--sub); line-height: 1.7; }
+.tool-card-body { padding: 12px 18px; display: flex; flex-direction: column; gap: 6px; }
+.tool-feature {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  font-size: .78rem;
+  color: var(--text);
+  line-height: 1.5;
+}
+.tool-feature-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+.tool-btn {
+  display: block;
+  text-align: center;
+  padding: 13px;
+  font-size: .92rem;
+  font-weight: 800;
+  border-radius: 10px;
+  text-decoration: none;
+  margin: 12px 18px 16px;
+  transition: opacity .15s;
+}
+.tool-btn:active { opacity: .85; }
+.btn-pink { background: linear-gradient(135deg, #d4698a, #c0587a); color: #fff; }
+.btn-green { background: linear-gradient(135deg, #38a169, #2f855a); color: #fff; }
+.btn-purple { background: linear-gradient(135deg, #805ad5, #6a2a98); color: #fff; }
+.btn-red { background: linear-gradient(135deg, #c53030, #9b2c2c); color: #fff; }
+
+.section-label {
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 800;
+  color: var(--sub);
+  letter-spacing: .1em;
+  margin: 24px 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-label::before, .section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.footer {
+  text-align: center;
+  padding: 24px 20px 32px;
+  border-top: 1px solid var(--border);
+}
+.footer-logo { font-size: .95rem; font-weight: 800; color: var(--pink); margin-bottom: 4px; }
+.footer-sub { font-size: .72rem; color: var(--sub); line-height: 1.7; }
+.footer-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: .78rem;
+  color: var(--pink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2px;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">みらいナビ ツール集</div>
+  <div class="hero-title">「親なきあと」を<br><span>4つのツール</span>で準備する</div>
+  <div class="hero-sub">障害のある子を持つ親のために。気づいて、知って、増やして、残す。</div>
+  <div class="hero-badge">🧭 みらいナビ｜福祉ナビゲーション</div>
+</div>
+
+<div class="main">
+
+  <div class="flow">
+    <div class="flow-step">気づく</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">知る</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">増やす</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">残す</div>
+  </div>
+
+  <!-- ① 気づくツール -->
+  <div class="tool-card">
+    <div class="tool-card-head">
+      <div class="tool-tag tag-pink">STEP 1 ｜ 気づく</div>
+      <div class="tool-title">🧭 未来の安心シミュレーター</div>
+      <div class="tool-desc">今の家庭の状況を入力するだけで、親なきあとのリスクと優先すべき準備がわかります。</div>
+    </div>
+    <div class="tool-card-body">
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--pink);"></div>
+        <span>後見リスク・財産拘束度・家族力を自動診断</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--pink);"></div>
+        <span>親の年齢から「今すぐやること TOP3」を表示</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--pink);"></div>
+        <span>医療的ケアがある場合の専用アドバイスつき</span>
+      </div>
+    </div>
+    <a href="mirai-simulator.html" class="tool-btn btn-pink">診断してみる →</a>
+  </div>
+
+  <!-- ② 知るツール -->
+  <div class="tool-card">
+    <div class="tool-card-head">
+      <div class="tool-tag tag-red">STEP 2 ｜ 知る</div>
+      <div class="tool-title">⚖️ 成年後見費用シミュレーター</div>
+      <div class="tool-desc">何も準備しなかった場合、成年後見制度でいくらかかるかを試算します。制度を正しく知ることが準備の第一歩です。</div>
+    </div>
+    <div class="tool-card-body">
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--red);"></div>
+        <span>財産額・後見人候補・状況から費用を試算</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--red);"></div>
+        <span>10・20・30年の生涯コストを表示</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--red);"></div>
+        <span>家族信託・遺言・扶養共済との費用比較つき</span>
+      </div>
+    </div>
+    <a href="koken-calc.html" class="tool-btn btn-red">費用を試算する →</a>
+  </div>
+
+    <!-- ③ 増やすツール -->
+  <div class="tool-card">
+    <div class="tool-card-head">
+      <div class="tool-tag tag-green">STEP 3 ｜ 増やす</div>
+      <div class="tool-title">📊 みらいマネーシミュレーター</div>
+      <div class="tool-desc">積立・投資・貯蓄の数字を入れると、将来の資産がどう育つかを5つのステータスで見える化します。</div>
+    </div>
+    <div class="tool-card-body">
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--green);"></div>
+        <span>複利計算で将来の資産額をシミュレーション</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--green);"></div>
+        <span>家計バランスを5つのステータスバーで表示</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--green);"></div>
+        <span>心身扶養共済の役割と活用法も解説</span>
+      </div>
+    </div>
+    <a href="mirai-asset-simulator.html" class="tool-btn btn-green">試算してみる →</a>
+  </div>
+
+  <!-- ④ 残すツール -->
+  <div class="tool-card">
+    <div class="tool-card-head">
+      <div class="tool-tag tag-purple">STEP 4 ｜ 残す</div>
+      <div class="tool-title">📓 未来の安心 引継ぎノート</div>
+      <div class="tool-desc">医療情報・生活情報・親なきあと計画を1冊にまとめて、いつでも家族に渡せる状態にします。</div>
+    </div>
+    <div class="tool-card-body">
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--purple);"></div>
+        <span>緊急時ページが医療情報から自動反映</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--purple);"></div>
+        <span>印刷・PDF保存でそのまま紙ファイルにできる</span>
+      </div>
+      <div class="tool-feature">
+        <div class="tool-feature-dot" style="background:var(--purple);"></div>
+        <span>毎年の確認チェックリストで継続的に更新できる</span>
+      </div>
+    </div>
+    <a href="mirai-notebook.html" class="tool-btn btn-purple">ノートを作る →</a>
+  </div>
+
+  <div class="section-label">このツール集について</div>
+
+  <div style="background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:16px 18px;font-size:.78rem;line-height:1.9;color:var(--sub);">
+    このツール集は、重度障害のある子を持つ親が「同じ立場の家族に届けたい」という思いで作りました。いずれのツールも入力情報は外部に送信されません。あくまでも考えるきっかけとしてご活用ください。具体的な手続きは専門家にご相談ください。
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-logo">🧭 みらいナビ</div>
+  <div class="footer-sub">障がいを持つ家族のための福祉ナビゲーション</div>
+  <a href="https://harrylandsea.github.io/mirai-navi/" class="footer-link">みらいナビ 本体サイトへ →</a>
+</div>
+
+
+<div style="text-align:center;padding:16px;font-size:.72rem;color:#aaa;">© 2026 みらいナビ｜harrylandsea All Rights Reserved.</div>
+</body>
+</html>
