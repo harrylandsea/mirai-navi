@@ -457,14 +457,14 @@ details.facilities[open] .fac-chev{transform:rotate(90deg)}
 .fac-map{background:#e8f1fa;color:var(--c-connect);border-color:var(--c-connect)}
 
 /* 探すリンク */
-.find-links h3{font-size:1.05rem;font-weight:800;margin-bottom:13px}
-.find-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.find-links h3{font-size:.95rem;font-weight:800;margin-bottom:10px}
+.find-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media(max-width:560px){.find-grid{grid-template-columns:1fr}}
-.find-card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);text-decoration:none;transition:.2s;display:block}
-.find-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);border-color:var(--c-connect)}
-.find-card .fc-emoji{font-size:1.6rem;display:block;margin-bottom:9px}
-.find-card .fc-title{font-weight:800;font-size:.96rem;margin-bottom:4px}
-.find-card .fc-desc{font-size:.8rem;color:var(--ink-soft);line-height:1.6}
+.find-card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px 13px;box-shadow:var(--shadow);text-decoration:none;transition:.2s;display:flex;align-items:center;gap:10px}
+.find-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--c-connect)}
+.find-card .fc-emoji{font-size:1.3rem;flex:none}
+.find-card .fc-title{font-weight:800;font-size:.88rem;margin-bottom:2px}
+.find-card .fc-desc{font-size:.74rem;color:var(--ink-soft);line-height:1.5}
 
 /* ===== ロードマップ ===== */
 .rm-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:18px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--line);border-radius:14px}
@@ -1534,15 +1534,7 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
 
   <div class="related-nav">
     <div class="related-nav-title">📌 次に読みたい方へ</div>
-    <button class="related-btn" onclick="goTab('okane')">
-      <span class="rb-e">💰</span>
-      <div>
-        <div class="rb-l">お金が心配</div>
-        <div class="rb-d">手当・医療費助成・障害年金の詳細へ</div>
-      </div>
-      <span class="rb-arrow">→</span>
-    </button>
-    <button class="related-btn" onclick="goTab('iryo')">
+    <button class="related-btn" onclick="goTab('iryocare')">
       <span class="rb-e">🩺</span>
       <div>
         <div class="rb-l">医療的ケアが不安</div>
@@ -1707,7 +1699,7 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   </details>
 
   <!-- 親なきあと -->
-  <details style="border:1.5px solid #f0c080;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#fef6e8,#fff8f0);box-shadow:var(--shadow);margin-bottom:20px;">
+  <details id="okane-oyanaki" style="border:1.5px solid #f0c080;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#fef6e8,#fff8f0);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#e08020,#b85e10);box-shadow:0 5px 14px rgba(224,128,32,.4);">👪</div>
       <div class="rc-htext">
@@ -1719,11 +1711,23 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
     <div class="rc-body" style="border-top:1px solid #f0c080;">
       <div class="rc-block">
         <h5 style="color:#b85e10;">📋 主な選択肢</h5>
-        <ul>
-          <li><strong>心身障害者扶養共済</strong>：月々の掛け金で、親が亡くなった後も子どもに年金が出る。65歳未満で加入を</li>
-          <li><strong>障害年金</strong>：成人後の生活費の基盤。20歳前に申請準備を</li>
-          <li><strong>家族信託</strong>：信頼できる家族に財産管理を任せる。柔軟な運用が可能</li>
-          <li><strong>成年後見制度</strong>：判断能力がない場合の財産管理・身上監護</li>
+        <ul style="list-style:none;padding:0;">
+          <li style="margin-bottom:12px;">
+            <strong>心身障害者扶養共済</strong>：月々の掛け金で、親が亡くなった後も子どもに年金が出る。65歳未満で加入を
+            <div style="margin-top:6px;"><button onclick="goTab('seido','kyosai-seido')" style="font-size:.76rem;font-weight:700;color:#b85e10;background:#fff8ee;border:1px solid #e8b878;border-radius:8px;padding:4px 10px;cursor:pointer;">制度タブで詳しく見る →</button></div>
+          </li>
+          <li style="margin-bottom:12px;">
+            <strong>障害年金</strong>：成人後の生活費の基盤。20歳前に申請準備を
+            <div style="margin-top:6px;"><button onclick="goTab('seido','nenkin-seido')" style="font-size:.76rem;font-weight:700;color:#b85e10;background:#fff8ee;border:1px solid #e8b878;border-radius:8px;padding:4px 10px;cursor:pointer;">制度タブで詳しく見る →</button></div>
+          </li>
+          <li style="margin-bottom:12px;">
+            <strong>家族信託</strong>：信頼できる家族に財産管理を任せる。柔軟な運用が可能
+            <div style="margin-top:6px;"><button onclick="goTab('seido','shintaku-seido')" style="font-size:.76rem;font-weight:700;color:#b85e10;background:#fff8ee;border:1px solid #e8b878;border-radius:8px;padding:4px 10px;cursor:pointer;">制度タブで詳しく見る →</button></div>
+          </li>
+          <li style="margin-bottom:12px;">
+            <strong>成年後見制度</strong>：判断能力がない場合の財産管理・身上監護
+            <div style="margin-top:6px;"><button onclick="goTab('seido','koken-seido')" style="font-size:.76rem;font-weight:700;color:#b85e10;background:#fff8ee;border:1px solid #e8b878;border-radius:8px;padding:4px 10px;cursor:pointer;">制度タブで詳しく見る →</button></div>
+          </li>
           <li><strong>貯蓄・NISA</strong>：資産を増やす手段。管理の仕組みと組み合わせて使う</li>
         </ul>
       </div>
@@ -1853,7 +1857,7 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
     </div>
   </div>
   <div style="margin-top:12px;">
-    <a href="javascript:void(0)" onclick="goTab('seido');setTimeout(()=>{document.getElementById('kyosai-seido')?.scrollIntoView({behavior:'smooth'});document.getElementById('kyosai-seido')?.setAttribute('open','')},200)" style="font-size:12px; color:#1a7a6e; text-decoration:underline;">🔗 みらいナビで詳しく見る →</a>
+    <a href="javascript:void(0)" onclick="goTab('oyanaki','oyanaki-okane')" style="font-size:12px; color:#1a7a6e; text-decoration:underline;">🔗 みらいナビで詳しく見る →</a>
   </div>
 </div>
 
@@ -2433,14 +2437,6 @@ function mnSwitchTab(id) {
       </div>
       <span class="rb-arrow">→</span>
     </button>
-    <button class="related-btn" onclick="goTab('iryo')">
-      <span class="rb-e">🩺</span>
-      <div>
-        <div class="rb-l">医療的ケアが不安</div>
-        <div class="rb-d">医療的ケアの日常管理へ</div>
-      </div>
-      <span class="rb-arrow">→</span>
-    </button>
   </div>
 
 </section>
@@ -2555,14 +2551,6 @@ function mnSwitchTab(id) {
 
   <div class="related-nav">
     <div class="related-nav-title">📌 次に読みたい方へ</div>
-    <button class="related-btn" onclick="goTab('shindan')">
-      <span class="rb-e">🌱</span>
-      <div>
-        <div class="rb-l">診断されたばかり</div>
-        <div class="rb-d">手帳・医療費助成・相談窓口へ</div>
-      </div>
-      <span class="rb-arrow">→</span>
-    </button>
     <button class="related-btn" onclick="goTab('sotsugo')">
       <span class="rb-e">🏠</span>
       <div>
@@ -2681,14 +2669,6 @@ function mnSwitchTab(id) {
 
   <div class="related-nav">
     <div class="related-nav-title">📌 次に読みたい方へ</div>
-    <button class="related-btn" onclick="goTab('okane')">
-      <span class="rb-e">💰</span>
-      <div>
-        <div class="rb-l">お金が心配</div>
-        <div class="rb-d">障害年金・特別障害者手当へ</div>
-      </div>
-      <span class="rb-arrow">→</span>
-    </button>
     <button class="related-btn" onclick="goTab('oyanaki')">
       <span class="rb-e">👪</span>
       <div>
@@ -2764,7 +2744,7 @@ function mnSwitchTab(id) {
   </details>
 
   <!-- お金の備え -->
-  <details style="border:1.5px solid #f0c080;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#fef6e8,#fff8f0);box-shadow:var(--shadow);margin-bottom:20px;">
+  <details id="oyanaki-okane" style="border:1.5px solid #f0c080;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#fef6e8,#fff8f0);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#e08020,#b85e10);box-shadow:0 5px 14px rgba(224,128,32,.4);">💰</div>
       <div class="rc-htext">
@@ -2774,8 +2754,27 @@ function mnSwitchTab(id) {
       <span class="rc-chev" style="color:#b85e10;">▶</span>
     </summary>
     <div class="rc-body" style="border-top:1px solid #f0c080;">
+
+      <!-- 心身共済説明 -->
+      <div style="background:linear-gradient(135deg,#1a7a6e,#0f5a52);border-radius:14px;padding:18px;color:#fff;margin-bottom:16px;">
+        <div style="font-size:11px;font-weight:700;opacity:.8;margin-bottom:6px;">都道府県・政令市が運営する公的制度</div>
+        <div style="font-size:18px;font-weight:800;margin-bottom:10px;line-height:1.4;">親が亡くなったあとも<br>毎月年金が受け取れる</div>
+        <div style="font-size:12px;opacity:.9;line-height:1.8;margin-bottom:12px;">
+          加入者（保護者）が亡くなると、障がいのある子に<strong>月2〜4万円の年金</strong>が生涯支払われます。<br><br>
+          親の資産は相続で兄妹と分けることになりますが、<strong>共済年金は障がいのある子だけに直接・生涯届くお金</strong>です。兄妹がいるご家庭にとって特に大切な備えになります。
+        </div>
+        <div style="background:rgba(255,255,255,.15);border-radius:10px;padding:10px 12px;font-size:11.5px;line-height:1.8;margin-bottom:12px;">
+          💬 共済は「元が取れるか」で判断するものではありません。親がいなくなった後も、障がいのある子に毎月お金が届き続ける。その<strong>安心を買う制度</strong>です。
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span style="background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;">✓ 掛金が所得控除</span>
+          <span style="background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;">✓ 生涯支給</span>
+          <span style="background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;">✓ 非課税</span>
+          <span style="background:rgba(255,255,255,.2);border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;">✓ 65歳未満で加入可</span>
+        </div>
+      </div>
+
       <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;">
-        <span style="background:#fff;border:1px solid #f0d4b8;border-radius:20px;padding:6px 12px;font-size:11.5px;color:#b85e10;font-weight:700;">心身障害者扶養共済</span>
         <span style="background:#fff;border:1px solid #f0d4b8;border-radius:20px;padding:6px 12px;font-size:11.5px;color:#b85e10;font-weight:700;">障害基礎年金</span>
         <span style="background:#fff;border:1px solid #f0d4b8;border-radius:20px;padding:6px 12px;font-size:11.5px;color:#b85e10;font-weight:700;">家族信託</span>
         <span style="background:#fff;border:1px solid #f0d4b8;border-radius:20px;padding:6px 12px;font-size:11.5px;color:#b85e10;font-weight:700;">成年後見制度</span>
@@ -2789,31 +2788,21 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <!-- わが子ノート -->
+  <!-- 情報の備え -->
   <details style="border:1.5px solid #80ccaa;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eaf5ee,#f4fbf5);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
-      <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);box-shadow:0 5px 14px rgba(45,138,96,.4);">📒</div>
+      <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);box-shadow:0 5px 14px rgba(45,138,96,.4);">📝</div>
       <div class="rc-htext">
-        <div class="rc-tag" style="color:#1a5a38;">親しか知らない情報を残す</div>
-        <div class="rc-title">わが子ノート——今すぐ書き始めよう</div>
+        <div class="rc-tag" style="color:#1a5a38;">情報の備え</div>
+        <div class="rc-title">引き継ぎノートを作っておこう</div>
       </div>
       <span class="rc-chev" style="color:#1a5a38;">▶</span>
     </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
-      <p class="rc-lead" style="color:#1a5a38;">親しか知らない情報は、支援者がその子を支えるための最大の財産です。</p>
-      <div class="rc-block">
-        <h5 style="color:#1a5a38;">📝 残しておきたい情報</h5>
-        <ul>
-          <li>好きなこと・苦手なこと・安心できる場所</li>
-          <li>コミュニケーション方法・パニック時の対応</li>
-          <li>医療情報（診断名・服薬・ケア手順・アレルギー）</li>
-          <li>発作時・緊急時の対応手順</li>
-          <li>通院先・主治医・緊急連絡先</li>
-          <li>毎日の生活習慣・こだわり</li>
-          <li>「この子らしさ」を言葉で残す</li>
-        </ul>
+      <p class="rc-lead" style="color:#1a5a38;">親がいなくなっても、支援者や家族が安心して引き継げるように、「みらい安心引き継ぎノート」を作っておきましょう。</p>
+      <div class="rc-actions">
+        <a href="mirai-notebook.html" target="_blank" rel="noopener" class="rc-btn rc-btn-web" style="background:#2d8a60;color:#fff;border:none;">📓 みらい安心引き継ぎノートを開く</a>
       </div>
-      <div class="rc-note">📌 完璧を目指さず、まず「緊急連絡先」と「医療情報」だけでも書いておきましょう。年に1回見直すクセをつけると安心です。</div>
     </div>
   </details>
 
@@ -2823,16 +2812,8 @@ function mnSwitchTab(id) {
     <button class="related-btn" onclick="goTab('okane')">
       <span class="rb-e">💰</span>
       <div>
-        <div class="rb-l">お金が心配</div>
+        <div class="rb-l">お金の備えを整える</div>
         <div class="rb-d">扶養共済・障害年金・家族信託へ</div>
-      </div>
-      <span class="rb-arrow">→</span>
-    </button>
-    <button class="related-btn" onclick="goTab('sotsugo')">
-      <span class="rb-e">🏠</span>
-      <div>
-        <div class="rb-l">卒業後が心配</div>
-        <div class="rb-d">グループホーム・施設入所へ</div>
       </div>
       <span class="rb-arrow">→</span>
     </button>
@@ -2941,32 +2922,6 @@ function mnSwitchTab(id) {
 
 
 
-  <div class="ai-link-card" style="margin-top:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-      <span style="font-size:1.3rem;">✨</span>
-      <div>
-        <div style="font-weight:900;font-size:.95rem;">ロードマップについてAIに相談する</div>
-        <div style="font-size:.75rem;color:var(--ink-faint);">「うちの子の次のステップは？」など気軽に聞いてみましょう</div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <a href="https://chat.openai.com" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#10a37f;">
-        <span style="font-size:1.1rem;">🤖</span>
-        <span style="font-size:.84rem;font-weight:700;color:#10a37f;flex:1;">ChatGPT（おすすめ）</span>
-        <span style="color:#10a37f;">→</span>
-      </a>
-      <a href="https://gemini.google.com" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#4285f4;">
-        <span style="font-size:1.1rem;">🌟</span>
-        <span style="font-size:.84rem;font-weight:700;color:#4285f4;flex:1;">Gemini</span>
-        <span style="color:#4285f4;">→</span>
-      </a>
-      <a href="https://claude.ai" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#cc785c;">
-        <span style="font-size:1.1rem;">🔵</span>
-        <span style="font-size:.84rem;font-weight:700;color:#cc785c;flex:1;">Claude</span>
-        <span style="color:#cc785c;">→</span>
-      </a>
-    </div>
-  </div>
 </section>
 
 <!-- ============ 医療的ケア ============ -->
@@ -3228,106 +3183,7 @@ function mnSwitchTab(id) {
     <p class="tc-note">※ 制度・必要書類は変わることがあります。申請前に窓口での確認をおすすめします。最新情報は市の公式ページで。</p>
   </div>
 
-  <!-- 補装具費支給制度カード -->
-  <div style="font-size:.78rem;font-weight:700;color:var(--ink-faint);margin:22px 0 9px;letter-spacing:.04em">🦾 手帳を取ったら：補装具の申請方法</div>
-  <details class="hosou-card">
-    <summary>
-      <div class="rc-icon">🦽</div>
-      <div class="rc-htext">
-        <div class="rc-tag">障害者総合支援法の給付</div>
-        <div class="rc-title">補装具費支給制度（補聴器・装具・車いすなど）</div>
-      </div>
-      <span class="rc-chev">▶</span>
-    </summary>
-    <div class="rc-body">
-      <p class="rc-lead">補聴器・装具（AFO/KAFOなど）・車いす・座位保持装置などは「補装具費支給制度」で費用の大部分が公費でまかなわれます。<strong>原則として費用の1割が自己負担</strong>（上限あり）で、残りが市区町村から支給されます。障害者手帳または指定難病受給者証が必要です。</p>
 
-      <div class="rc-block">
-        <h5>🔧 主な補装具の種類</h5>
-        <ul>
-          <li><strong>補聴器</strong>（難聴・聴覚障がい）</li>
-          <li><strong>装具</strong>（AFO・KAFO・体幹装具など肢体不自由向け）</li>
-          <li><strong>車いす</strong>（手動・電動）</li>
-          <li><strong>座位保持装置</strong>（重症心身障がい児に多い）</li>
-          <li><strong>歩行器・歩行補助つえ</strong></li>
-          <li><strong>重度障害者用意思伝達装置</strong>（コミュニケーションエイド）</li>
-          <li>義肢・眼鏡（特殊なもの）・白杖 など</li>
-        </ul>
-      </div>
-
-      <div class="rc-block">
-        <h5>📝 申請の流れ（5ステップ）</h5>
-        <ol class="rc-steps">
-          <li><strong>市区町村の窓口（障がい者支援課）に相談・申請。</strong>まずここへ。業者に先に行くと補助が出ないことがある</li>
-          <li><strong>主治医・専門医に意見書（必要性の証明）を書いてもらう。</strong>整形外科・耳鼻科・リハビリ科など</li>
-          <li><strong>更生相談所での判定を受ける（必要な場合）。</strong>車いす・電動車いす・装具などは判定が必要なことが多い。ただし中川の郷のような重症心身障がいの総合施設に通っている場合は、施設内の医師・PT・OT・業者で判定から適合まで完結できることも多い。かかりつけの施設に確認してみるとよい</li>
-          <li><strong>指定補装具製作事業者と試着・打ち合わせ・製作。</strong>業者は「指定」を受けた事業者に限られる</li>
-          <li><strong>適合確認後、自己負担分のみ業者に支払い。</strong>市区町村から残りが支給される</li>
-        </ol>
-      </div>
-
-      <div class="rc-block">
-        <h5>⚠️ 一番大事なこと</h5>
-        <p><strong>支給決定が出る前に業者と契約・購入してしまうと、補装具費の対象にならないことがあります。</strong>「気に入った車いすを見つけた」場合でも、必ず先に市区町村に申請して支給決定を受けてから発注してください。</p>
-      </div>
-
-      <div class="rc-block">
-        <h5>✅ 準備チェックリスト</h5>
-        <div class="check-list" id="hosouCheckList" data-label="準備チェックリスト">
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">障害者手帳を取得している（補装具費支給の前提条件）</div><div class="check-hint">手帳の種類・等級によって対象となる補装具が変わる</div></div>
-          </div>
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">かかりつけ医に補装具の必要性を相談し、意見書を依頼する</div><div class="check-hint">整形外科・耳鼻科・リハビリ科・小児科など障がいに応じた専門科へ</div></div>
-          </div>
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">市の障がい者支援課に「補装具費の支給」として申請する</div><div class="check-hint">業者に行く前にここへ。支給決定通知が出てから発注するのが鉄則</div></div>
-          </div>
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">支給決定後に指定補装具製作事業者と打ち合わせ・製作へ進む</div><div class="check-hint">指定を受けていない業者から購入しても補助の対象にならないので確認を</div></div>
-          </div>
-        </div>
-        <div class="sg-progress" id="hosouProg"></div>
-      </div>
-
-      <div class="rc-note">📌 耐用年数内であれば修理も補装具費の対象になります。こわれたらまず市の窓口へ相談を。修理も先に申請が必要です。</div>
-
-      <div class="rc-actions">
-        <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課 048-736-1131</a>
-      </div>
-    </div>
-  </details>
-
-  <div class="ai-link-card" style="margin-top:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-      <span style="font-size:1.3rem;">✨</span>
-      <div>
-        <div style="font-weight:900;font-size:.95rem;">手帳についてAIに相談する</div>
-        <div style="font-size:.75rem;color:var(--ink-faint);">「どの手帳が対象になりそう？」など気軽に聞いてみましょう</div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <a href="https://chat.openai.com" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#10a37f;">
-        <span style="font-size:1.1rem;">🤖</span>
-        <span style="font-size:.84rem;font-weight:700;color:#10a37f;flex:1;">ChatGPT（おすすめ）</span>
-        <span style="color:#10a37f;">→</span>
-      </a>
-      <a href="https://gemini.google.com" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#4285f4;">
-        <span style="font-size:1.1rem;">🌟</span>
-        <span style="font-size:.84rem;font-weight:700;color:#4285f4;flex:1;">Gemini</span>
-        <span style="color:#4285f4;">→</span>
-      </a>
-      <a href="https://claude.ai" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#cc785c;">
-        <span style="font-size:1.1rem;">🔵</span>
-        <span style="font-size:.84rem;font-weight:700;color:#cc785c;flex:1;">Claude</span>
-        <span style="color:#cc785c;">→</span>
-      </a>
-    </div>
-  </div>
 </section>
 
 <!-- ============ ③ 通いはじめる ============ -->
@@ -3367,7 +3223,7 @@ function mnSwitchTab(id) {
 
   <!-- 春日部の事業所 -->
   <details class="facilities" id="facilitiesDetail">
-    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#c45882;color:#fff;border-radius:var(--radius);box-shadow:0 4px 12px rgba(196,88,130,.35);margin-bottom:2px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#c47898;color:#fff;border-radius:var(--radius);box-shadow:0 2px 8px rgba(196,120,152,.25);margin-bottom:2px;">
       <div style="display:flex;align-items:center;gap:10px">
         <span style="font-size:1.2rem">🏫</span>
         <div>
@@ -3384,7 +3240,7 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <button onclick="goTab('seido');setTimeout(()=>{const el=document.getElementById('gakkoCard');if(el){el.open=true;el.scrollIntoView({behavior:'smooth',block:'start'});}},100)" style="width:100%;margin-top:10px;padding:16px 20px;background:#e08020;color:#fff;border:none;border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 4px 12px rgba(224,128,32,.35);text-align:left;">
+  <button onclick="goTab('seido');setTimeout(()=>{const el=document.getElementById('gakkoCard');if(el){el.open=true;el.scrollIntoView({behavior:'smooth',block:'start'});}},100)" style="width:100%;margin-top:10px;padding:16px 20px;background:#c88040;color:#fff;border:none;border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(200,128,64,.25);text-align:left;">
     <span style="font-size:1.2rem;flex:none">🏫</span>
     <div style="flex:1">
       <div style="font-size:.92rem;font-weight:800">就学先を探している方へ</div>
@@ -3428,32 +3284,6 @@ function mnSwitchTab(id) {
     <p class="tc-note">※ 相談支援専門員がまだ付いていない場合も、障がい者支援課に「相談支援をお願いしたい」と伝えれば事業所を案内してもらえます。</p>
   </div>
 
-  <div class="ai-link-card" style="margin-top:20px">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-      <span style="font-size:1.3rem;">✨</span>
-      <div>
-        <div style="font-weight:900;font-size:.95rem;">事業所さがしをAIに相談する</div>
-        <div style="font-size:.75rem;color:var(--ink-faint);">「5歳・人工呼吸器・送迎あり希望」など条件を伝えてみましょう</div>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <a href="https://chat.openai.com" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#10a37f;">
-        <span style="font-size:1.1rem;">🤖</span>
-        <span style="font-size:.84rem;font-weight:700;color:#10a37f;flex:1;">ChatGPT（おすすめ）</span>
-        <span style="color:#10a37f;">→</span>
-      </a>
-      <a href="https://gemini.google.com" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#4285f4;">
-        <span style="font-size:1.1rem;">🌟</span>
-        <span style="font-size:.84rem;font-weight:700;color:#4285f4;flex:1;">Gemini</span>
-        <span style="color:#4285f4;">→</span>
-      </a>
-      <a href="https://claude.ai" target="_blank" rel="noopener" class="ai-link-btn" style="border-color:#cc785c;">
-        <span style="font-size:1.1rem;">🔵</span>
-        <span style="font-size:.84rem;font-weight:700;color:#cc785c;flex:1;">Claude</span>
-        <span style="color:#cc785c;">→</span>
-      </a>
-    </div>
-  </div>
 
 </section>
 
@@ -4501,36 +4331,7 @@ function mnSwitchTab(id) {
       </div>
 
       <div class="rc-block">
-        <h5>🧮 控除でどれくらい節税になる？（目安）</h5>
-        <p style="font-size:.84rem;color:var(--ink-soft);margin-bottom:10px">例：35〜39歳で1口加入（月11,400円）の場合</p>
-        <table class="kyosai-table">
-          <tr><th>年収の目安</th><th>年間掛金</th><th>節税額の目安</th><th>実質負担（月換算）</th></tr>
-          <tr><td>400万円前後</td><td>136,800円</td><td>約2万円</td><td>約9,700円</td></tr>
-          <tr><td>600万円前後</td><td>136,800円</td><td>約2.7万円</td><td>約9,000円</td></tr>
-          <tr><td>800万円前後</td><td>136,800円</td><td>約3.5万円</td><td>約8,600円</td></tr>
-          <tr><td>1,000万円超</td><td>136,800円</td><td>約4万円〜</td><td>約8,000円〜</td></tr>
-        </table>
-        <p style="font-size:.82rem;color:var(--ink-faint);margin-top:8px">※ 所得税・住民税率による概算。2口なら節税額も約2倍。年収が高いほど節税メリットは大きい。</p>
-      </div>
-
-      <div class="rc-block">
-        <h5>📊 長期でみると（2口加入・月4万円給付の場合）</h5>
-        <table class="kyosai-table">
-          <tr><th>子どもが給付を受ける期間</th><th>受け取り総額</th></tr>
-          <tr><td>20年間</td><td>約960万円</td></tr>
-          <tr><td>30年間</td><td>約1,440万円</td></tr>
-          <tr><td>40年間</td><td>約1,920万円</td></tr>
-        </table>
-        <p style="font-size:.82rem;color:var(--ink-faint);margin-top:8px">※ 終身給付のため、長生きするほど受取総額は増える。掛金の払込期間も含めたトータルで考えるとよい。</p>
-      </div>
-
-      <div class="rc-block">
-        <h5>⏰ 加入するなら早いほど有利</h5>
-        <ul>
-          <li>加入年齢が低いほど掛金が安く、一生その金額が続く。子どもが小さいうちの加入が有利</li>
-          <li>月2万円（2口4万円）が「十分か」は家族によって異なる。<strong>障害年金・生命保険・遺言・信託</strong>と組み合わせて考えると良い</li>
-          <li>40代くらいまでに「親なき後のセット」を一度整理しておくのがおすすめ</li>
-        </ul>
+        <button class="rc-btn" style="width:100%;background:#fff8ee;color:#8a5000;border:1.5px solid #e8b878;border-radius:var(--radius-sm);padding:12px 16px;font-size:.88rem;font-weight:800;cursor:pointer;text-align:left;" onclick="goTab('okane','okane-oyanaki')">💰 心身共済の活用方法はお金の備え方タブで詳しく →</button>
       </div>
 
       <div class="rc-note">⚠️ 掛金額は制度改正で変わることがあります。申請前に春日部市 障がい者支援課または埼玉県のページで最新額を確認してください。</div>
@@ -4538,13 +4339,63 @@ function mnSwitchTab(id) {
       <div class="rc-actions">
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
         <a href="https://www.pref.saitama.lg.jp/a0604/fukusiguide/guide2_7.html" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 埼玉県 扶養共済の詳細</a>
-        <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('oyanaki')">💡 関連：👪 親なきあとが不安を見る →</button>
+      </div>
+    </div>
+  </details>
+
+  <!-- 補装具費支給制度カード -->
+  <div style="font-size:.78rem;font-weight:700;color:var(--ink-faint);margin:22px 0 9px;letter-spacing:.04em">🦾 手帳を取ったら：補装具の申請方法</div>
+  <details class="hosou-card">
+    <summary>
+      <div class="rc-icon">🦽</div>
+      <div class="rc-htext">
+        <div class="rc-tag">障害者総合支援法の給付</div>
+        <div class="rc-title">補装具費支給制度（補聴器・装具・車いすなど）</div>
+      </div>
+      <span class="rc-chev">▶</span>
+    </summary>
+    <div class="rc-body">
+      <p class="rc-lead">補聴器・装具（AFO/KAFOなど）・車いす・座位保持装置などは「補装具費支給制度」で費用の大部分が公費でまかなわれます。<strong>原則として費用の1割が自己負担</strong>（上限あり）で、残りが市区町村から支給されます。障害者手帳または指定難病受給者証が必要です。</p>
+
+      <div class="rc-block">
+        <h5>🔧 主な補装具の種類</h5>
+        <ul>
+          <li><strong>補聴器</strong>（難聴・聴覚障がい）</li>
+          <li><strong>装具</strong>（AFO・KAFO・体幹装具など肢体不自由向け）</li>
+          <li><strong>車いす</strong>（手動・電動）</li>
+          <li><strong>座位保持装置</strong>（重症心身障がい児に多い）</li>
+          <li><strong>歩行器・歩行補助つえ</strong></li>
+          <li><strong>重度障害者用意思伝達装置</strong>（コミュニケーションエイド）</li>
+          <li>義肢・眼鏡（特殊なもの）・白杖 など</li>
+        </ul>
+      </div>
+
+      <div class="rc-block">
+        <h5>📝 申請の流れ（5ステップ）</h5>
+        <ol class="rc-steps">
+          <li><strong>市区町村の窓口（障がい者支援課）に相談・申請。</strong>まずここへ。業者に先に行くと補助が出ないことがある</li>
+          <li><strong>主治医・専門医に意見書（必要性の証明）を書いてもらう。</strong>整形外科・耳鼻科・リハビリ科など</li>
+          <li><strong>更生相談所での判定を受ける（必要な場合）。</strong>車いす・電動車いす・装具などは判定が必要なことが多い</li>
+          <li><strong>指定補装具製作事業者と試着・打ち合わせ・製作。</strong>業者は「指定」を受けた事業者に限られる</li>
+          <li><strong>適合確認後、自己負担分のみ業者に支払い。</strong>市区町村から残りが支給される</li>
+        </ol>
+      </div>
+
+      <div class="rc-block">
+        <h5>⚠️ 一番大事なこと</h5>
+        <p><strong>支給決定が出る前に業者と契約・購入してしまうと、補装具費の対象にならないことがあります。</strong>必ず先に市区町村に申請して支給決定を受けてから発注してください。</p>
+      </div>
+
+      <div class="rc-note">📌 耐用年数内であれば修理も補装具費の対象になります。こわれたらまず市の窓口へ相談を。修理も先に申請が必要です。</div>
+
+      <div class="rc-actions">
+        <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課 048-736-1131</a>
       </div>
     </div>
   </details>
 
   <!-- 障害年金 書類・通院記録整理カード -->
-  <details class="kiroku-card">
+  <details class="kiroku-card" id="nenkin-seido">
     <summary>
       <div class="rc-icon">📂</div>
       <div class="rc-htext">
@@ -4676,7 +4527,6 @@ function mnSwitchTab(id) {
       <div class="rc-note">⚠️ 審査結果は申請内容や診断書の書き方によって変わります。主治医への依頼や申立書の記載は、相談支援専門員やソーシャルワーカーと一緒に確認するのが安心です。</div>
       <div class="rc-actions">
         <a href="https://www.nenkin.go.jp/service/jukyu/shougainenkin/index.html" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 日本年金機構（障害年金）</a>
-        <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('oyanaki')">💡 関連：👪 親なきあとが不安を見る →</button>
       </div>
     </div>
   </details>
@@ -4830,7 +4680,7 @@ function mnSwitchTab(id) {
 
   <!-- ⑤ 大人の制度 -->
   <!-- 家族信託カード -->
-  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+  <details id="shintaku-seido" style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2563c8,#1a4a9a);">🏦</div>
       <div class="rc-htext">
@@ -4937,13 +4787,12 @@ function mnSwitchTab(id) {
       <div class="rc-note">📌 家族信託・成年後見制度はどちらか一方ではなく、組み合わせて使うのが一般的です。まず司法書士や弁護士に相談することをおすすめします。</div>
       <div class="rc-actions">
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
-        <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('oyanaki')">💡 関連：👪 親なきあとが不安を見る →</button>
       </div>
     </div>
   </details>
 
   <!-- 成年後見制度カード -->
-  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+  <details id="koken-seido" style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#9b59b6,#6c3483);">⚖️</div>
       <div class="rc-htext">
@@ -5120,7 +4969,6 @@ function mnSwitchTab(id) {
       <div class="rc-note">📌 司法書士・弁護士・社会福祉士に相談すると手続きがスムーズです。費用の補助制度がある自治体もあります。</div>
       <div class="rc-actions">
         <a href="tel:048-863-8521" class="rc-btn rc-btn-tel">📞 さいたま家庭裁判所</a>
-        <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('oyanaki')">💡 関連：👪 親なきあとが不安を見る →</button>
       </div>
     </div>
   </details>
@@ -5341,7 +5189,6 @@ function mnSwitchTab(id) {
       <div class="rc-actions">
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
         <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('sotsugo')">💡 関連：🏠 卒業後が心配を見る →</button>
-        <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('oyanaki')">💡 関連：👪 親なきあとが不安を見る →</button>
       </div>
     </div>
   </details>
@@ -5732,8 +5579,10 @@ function mnSwitchTab(id) {
       <div class="rc-block">
         <ul>
           <li><a href="https://youtube.com/@konolove1023" target="_blank" rel="noopener" style="color:#a83a60;">このらぶチャンネル →</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:4px 0 10px 1.2em;">重度知的障害のあるお子さんと、ご家族の日常を発信しているYouTubeチャンネル。みらいナビが広がるきっかけにもなりました。</div>
+          <li><a href="https://share.google/rtj5r1BxL80oHvmXO" target="_blank" rel="noopener noreferrer" style="color:#a83a60;">障害者手帳で行こう！〜全国版〜 →</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:4px 0 0 1.2em;">障がい者割引が効く施設がたくさん載っているサイトです。</div>
         </ul>
-        <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin-top:8px;">重度知的障害のあるお子さんと、ご家族の日常を発信しているYouTubeチャンネル。みらいナビが広がるきっかけにもなりました。</div>
       </div>
     </div>
   </div>
@@ -5823,35 +5672,6 @@ function mnSwitchTab(id) {
 
   <div class="mn-note-box" style="margin-top:6px;">※ 電話番号・リンク先は変更される場合があります。最新情報は各公式サイトでご確認ください。</div>
 
-  <div style="margin-top:24px;">
-    <div style="font-size:.95rem;font-weight:900;color:var(--ink);padding:10px 4px 6px;border-bottom:2px solid var(--line);margin-bottom:16px;">✨ AIに相談する</div>
-    <div class="rc-note" style="margin-bottom:16px;">
-      <p style="font-weight:800;margin-bottom:6px;">💡 こんなふうに聞いてみて</p>
-      <ul style="margin:0;padding-left:1.2em;line-height:2;font-size:.84rem;">
-        <li>「5歳、医療的ケア児です。来年の就学をどう進めればいいですか？」</li>
-        <li>「障害年金の申請方法を教えてください」</li>
-        <li>「親なきあとの準備、何から始めればいいですか？」</li>
-      </ul>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:16px;">
-      <a href="https://chat.openai.com" target="_blank" rel="noopener" class="ai-link-btn ai-link-btn--lg" style="border-color:#10a37f;">
-        <span style="font-size:1.8rem;">🤖</span>
-        <div style="flex:1;"><div style="font-weight:900;font-size:1rem;color:#10a37f;">ChatGPT</div><div style="font-size:.78rem;color:var(--ink-faint);margin-top:2px;">一番有名なAI。無料で使えます</div></div>
-        <span style="color:#10a37f;font-size:1.1rem;">→</span>
-      </a>
-      <a href="https://gemini.google.com" target="_blank" rel="noopener" class="ai-link-btn ai-link-btn--lg" style="border-color:#4285f4;">
-        <span style="font-size:1.8rem;">🌟</span>
-        <div style="flex:1;"><div style="font-weight:900;font-size:1rem;color:#4285f4;">Gemini</div><div style="font-size:.78rem;color:var(--ink-faint);margin-top:2px;">Googleのサービス。Googleアカウントで使えます</div></div>
-        <span style="color:#4285f4;font-size:1.1rem;">→</span>
-      </a>
-      <a href="https://claude.ai" target="_blank" rel="noopener" class="ai-link-btn ai-link-btn--lg" style="border-color:#cc785c;">
-        <span style="font-size:1.8rem;">🔵</span>
-        <div style="flex:1;"><div style="font-weight:900;font-size:1rem;color:#cc785c;">Claude</div><div style="font-size:.78rem;color:var(--ink-faint);margin-top:2px;">Anthropicのサービス。丁寧な回答が得意</div></div>
-        <span style="color:#cc785c;font-size:1.1rem;">→</span>
-      </a>
-    </div>
-    <div class="rc-note" style="font-size:.78rem;">⚠️ AIの回答は一般的な情報です。具体的なことは主治医・相談支援専門員・市の窓口にご確認ください。</div>
-  </div>
 
 </section>
 
@@ -5886,59 +5706,6 @@ function mnSwitchTab(id) {
   </div>
 </section>
 
-<!-- ============ AIに相談 ============ -->
-<section class="panel" id="tab-ai">
-  <div class="sec-head">
-    <div class="kicker">AI CONSULTATION</div>
-    <h2>✨ AIに相談する</h2>
-    <p>下のボタンから各AIサービスに飛んで、困っていることを相談してみてください。ふつうの言葉で書くだけで、わかりやすく案内してくれます。</p>
-  </div>
-
-  <div class="rc-note" style="margin-bottom:20px;">
-    <p style="font-weight:800;margin-bottom:8px;">💡 こんなふうに聞いてみて</p>
-    <ul style="margin:0;padding-left:1.2em;line-height:2;font-size:.84rem;">
-      <li>「5歳、医療的ケア児です。来年の就学をどう進めればいいですか？」</li>
-      <li>「障害年金の申請方法を教えてください」</li>
-      <li>「親なきあとの準備、何から始めればいいですか？」</li>
-    </ul>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px;">
-
-    <a href="https://chat.openai.com" target="_blank" rel="noopener" class="ai-link-btn ai-link-btn--lg" style="border-color:#10a37f;">
-      <span style="font-size:1.8rem;">🤖</span>
-      <div style="flex:1;">
-        <div style="font-weight:900;font-size:1rem;color:#10a37f;">ChatGPT</div>
-        <div style="font-size:.78rem;color:var(--ink-faint);margin-top:2px;">一番有名なAI。無料で使えます</div>
-      </div>
-      <span style="color:#10a37f;font-size:1.1rem;">→</span>
-    </a>
-
-    <a href="https://gemini.google.com" target="_blank" rel="noopener" class="ai-link-btn ai-link-btn--lg" style="border-color:#4285f4;">
-      <span style="font-size:1.8rem;">🌟</span>
-      <div style="flex:1;">
-        <div style="font-weight:900;font-size:1rem;color:#4285f4;">Gemini</div>
-        <div style="font-size:.78rem;color:var(--ink-faint);margin-top:2px;">Googleのサービス。Googleアカウントで使えます</div>
-      </div>
-      <span style="color:#4285f4;font-size:1.1rem;">→</span>
-    </a>
-
-    <a href="https://claude.ai" target="_blank" rel="noopener" class="ai-link-btn ai-link-btn--lg" style="border-color:#cc785c;">
-      <span style="font-size:1.8rem;">🔵</span>
-      <div style="flex:1;">
-        <div style="font-weight:900;font-size:1rem;color:#cc785c;">Claude</div>
-        <div style="font-size:.78rem;color:var(--ink-faint);margin-top:2px;">Anthropicのサービス。丁寧な回答が得意</div>
-      </div>
-      <span style="color:#cc785c;font-size:1.1rem;">→</span>
-    </a>
-
-  </div>
-
-  <div class="rc-note" style="font-size:.78rem;">
-    ⚠️ AIの回答は一般的な情報です。お子さんの状態や制度は地域・時期によって変わります。具体的なことは主治医・相談支援専門員・市の窓口にご確認ください。
-  </div>
-
-</section>
 
 <footer>
   <div class="fs">🧭</div>
@@ -6397,14 +6164,26 @@ const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
 /* =====================================================================
    タブ切替
    ===================================================================== */
-function goTab(id){
+function goTab(id, scrollTargetId){
   $$(".panel").forEach(p=>p.classList.remove("on"));
   $$(".tab").forEach(t=>t.classList.remove("on"));
   const panel = $(`#tab-${id}`);
   const tabBtn = $(`.tab[data-tab="${id}"]`);
   if(panel) panel.classList.add("on");
   if(tabBtn) tabBtn.classList.add("on");
-  window.scrollTo({top:0,behavior:"smooth"});
+  if(scrollTargetId){
+    setTimeout(()=>{
+      const el = document.getElementById(scrollTargetId);
+      if(el){
+        if(el.tagName==='DETAILS') el.open=true;
+        const headerH=(document.querySelector('header.top')?.offsetHeight||140);
+        const y=el.getBoundingClientRect().top+window.scrollY-headerH-10;
+        window.scrollTo({top:y,behavior:'smooth'});
+      }
+    },100);
+  } else {
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
 }
 
 /* =====================================================================
