@@ -1306,6 +1306,89 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   font-size:11px;color:#7a8088;line-height:1.8;
 }
 
+/* ===== 制度サブタブ ===== */
+.seido-subtabs{
+  display:flex;flex-direction:column;gap:6px;
+  margin-bottom:16px;
+}
+.seido-stab{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:14px;
+  border:1.5px solid var(--line);
+  background:var(--bg-card);
+  color:var(--ink-soft);font-weight:700;
+  font-size:.88rem;text-align:left;
+  cursor:pointer;transition:.18s;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+  position:relative;
+}
+.seido-stab::after{content:"›";position:absolute;right:16px;font-size:1.1rem;color:var(--ink-faint);transition:.18s;}
+.seido-stab .st-icon{font-size:1.4rem;flex:none}
+.seido-stab:hover{background:#fdf0e8;border-color:var(--c-act)}
+.seido-stab.active{
+  background:linear-gradient(135deg,rgba(217,122,165,.12),rgba(232,137,107,.08));
+  border-color:var(--c-act);color:var(--c-act);
+  box-shadow:0 2px 8px rgba(217,122,165,.2);
+}
+.seido-stab.active::after{content:"✕";color:var(--c-act);}
+.seido-subcontent{display:none}
+.seido-subcontent.active{display:block;animation:fade .25s ease}
+
+/* ===== 制度カード一覧（詳細切り替え方式） ===== */
+/* detailsをボタン風カードに変換 */
+#tab-seido details{
+  cursor:pointer;
+}
+#tab-seido details summary{
+  list-style:none;
+}
+#tab-seido details summary::-webkit-details-marker{display:none}
+
+/* 詳細画面オーバーレイ */
+.seido-detail-view{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:200;
+  background:var(--bg);
+  overflow-y:auto;
+  animation:slideInRight .22s ease;
+}
+.seido-detail-view.open{display:block}
+@keyframes slideInRight{
+  from{transform:translateX(40px);opacity:0}
+  to{transform:none;opacity:1}
+}
+.seido-detail-header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(251,247,240,.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line-soft);
+  padding:12px 16px;
+  display:flex;align-items:center;gap:12px;
+}
+.seido-detail-back{
+  width:38px;height:38px;border-radius:12px;flex:none;
+  display:grid;place-items:center;
+  background:var(--bg-soft);border:1px solid var(--line);
+  font-size:1.1rem;cursor:pointer;transition:.15s;
+}
+.seido-detail-back:active{background:#fde3b8}
+.seido-detail-title{
+  font-size:.9rem;font-weight:800;color:var(--ink);
+  flex:1;line-height:1.4;
+}
+.seido-detail-body{
+  padding:16px 16px 48px;
+  max-width:var(--maxw);margin:0 auto;
+}
+
+/* サマリーをタップ可能カードに見せる（open状態のbodyは非表示） */
+#tab-seido details[open] > .rc-body,
+#tab-seido details[open] > div.rc-body{
+  display:none !important;
+}
+
 </style>
 
 
@@ -3344,13 +3427,37 @@ function mnSwitchTab(id) {
   <div class="sec-head">
     <div class="kicker">GUIDE</div>
     <h2>制度ガイド</h2>
-    <p>補装具・レスパイト入院・障害年金・ETC障害者割引——申請方法や使い方をひとつの場所でまとめて確認できます。タップして開いてください。</p>
+    <p>手帳でできること・生活を支えるサービス・学校・お金・大人のサービス。カテゴリを選んで確認できます。</p>
   </div>
 
-  <div style="background:#f0f4f7;border-radius:12px;padding:10px 14px;margin-bottom:16px;font-size:11.5px;color:#5a6a7a;line-height:1.7;">
-    ℹ️ 制度の内容・金額・対象条件は<strong>自治体や障がいの状態によって異なります</strong>。ここでの情報は一般的な目安としてご覧いただき、申請の前に必ずお住まいの自治体窓口でご確認ください。
+  <div style="background:#f0f4f7;border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:11.5px;color:#5a6a7a;line-height:1.7;">
+    ℹ️ 制度の内容・金額・対象条件は<strong>自治体や障がいの状態によって異なります</strong>。申請の前に必ずお住まいの自治体窓口でご確認ください。
   </div>
-  <!-- ① 手帳でできること -->
+
+  <!-- サブタブナビ -->
+  <div class="seido-subtabs" id="seidoSubtabs">
+    <button class="seido-stab active" data-seido="hajimete">
+      <span class="st-icon">🌱</span>はじめての方
+    </button>
+    <button class="seido-stab" data-seido="techo">
+      <span class="st-icon">🪪</span>手帳でできること
+    </button>
+    <button class="seido-stab" data-seido="seikatsu">
+      <span class="st-icon">💪</span>生活を支える制度
+    </button>
+    <button class="seido-stab" data-seido="gakko">
+      <span class="st-icon">🎒</span>学校・進路
+    </button>
+    <button class="seido-stab" data-seido="okane">
+      <span class="st-icon">💰</span>お金・将来への備え
+    </button>
+    <button class="seido-stab" data-seido="otona">
+      <span class="st-icon">🧑</span>大人のサービス
+    </button>
+  </div>
+
+  <!-- ① はじめての方 -->
+  <div class="seido-subcontent active" id="seido-sub-hajimete">
   <div class="seido-group-head">🌱 はじめての方</div>
 
   <!-- 相談支援専門員に聞くことリスト -->
@@ -3447,6 +3554,10 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
+  </div><!-- /seido-sub-hajimete -->
+
+  <!-- ② 手帳でできること -->
+  <div class="seido-subcontent" id="seido-sub-techo">
   <div class="seido-cat-head"><span class="seido-cat-num">1</span>🪪 手帳でできること</div>
 
   <!-- おむつ給付・配付カード -->
@@ -3651,8 +3762,10 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <!-- ② 生活を支える制度 -->
-  <div class="seido-group-head" id="seido-group-gakko">🏫 学校・成長</div>
+  </div><!-- /seido-sub-techo -->
+
+  <!-- ③ 生活を支える制度 -->
+  <div class="seido-subcontent" id="seido-sub-seikatsu">
   <div class="seido-cat-head"><span class="seido-cat-num">2</span>🌱 生活を支える制度</div>
   <div class="rc-note" style="margin-bottom:16px;">
     <p style="font-weight:800;margin-bottom:8px;">💡 障害支援区分とは？</p>
@@ -4080,6 +4193,11 @@ function mnSwitchTab(id) {
       <div class="rc-note">📌 移行期医療は制度的な「決まり」より「主治医との関係と計画づくり」がカギになります。一人で抱えず、相談支援専門員・訪問看護・ソーシャルワーカーも一緒に動いてもらうのがおすすめです。</div>
     </div>
   </details>
+
+  </div><!-- /seido-sub-seikatsu -->
+
+  <!-- ④ 学校・進路 -->
+  <div class="seido-subcontent" id="seido-sub-gakko">
   <div class="seido-cat-head"><span class="seido-cat-num">3</span>🎒 学校・進路</div>
   <details class="gakko-card" id="gakkoCard">
     <summary>
@@ -4360,8 +4478,78 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <div class="seido-group-head" id="seido-group-mirai">💰 お金のこと・将来の暮らし</div>
-  <div class="seido-cat-head"><span class="seido-cat-num">4</span>🔮 将来への備え</div>
+  </div><!-- /seido-sub-gakko -->
+
+  <!-- ⑤ お金・将来への備え -->
+  <div class="seido-subcontent" id="seido-sub-okane">
+  <div class="seido-cat-head"><span class="seido-cat-num">4</span>💰 お金・将来への備え</div>
+
+  <details class="etc-card">
+    <summary>
+      <div class="rc-icon">🚗</div>
+      <div class="rc-htext">
+        <div class="rc-tag">知っておきたい盲点</div>
+        <div class="rc-title">高速道路 障害者割引とETCカードの問題</div>
+      </div>
+      <span class="rc-chev">▶</span>
+    </summary>
+    <div class="rc-body">
+      <p class="rc-lead">重症心身障がい・医療的ケア児の家族の間では有名な問題です。高速道路の障害者割引をETCで受けるには原則として<strong>障害者本人名義のETCカードが必要</strong>。しかし本人はクレジット契約ができないため、ETCカードも作れず、割引が使えないという矛盾が長年指摘されていました。</p>
+
+      <div class="rc-block">
+        <h5>✅ 2026年4月に改善された点</h5>
+        <p><strong>親権者や成年後見人等の名義のETCカードで登録できる年齢範囲が、18歳未満から20歳未満に拡大</strong>されました（全国の高速道路会社共通）。登録できる名義は、親権者・親権者に準ずる方・未成年後見人・成年後見人・保佐人・補助人です。</p>
+      </div>
+
+      <div class="rc-block">
+        <h5>⚠️ 20歳以降も残る問題</h5>
+        <ul>
+          <li>原則として本人名義のETCカードが必要になる</li>
+          <li>しかし本人はクレジット契約ができないため、通常のETCカードは作れない</li>
+          <li>親名義では引き続き登録できないケースがある</li>
+        </ul>
+      </div>
+
+      <div class="rc-block">
+        <h5>💡 20歳以降の2つの解決策</h5>
+        <ul>
+          <li><strong>成年後見人・保佐人・補助人名義のETCカード</strong>で引き続き登録できます。成年後見制度の利用が、ETC割引の継続にも直結します</li>
+          <li><strong>ETCパーソナルカード（本人名義）</strong>を使う方法もあります。高速道路会社6社が発行する保証金制のカードで、クレジット審査なしで発行できます。本人名義として認められるため、割引の登録に使えます</li>
+        </ul>
+      </div>
+
+      <div class="rc-block">
+        <h5>📋 18歳ごろから準備しておくこと</h5>
+        <div class="check-list" id="etcCheckList">
+          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
+            <div class="check-box"></div>
+            <div class="check-text"><div class="check-q">成年後見・保佐・補助の必要性を20歳前に検討し始める</div><div class="check-hint">後見人等の名義でETCカードを引き続き登録できる。相談支援専門員や司法書士・弁護士へ相談を</div></div>
+          </div>
+          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
+            <div class="check-box"></div>
+            <div class="check-text"><div class="check-q">ETCパーソナルカードを本人名義で事前に発行しておく</div><div class="check-hint">申込みから発行まで時間がかかるため、20歳を待たず早めに手続きを。申込書はサービスエリアか郵送で入手できる</div></div>
+          </div>
+          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
+            <div class="check-box"></div>
+            <div class="check-text"><div class="check-q">高速道路会社のETC登録情報を20歳誕生日前に更新する</div><div class="check-hint">親権者名義で登録中の場合、20歳の誕生日以降は無効になるため切替え申請が必要</div></div>
+          </div>
+          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
+            <div class="check-box"></div>
+            <div class="check-text"><div class="check-q">どの方法で継続するか、相談支援専門員と一緒に確認する</div><div class="check-hint">障害年金・成年後見・ETCパーソナルカードはセットで考えると整理しやすい</div></div>
+          </div>
+        </div>
+        <div class="sg-progress" id="etcProg"></div>
+      </div>
+
+      <div class="rc-note">📝 ETCパーソナルカードの公式サイトは「etc-pasoca.jp」。申込書を郵送で取り寄せ、保証金を振り込むとカードが届きます。無職・信用情報不問で申し込めます。</div>
+
+      <div class="rc-actions">
+        <a href="https://www.etc-pasoca.jp/" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 ETCパーソナルカード公式</a>
+        <a href="https://www.driveplaza.com/etc/dis/etc_dis_handicapped/" target="_blank" rel="noopener" class="rc-btn rc-btn-web" style="background:#6b9e6b">🌐 NEXCO 障害者割引の詳細</a>
+      </div>
+    </div>
+  </details>
+
   <!-- 心身障害者扶養共済カード -->
   <details class="kyosai-card" id="kyosai-seido">
     <summary>
@@ -4573,73 +4761,94 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <details class="etc-card">
-    <summary>
-      <div class="rc-icon">🚗</div>
+  <!-- 特定障害者扶養信託カード -->
+  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
+      <div class="rc-icon" style="background:linear-gradient(135deg,#7a3a9a,#4a1a6a);">🏦</div>
       <div class="rc-htext">
-        <div class="rc-tag">知っておきたい盲点</div>
-        <div class="rc-title">高速道路 障害者割引とETCカードの問題</div>
+        <div class="rc-tag" style="color:#4a1a6a;">信託銀行が窓口</div>
+        <div class="rc-title">特定障害者扶養信託——贈与税が非課税に</div>
       </div>
-      <span class="rc-chev">▶</span>
+      <span class="rc-chev" style="color:#4a1a6a;">▶</span>
     </summary>
-    <div class="rc-body">
-      <p class="rc-lead">重症心身障がい・医療的ケア児の家族の間では有名な問題です。高速道路の障害者割引をETCで受けるには原則として<strong>障害者本人名義のETCカードが必要</strong>。しかし本人はクレジット契約ができないため、ETCカードも作れず、割引が使えないという矛盾が長年指摘されていました。</p>
+    <div class="rc-body" style="border-top:1px solid #c4a8d8;">
+      <p class="rc-lead">特定障害者扶養信託とは、親や祖父母が障がいのある子のために財産を信託銀行に預け、生活費として定期的に給付される制度です。通常なら課税される贈与でも、一定額まで非課税になります。</p>
 
       <div class="rc-block">
-        <h5>✅ 2026年4月に改善された点</h5>
-        <p><strong>親権者や成年後見人等の名義のETCカードで登録できる年齢範囲が、18歳未満から20歳未満に拡大</strong>されました（全国の高速道路会社共通）。登録できる名義は、親権者・親権者に準ずる方・未成年後見人・成年後見人・保佐人・補助人です。</p>
-      </div>
-
-      <div class="rc-block">
-        <h5>⚠️ 20歳以降も残る問題</h5>
+        <h5>💰 最大のメリット：贈与税が非課税</h5>
         <ul>
-          <li>原則として本人名義のETCカードが必要になる</li>
-          <li>しかし本人はクレジット契約ができないため、通常のETCカードは作れない</li>
-          <li>親名義では引き続き登録できないケースがある</li>
+          <li>特別障害者（重度）：<strong>6,000万円まで</strong>贈与税非課税</li>
+          <li>特別障害者以外：<strong>3,000万円まで</strong>贈与税非課税</li>
+          <li>通常の贈与税の基礎控除（年110万円）とは別枠で使える</li>
         </ul>
       </div>
 
       <div class="rc-block">
-        <h5>💡 20歳以降の2つの解決策</h5>
+        <h5>📋 対象者の条件</h5>
         <ul>
-          <li><strong>成年後見人・保佐人・補助人名義のETCカード</strong>で引き続き登録できます。成年後見制度の利用が、ETC割引の継続にも直結します</li>
-          <li><strong>ETCパーソナルカード（本人名義）</strong>を使う方法もあります。高速道路会社6社が発行する保証金制のカードで、クレジット審査なしで発行できます。本人名義として認められるため、割引の登録に使えます</li>
+          <li>特別障害者：身体障害者手帳1〜2級、療育手帳A、精神障害者保健福祉手帳1級など</li>
+          <li>特別障害者以外：身体障害者手帳3〜6級、療育手帳B、精神障害者保健福祉手帳2〜3級など</li>
         </ul>
       </div>
 
       <div class="rc-block">
-        <h5>📋 18歳ごろから準備しておくこと</h5>
-        <div class="check-list" id="etcCheckList">
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">成年後見・保佐・補助の必要性を20歳前に検討し始める</div><div class="check-hint">後見人等の名義でETCカードを引き続き登録できる。相談支援専門員や司法書士・弁護士へ相談を</div></div>
-          </div>
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">ETCパーソナルカードを本人名義で事前に発行しておく</div><div class="check-hint">申込みから発行まで時間がかかるため、20歳を待たず早めに手続きを。申込書はサービスエリアか郵送で入手できる</div></div>
-          </div>
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">高速道路会社のETC登録情報を20歳誕生日前に更新する</div><div class="check-hint">親権者名義で登録中の場合、20歳の誕生日以降は無効になるため切替え申請が必要</div></div>
-          </div>
-          <div class="check-item" tabindex="0" role="checkbox" aria-checked="false">
-            <div class="check-box"></div>
-            <div class="check-text"><div class="check-q">どの方法で継続するか、相談支援専門員と一緒に確認する</div><div class="check-hint">障害年金・成年後見・ETCパーソナルカードはセットで考えると整理しやすい</div></div>
-          </div>
+        <h5>📝 手続きの流れ</h5>
+        <ol class="rc-steps">
+          <li>信託銀行に相談・申し込み</li>
+          <li>障害者手帳など必要書類を準備</li>
+          <li>税務署に「障害者非課税信託申告書」を提出</li>
+          <li>信託契約を締結・財産を預ける</li>
+          <li>定期的に給付金として受け取る</li>
+        </ol>
+      </div>
+
+      <div class="rc-block">
+        <h5>💴 非課税のウラにあるコスト</h5>
+        <div style="background:#f8f4ff;border-radius:12px;padding:14px;margin-bottom:12px;">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 220" width="100%" font-family="'Hiragino Sans','Yu Gothic',sans-serif">
+            <!-- タイトル -->
+            <text x="150" y="18" text-anchor="middle" font-size="11" font-weight="800" fill="#4a1a6a">特定贈与信託のメリット・コスト</text>
+
+            <!-- メリット列 -->
+            <rect x="8" y="28" width="132" height="180" rx="10" fill="#e8f5e9" stroke="#81c784" stroke-width="1.5"/>
+            <text x="74" y="46" text-anchor="middle" font-size="10" font-weight="800" fill="#2e7d32">✅ メリット</text>
+            <text x="74" y="65" text-anchor="middle" font-size="9" fill="#2e7d32">贈与税が非課税</text>
+            <rect x="18" y="70" width="112" height="22" rx="6" fill="#2e7d32"/>
+            <text x="74" y="85" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">最大6,000万円</text>
+            <text x="74" y="104" text-anchor="middle" font-size="9" fill="#2e7d32">通常の110万円枠とは</text>
+            <text x="74" y="116" text-anchor="middle" font-size="9" fill="#2e7d32">別枠で使える</text>
+            <line x1="24" y1="128" x2="124" y2="128" stroke="#81c784" stroke-width="1"/>
+            <text x="74" y="144" text-anchor="middle" font-size="9" fill="#2e7d32">元本保証</text>
+            <text x="74" y="158" text-anchor="middle" font-size="9" fill="#2e7d32">（信託銀行が管理）</text>
+            <line x1="24" y1="168" x2="124" y2="168" stroke="#81c784" stroke-width="1"/>
+            <text x="74" y="184" text-anchor="middle" font-size="9" fill="#2e7d32">親なきあとも</text>
+            <text x="74" y="196" text-anchor="middle" font-size="9" fill="#2e7d32">銀行が継続管理</text>
+
+            <!-- コスト列 -->
+            <rect x="160" y="28" width="132" height="180" rx="10" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
+            <text x="226" y="46" text-anchor="middle" font-size="10" font-weight="800" fill="#e65100">⚠️ コスト・注意点</text>
+            <text x="226" y="65" text-anchor="middle" font-size="9" fill="#e65100">最低預入額あり</text>
+            <rect x="170" y="70" width="112" height="22" rx="6" fill="#e65100"/>
+            <text x="226" y="85" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">1,000万円〜</text>
+            <text x="226" y="104" text-anchor="middle" font-size="9" fill="#e65100">毎年の管理手数料</text>
+            <text x="226" y="116" text-anchor="middle" font-size="9" fill="#e65100">年率0.3〜0.5%程度※</text>
+            <line x1="170" y1="128" x2="280" y2="128" stroke="#ffb74d" stroke-width="1"/>
+            <text x="226" y="144" text-anchor="middle" font-size="9" fill="#e65100">運用益はほぼゼロ</text>
+            <text x="226" y="158" text-anchor="middle" font-size="9" fill="#e65100">（元本保証の裏返し）</text>
+            <line x1="170" y1="168" x2="280" y2="168" stroke="#ffb74d" stroke-width="1"/>
+            <text x="226" y="184" text-anchor="middle" font-size="9" fill="#e65100">途中解約で</text>
+            <text x="226" y="196" text-anchor="middle" font-size="9" fill="#e65100">贈与税が課税される場合</text>
+          </svg>
+          <div style="font-size:10px;color:#888;margin-top:4px;line-height:1.6;">※ 手数料は信託銀行・預入額により異なります。事前に各銀行に確認を。</div>
         </div>
-        <div class="sg-progress" id="etcProg"></div>
-      </div>
-
-      <div class="rc-note">📝 ETCパーソナルカードの公式サイトは「etc-pasoca.jp」。申込書を郵送で取り寄せ、保証金を振り込むとカードが届きます。無職・信用情報不問で申し込めます。</div>
-
+        <div style="background:#fff8e1;border-radius:10px;padding:10px;font-size:11.5px;line-height:1.8;color:#5a4000;">
+          💡 <strong>向いているケース：</strong>まとまった財産（1,000万円以上）があり、頼れる家族がいない場合や確実に銀行管理で残したい場合。家族が管理する家族信託と異なり信託銀行が管理するため、後継者不在でも安心。少額なら家族信託や生命保険の方がコスト面で有利なことも。
+        </div>
       <div class="rc-actions">
-        <a href="https://www.etc-pasoca.jp/" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 ETCパーソナルカード公式</a>
-        <a href="https://www.driveplaza.com/etc/dis/etc_dis_handicapped/" target="_blank" rel="noopener" class="rc-btn rc-btn-web" style="background:#6b9e6b">🌐 NEXCO 障害者割引の詳細</a>
+        <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
   </details>
-
-  <!-- ④ 学校・進路 -->
 
   <!-- 遺言書カード -->
   <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
@@ -4727,7 +4936,6 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <!-- ⑤ 大人の制度 -->
   <!-- 家族信託カード -->
   <details id="shintaku-seido" style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
@@ -5005,94 +5213,6 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <!-- 特定障害者扶養信託カード -->
-  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
-    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
-      <div class="rc-icon" style="background:linear-gradient(135deg,#7a3a9a,#4a1a6a);">🏦</div>
-      <div class="rc-htext">
-        <div class="rc-tag" style="color:#4a1a6a;">信託銀行が窓口</div>
-        <div class="rc-title">特定障害者扶養信託——贈与税が非課税に</div>
-      </div>
-      <span class="rc-chev" style="color:#4a1a6a;">▶</span>
-    </summary>
-    <div class="rc-body" style="border-top:1px solid #c4a8d8;">
-      <p class="rc-lead">特定障害者扶養信託とは、親や祖父母が障がいのある子のために財産を信託銀行に預け、生活費として定期的に給付される制度です。通常なら課税される贈与でも、一定額まで非課税になります。</p>
-
-      <div class="rc-block">
-        <h5>💰 最大のメリット：贈与税が非課税</h5>
-        <ul>
-          <li>特別障害者（重度）：<strong>6,000万円まで</strong>贈与税非課税</li>
-          <li>特別障害者以外：<strong>3,000万円まで</strong>贈与税非課税</li>
-          <li>通常の贈与税の基礎控除（年110万円）とは別枠で使える</li>
-        </ul>
-      </div>
-
-      <div class="rc-block">
-        <h5>📋 対象者の条件</h5>
-        <ul>
-          <li>特別障害者：身体障害者手帳1〜2級、療育手帳A、精神障害者保健福祉手帳1級など</li>
-          <li>特別障害者以外：身体障害者手帳3〜6級、療育手帳B、精神障害者保健福祉手帳2〜3級など</li>
-        </ul>
-      </div>
-
-      <div class="rc-block">
-        <h5>📝 手続きの流れ</h5>
-        <ol class="rc-steps">
-          <li>信託銀行に相談・申し込み</li>
-          <li>障害者手帳など必要書類を準備</li>
-          <li>税務署に「障害者非課税信託申告書」を提出</li>
-          <li>信託契約を締結・財産を預ける</li>
-          <li>定期的に給付金として受け取る</li>
-        </ol>
-      </div>
-
-      <div class="rc-block">
-        <h5>💴 非課税のウラにあるコスト</h5>
-        <div style="background:#f8f4ff;border-radius:12px;padding:14px;margin-bottom:12px;">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 220" width="100%" font-family="'Hiragino Sans','Yu Gothic',sans-serif">
-            <!-- タイトル -->
-            <text x="150" y="18" text-anchor="middle" font-size="11" font-weight="800" fill="#4a1a6a">特定贈与信託のメリット・コスト</text>
-
-            <!-- メリット列 -->
-            <rect x="8" y="28" width="132" height="180" rx="10" fill="#e8f5e9" stroke="#81c784" stroke-width="1.5"/>
-            <text x="74" y="46" text-anchor="middle" font-size="10" font-weight="800" fill="#2e7d32">✅ メリット</text>
-            <text x="74" y="65" text-anchor="middle" font-size="9" fill="#2e7d32">贈与税が非課税</text>
-            <rect x="18" y="70" width="112" height="22" rx="6" fill="#2e7d32"/>
-            <text x="74" y="85" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">最大6,000万円</text>
-            <text x="74" y="104" text-anchor="middle" font-size="9" fill="#2e7d32">通常の110万円枠とは</text>
-            <text x="74" y="116" text-anchor="middle" font-size="9" fill="#2e7d32">別枠で使える</text>
-            <line x1="24" y1="128" x2="124" y2="128" stroke="#81c784" stroke-width="1"/>
-            <text x="74" y="144" text-anchor="middle" font-size="9" fill="#2e7d32">元本保証</text>
-            <text x="74" y="158" text-anchor="middle" font-size="9" fill="#2e7d32">（信託銀行が管理）</text>
-            <line x1="24" y1="168" x2="124" y2="168" stroke="#81c784" stroke-width="1"/>
-            <text x="74" y="184" text-anchor="middle" font-size="9" fill="#2e7d32">親なきあとも</text>
-            <text x="74" y="196" text-anchor="middle" font-size="9" fill="#2e7d32">銀行が継続管理</text>
-
-            <!-- コスト列 -->
-            <rect x="160" y="28" width="132" height="180" rx="10" fill="#fff3e0" stroke="#ffb74d" stroke-width="1.5"/>
-            <text x="226" y="46" text-anchor="middle" font-size="10" font-weight="800" fill="#e65100">⚠️ コスト・注意点</text>
-            <text x="226" y="65" text-anchor="middle" font-size="9" fill="#e65100">最低預入額あり</text>
-            <rect x="170" y="70" width="112" height="22" rx="6" fill="#e65100"/>
-            <text x="226" y="85" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">1,000万円〜</text>
-            <text x="226" y="104" text-anchor="middle" font-size="9" fill="#e65100">毎年の管理手数料</text>
-            <text x="226" y="116" text-anchor="middle" font-size="9" fill="#e65100">年率0.3〜0.5%程度※</text>
-            <line x1="170" y1="128" x2="280" y2="128" stroke="#ffb74d" stroke-width="1"/>
-            <text x="226" y="144" text-anchor="middle" font-size="9" fill="#e65100">運用益はほぼゼロ</text>
-            <text x="226" y="158" text-anchor="middle" font-size="9" fill="#e65100">（元本保証の裏返し）</text>
-            <line x1="170" y1="168" x2="280" y2="168" stroke="#ffb74d" stroke-width="1"/>
-            <text x="226" y="184" text-anchor="middle" font-size="9" fill="#e65100">途中解約で</text>
-            <text x="226" y="196" text-anchor="middle" font-size="9" fill="#e65100">贈与税が課税される場合</text>
-          </svg>
-          <div style="font-size:10px;color:#888;margin-top:4px;line-height:1.6;">※ 手数料は信託銀行・預入額により異なります。事前に各銀行に確認を。</div>
-        </div>
-        <div style="background:#fff8e1;border-radius:10px;padding:10px;font-size:11.5px;line-height:1.8;color:#5a4000;">
-          💡 <strong>向いているケース：</strong>まとまった財産（1,000万円以上）があり、頼れる家族がいない場合や確実に銀行管理で残したい場合。家族が管理する家族信託と異なり信託銀行が管理するため、後継者不在でも安心。少額なら家族信託や生命保険の方がコスト面で有利なことも。
-        </div>
-      <div class="rc-actions">
-        <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
-      </div>
-    </div>
-  </details>
   <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#7a3a9a,#4a1a6a);box-shadow:0 5px 14px rgba(122,58,154,.4);">🗂️</div>
@@ -5244,8 +5364,12 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
+  </div><!-- /seido-sub-okane -->
+
+  <!-- ⑥ 大人のサービス・制度 -->
+  <div class="seido-subcontent" id="seido-sub-otona">
   <div class="seido-cat-head"><span class="seido-cat-num">5</span>🧑 大人のサービス・制度</div>
-  <div class="rc-note" style="margin-bottom:16px;">💡 障害基礎年金の詳しい申請方法は「4 🔮 将来への備え」の中にあります。</div>
+  <div class="rc-note" style="margin-bottom:16px;">💡 障害基礎年金の詳しい申請方法は「4 💰 お金・将来への備え」の中にあります。</div>
 
   <!-- グループホームカード -->
   <details style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
@@ -5455,6 +5579,8 @@ function mnSwitchTab(id) {
   <div style="background:#f0f4f7;border-radius:12px;padding:12px 14px;margin-top:4px;font-size:11.5px;color:#5a6a7a;line-height:1.8;text-align:center;">
     💡 このタブでご紹介した制度・手続き・金額は<strong>一般的な目安</strong>です。自治体・年度・障がいの状態によって対象条件や内容が異なります。申請の前に必ずお住まいの自治体窓口でご確認ください。
   </div>
+
+  </div><!-- /seido-sub-otona -->
 
 </section>
 
@@ -5818,6 +5944,15 @@ function mnSwitchTab(id) {
 </footer>
 
 </div><!-- /wrap -->
+
+<!-- 制度詳細画面 -->
+<div class="seido-detail-view" id="seidoDetailView">
+  <div class="seido-detail-header">
+    <button class="seido-detail-back" id="seidoDetailBack">←</button>
+    <div class="seido-detail-title" id="seidoDetailTitle"></div>
+  </div>
+  <div class="seido-detail-body" id="seidoDetailBody"></div>
+</div>
 
 <!-- お気に入りパネル -->
 <div class="fav-panel" id="favPanel">
@@ -6273,6 +6408,27 @@ function goTab(id, scrollTargetId){
   const tabBtn = $(`.tab[data-tab="${id}"]`);
   if(panel) panel.classList.add("on");
   if(tabBtn) tabBtn.classList.add("on");
+
+  // 制度タブ内のサブタブ対応（scrollTargetIdからサブタブを特定）
+  if(id === "seido" && scrollTargetId){
+    const subMap = {
+      "seido-group-gakko":"gakko", "gakkoCard":"gakko",
+      "seido-group-mirai":"okane",
+      "kyosai-seido":"okane","nenkin-seido":"okane",
+      "tokubetsu-seido":"okane","shintaku-seido":"okane","koken-seido":"okane",
+      "tokubetsu-teate-seido":"okane",
+      "discount-seido":"techo",
+    };
+    const subKey = subMap[scrollTargetId];
+    if(subKey){
+      $$(".seido-stab").forEach(b=>b.classList.remove("active"));
+      const targetBtn = $(`.seido-stab[data-seido="${subKey}"]`);
+      if(targetBtn) targetBtn.classList.add("active");
+      $$(".seido-subcontent").forEach(c=>c.classList.remove("active"));
+      const targetSub = document.getElementById("seido-sub-"+subKey);
+      if(targetSub) targetSub.classList.add("active");
+    }
+  }
   if(scrollTargetId){
     setTimeout(()=>{
       const el = document.getElementById(scrollTargetId);
@@ -7185,6 +7341,78 @@ function init(){
   $("#favClose").addEventListener("click",closeFav);
   $("#favBack").addEventListener("click",closeFav);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeFav();});
+
+  // 制度サブタブ
+  function initSeidoSubtabs(){
+    const stabs = $$(".seido-stab");
+    stabs.forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const key = btn.dataset.seido;
+        stabs.forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        $$(".seido-subcontent").forEach(c=>c.classList.remove("active"));
+        const target = document.getElementById("seido-sub-"+key);
+        if(target) target.classList.add("active");
+        // サブタブ切り替え後はタブ上部へスクロール
+        const subtabsEl = document.getElementById("seidoSubtabs");
+        if(subtabsEl){
+          const headerH = document.querySelector("header.top")?.offsetHeight||140;
+          const y = subtabsEl.getBoundingClientRect().top+window.scrollY-headerH-6;
+          window.scrollTo({top:y,behavior:"smooth"});
+        }
+      });
+    });
+  }
+  initSeidoSubtabs();
+
+  // 制度タブ：詳細画面切り替え
+  function initSeidoDetail(){
+    const detailView  = document.getElementById('seidoDetailView');
+    const detailBody  = document.getElementById('seidoDetailBody');
+    const detailTitle = document.getElementById('seidoDetailTitle');
+    const backBtn     = document.getElementById('seidoDetailBack');
+
+    // 制度タブ内の全detailsにクリックを設定
+    document.querySelectorAll('#tab-seido details').forEach(det => {
+      det.addEventListener('click', e => {
+        e.preventDefault();
+        const summary = det.querySelector('summary');
+        const body    = det.querySelector('.rc-body');
+        const titleEl = det.querySelector('.rc-title');
+        if(!body || !titleEl) return;
+
+        // タイトルと本文を詳細画面にセット
+        detailTitle.textContent = titleEl.textContent.trim();
+        detailBody.innerHTML    = body.innerHTML;
+
+        // チェックリストのイベントを再バインド
+        detailBody.querySelectorAll('.check-item').forEach(item => {
+          item.addEventListener('click', () => {
+            const checked = item.getAttribute('aria-checked') === 'true';
+            item.setAttribute('aria-checked', !checked);
+            item.classList.toggle('done', !checked);
+          });
+        });
+
+        detailView.classList.add('open');
+        detailView.scrollTop = 0;
+        window.scrollTo({top:0});
+      });
+    });
+
+    // 戻るボタン
+    backBtn.addEventListener('click', () => {
+      detailView.classList.remove('open');
+    });
+
+    // Androidの戻るボタン対応
+    window.addEventListener('popstate', () => {
+      if(detailView.classList.contains('open')){
+        detailView.classList.remove('open');
+      }
+    });
+  }
+  initSeidoDetail();
 }
 init();
 </script>
