@@ -283,6 +283,9 @@ body {
 </style>
 </head>
 <body>
+<div style="position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid #e8e2d8;padding:10px 16px;">
+  <button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:linear-gradient(135deg,#d97aa5,#e8896b);color:#fff;font-weight:800;font-size:.82rem;border:none;cursor:pointer;">← みらいナビに戻る</button>
+</div>
 
 <div class="header">
   <div class="header-title">🧭 未来の安心シミュレーター</div>
@@ -354,15 +357,15 @@ body {
       </div>
       <div class="sec-body triple">
         <div class="field">
-          <label>総資産（万円）</label>
-          <input type="number" id="a-total" placeholder="例：3000（万円単位）" oninput="liveUpdate()">
+          <label>総資産(万円)</label>
+          <input type="number" id="a-total" placeholder="例：3000" oninput="liveUpdate()">
         </div>
         <div class="field">
-          <label>現預金（万円）</label>
-          <input type="number" id="a-cash" placeholder="例：1000（万円単位）" oninput="liveUpdate()">
+          <label>現預金(万円)</label>
+          <input type="number" id="a-cash" placeholder="例：1000" oninput="liveUpdate()">
         </div>
         <div class="field">
-          <label>不動産<br>　</label>
+          <label>不動産</label>
           <select id="a-estate" onchange="liveUpdate()">
             <option value="">選択</option>
             <option value="none">なし</option>
@@ -382,11 +385,11 @@ body {
       </div>
       <div class="sec-body" style="grid-template-columns:1fr 1fr;">
         <div class="field">
-          <label>管理者の<br>現在の年齢</label>
+          <label>現在の年齢</label>
           <input type="number" id="parent-age" placeholder="例：58" min="30" max="100" oninput="liveUpdate()">
         </div>
         <div class="field">
-          <label>健康状態<br>（管理者）</label>
+          <label>健康状態</label>
           <select id="parent-health" onchange="liveUpdate()">
             <option value="">選択</option>
             <option value="good">良好</option>
