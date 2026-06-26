@@ -5945,6 +5945,13 @@ function mnSwitchTab(id) {
 
 </div><!-- /wrap -->
 
+<!-- お気に入りパネル -->
+<div class="fav-panel" id="favPanel">
+  <div class="fav-head"><h3>🔖 保存したもの</h3><button class="fav-x" id="favClose">✕</button></div>
+  <div class="fav-list" id="favList"></div>
+</div>
+<div class="fav-back" id="favBack"></div>
+
 <!-- 制度詳細画面 -->
 <div class="seido-detail-view" id="seidoDetailView">
   <div class="seido-detail-header">
@@ -5953,13 +5960,6 @@ function mnSwitchTab(id) {
   </div>
   <div class="seido-detail-body" id="seidoDetailBody"></div>
 </div>
-
-<!-- お気に入りパネル -->
-<div class="fav-panel" id="favPanel">
-  <div class="fav-head"><h3>🔖 保存したもの</h3><button class="fav-x" id="favClose">✕</button></div>
-  <div class="fav-list" id="favList"></div>
-</div>
-<div class="fav-back" id="favBack"></div>
 
 <script>
 function closeSplash(){
@@ -7416,5 +7416,6 @@ function init(){
 }
 init();
 </script>
+
 </body>
 </html>
