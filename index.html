@@ -1306,7 +1306,82 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   font-size:11px;color:#7a8088;line-height:1.8;
 }
 
-/* ===== 制度サブタブ ===== */
+/* ===== 年齢から探す ===== */
+.age-nav{
+  margin:20px 0 8px;
+  background:var(--bg-card);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px;
+  box-shadow:var(--shadow);
+}
+.age-nav-title{
+  font-size:.8rem;font-weight:800;color:var(--ink-soft);
+  margin-bottom:12px;letter-spacing:.05em;
+}
+.age-nav-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+.age-btn{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:12px 8px;border-radius:14px;
+  border:1.5px solid var(--line);
+  background:var(--bg-soft);
+  cursor:pointer;transition:.18s;
+}
+.age-btn:active,.age-btn.active{
+  background:linear-gradient(135deg,rgba(217,122,165,.12),rgba(232,137,107,.08));
+  border-color:var(--c-act);
+}
+.age-icon{font-size:1.6rem;line-height:1}
+.age-label{font-size:.85rem;font-weight:800;color:var(--ink)}
+.age-sub{font-size:.68rem;color:var(--ink-faint);text-align:center;line-height:1.4}
+
+.age-panel{
+  display:none;
+  background:var(--bg-card);
+  border:1.5px solid var(--c-act);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  margin-bottom:12px;
+  animation:fade .2s ease;
+}
+.age-panel.open{display:block}
+.age-panel-head{
+  font-size:.82rem;font-weight:800;color:var(--c-act);
+  margin-bottom:10px;
+}
+.age-links{display:flex;flex-direction:column;gap:10px}
+.age-link{
+  display:flex;align-items:center;
+  width:100%;padding:16px 18px;
+  border-radius:16px;
+  background:var(--bg-card);
+  border:1.5px solid var(--line);
+  box-shadow:var(--shadow);
+  font-size:.95rem;font-weight:700;color:var(--ink);
+  text-align:left;cursor:pointer;transition:.15s;
+  gap:10px;
+}
+.age-link::after{content:"›";margin-left:auto;font-size:1.3rem;color:var(--ink-faint)}
+.age-link:active{background:#fdf0e8;border-color:var(--c-act);color:var(--c-act)}
+
+/* ===== 災害バナー ===== */
+.disaster-home-btn{
+  display:flex;align-items:center;gap:12px;
+  width:100%;padding:14px 16px;margin:16px 0;
+  background:linear-gradient(135deg,#fff0f0,#fff8f0);
+  border:1.5px solid #e08080;border-radius:var(--radius);
+  box-shadow:var(--shadow);cursor:pointer;transition:.18s;
+  text-align:left;
+}
+.disaster-home-btn:active{background:#ffe0e0}
+.dhb-icon{font-size:1.8rem;flex:none}
+.dhb-text{flex:1}
+.dhb-title{font-size:.9rem;font-weight:800;color:#c04040}
+.dhb-sub{font-size:.74rem;color:#a06060;margin-top:2px;line-height:1.4}
+.dhb-arrow{font-size:1.3rem;color:#e08080}
+
 .seido-subtabs{
   display:flex;flex-direction:column;gap:6px;
   margin-bottom:16px;
@@ -1362,25 +1437,25 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
 }
 .seido-detail-header{
   position:sticky;top:0;z-index:10;
-  background:rgba(251,247,240,.95);
+  background:rgba(251,247,240,.97);
   backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line-soft);
+  border-bottom:2px solid var(--line);
   padding:12px 16px;
-  display:flex;align-items:center;gap:12px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:14px;
 }
 .seido-detail-back{
   display:flex;align-items:center;gap:6px;
-  padding:8px 16px;border-radius:20px;flex:none;
+  padding:10px 18px;border-radius:20px;flex:none;
   background:var(--c-act);color:#fff;
-  font-size:.85rem;font-weight:800;
+  font-size:.88rem;font-weight:800;
   cursor:pointer;transition:.15s;
-  border:none;
+  border:none;white-space:nowrap;
 }
 .seido-detail-back::before{content:"←";font-size:1rem}
 .seido-detail-back:active{opacity:.8}
 .seido-detail-title{
-  font-size:.9rem;font-weight:800;color:var(--ink);
-  flex:1;line-height:1.4;
+  font-size:1.05rem;font-weight:800;color:var(--ink);
+  line-height:1.4;width:100%;
 }
 .seido-detail-body{
   padding:16px 16px 48px;
@@ -1478,6 +1553,35 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
     </div>
   </div>
 
+  <!-- 年齢から探す -->
+  <div class="age-nav">
+    <div class="age-nav-title">🎂 お子さんの年齢から探す</div>
+    <div class="age-nav-grid">
+      <button class="age-btn" data-age="baby">
+        <span class="age-icon">👶</span>
+        <span class="age-label">0〜6歳</span>
+        <span class="age-sub">診断・療育・手帳</span>
+      </button>
+      <button class="age-btn" data-age="school">
+        <span class="age-icon">🎒</span>
+        <span class="age-label">小学生</span>
+        <span class="age-sub">就学・医療・放デイ</span>
+      </button>
+      <button class="age-btn" data-age="teen">
+        <span class="age-icon">🧑</span>
+        <span class="age-label">中高生</span>
+        <span class="age-sub">進路・切替・年金準備</span>
+      </button>
+      <button class="age-btn" data-age="adult">
+        <span class="age-icon">🧓</span>
+        <span class="age-label">成人後</span>
+        <span class="age-sub">大人のサービス・親なきあと</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 年齢別パネルはJS全画面で表示 -->
+
   <!-- 悩みから探す -->
   <div class="worry-nav">
     <div class="worry-nav-title">😟 今、どんなことが心配ですか？</div>
@@ -1515,6 +1619,16 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
       <div><div class="sc-l">親なきあとが不安</div><span class="sc-d">成年後見・扶養共済・わが子ノート</span></div>
     </button>
   </div>
+
+  <!-- 災害対策バナー -->
+  <button class="disaster-home-btn" data-goto="saigai">
+    <span class="dhb-icon">🆘</span>
+    <div class="dhb-text">
+      <div class="dhb-title">災害・緊急時の備え</div>
+      <div class="dhb-sub">避難計画・個別支援計画・非常用品チェック</div>
+    </div>
+    <span class="dhb-arrow">›</span>
+  </button>
 
   <div style="background:#fff;border:1.5px solid #e8e2d8;border-radius:16px;padding:16px;margin-top:20px;">
     <div style="font-size:.78rem;font-weight:800;color:var(--ink);margin-bottom:8px;">📖 このサイトについて</div>
@@ -5978,6 +6092,15 @@ function mnSwitchTab(id) {
 </div>
 <div class="fav-back" id="favBack"></div>
 
+<!-- 年齢別全画面 -->
+<div class="seido-detail-view" id="ageView">
+  <div class="seido-detail-header">
+    <button class="seido-detail-back" id="ageViewBack">ホームに戻る</button>
+    <div class="seido-detail-title" id="ageViewTitle"></div>
+  </div>
+  <div class="seido-detail-body" id="ageViewBody"></div>
+</div>
+
 <!-- 制度カード一覧画面 -->
 <div class="seido-detail-view" id="seidoListView">
   <div class="seido-detail-header">
@@ -7505,6 +7628,99 @@ function init(){
       }
     });
   }
+  // 年齢から探す（全画面方式）
+  const ageData = {
+    baby: {
+      title: '👶 0〜6歳 — まずやること',
+      links: [
+        {label:'🌱 診断されたばかりの方へ', goto:'shindan'},
+        {label:'🪪 手帳をとる', goto:'techo'},
+        {label:'🏫 通いはじめる（児童発達支援）', goto:'tsusho'},
+        {label:'💪 生活を支える制度', seido:'seikatsu'},
+      ]
+    },
+    school: {
+      title: '🎒 小学生 — 学校と放課後',
+      links: [
+        {label:'🏫 学校が心配な方へ', goto:'gakko'},
+        {label:'🏥 医療的ケア（学校での対応）', goto:'iryocare'},
+        {label:'🎒 学校・進路の制度', seido:'gakko'},
+      ]
+    },
+    teen: {
+      title: '🧑 中高生 — 卒業後と切替準備',
+      links: [
+        {label:'🚪 卒業後が心配な方へ', goto:'sotsugo'},
+        {label:'🛤️ 成人までのロードマップ', goto:'roadmap'},
+        {label:'💰 ETC・手当の切替・年金準備', seido:'okane'},
+      ]
+    },
+    adult: {
+      title: '🧓 成人後 — サービスと親なきあと',
+      links: [
+        {label:'👪 親なきあとが不安な方へ', goto:'oyanaki'},
+        {label:'🧑 大人のサービス', seido:'otona'},
+        {label:'💰 お金・将来への備え', seido:'okane'},
+        {label:'🛠️ シミュレーターツール', goto:'tools'},
+      ]
+    },
+  };
+
+  const ageView     = document.getElementById('ageView');
+  const ageViewBody = document.getElementById('ageViewBody');
+  const ageViewTitle= document.getElementById('ageViewTitle');
+  const ageViewBack = document.getElementById('ageViewBack');
+  document.body.appendChild(ageView);
+
+  function openAgeView(age){
+    const data = ageData[age];
+    if(!data) return;
+    ageViewTitle.textContent = data.title;
+    ageViewBody.innerHTML = '';
+    data.links.forEach(item => {
+      const btn = document.createElement('button');
+      btn.className = 'age-link';
+      btn.textContent = item.label;
+      btn.addEventListener('click', () => {
+        ageView.classList.remove('open');
+        if(item.goto){
+          goTab(item.goto);
+        } else if(item.seido){
+          goTab('seido');
+          setTimeout(()=>window.openSeidoList(item.seido), 100);
+        }
+      });
+      ageViewBody.appendChild(btn);
+    });
+    ageView.classList.add('open');
+    ageView.scrollTop = 0;
+    history.pushState({age}, '', '');
+  }
+
+  $$('.age-btn').forEach(btn => {
+    btn.addEventListener('click', () => openAgeView(btn.dataset.age));
+  });
+
+  ageViewBack.addEventListener('click', () => {
+    ageView.classList.remove('open');
+  });
+
+  window.addEventListener('popstate', (e) => {
+    if(ageView.classList.contains('open')){
+      ageView.classList.remove('open');
+    }
+  });
+
+  // 年齢リンクのdata-goto対応（念のため残す）
+  $$('.age-link[data-goto]').forEach(btn=>{
+    btn.addEventListener('click',()=>goTab(btn.dataset.goto));
+  });
+
+  // 災害バナー
+  $$('.disaster-home-btn[data-goto]').forEach(btn=>{
+    btn.addEventListener('click',()=>goTab(btn.dataset.goto));
+  });
+
   initSeidoNav();
 }
 init();
