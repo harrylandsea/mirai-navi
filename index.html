@@ -1332,27 +1332,19 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
 }
 .seido-stab.active::after{content:"✕";color:var(--c-act);}
 .seido-subcontent{display:none}
-.seido-subcontent.active{display:block !important;animation:fade .25s ease;min-height:100px}
+.seido-subcontent.active{display:block;animation:fade .25s ease}
 
 /* ===== 制度カード一覧（詳細切り替え方式） ===== */
-/* 制度カード（detailsをdivに変換済み） */
-#tab-seido .seido-card{
+/* detailsをボタン風カードに変換 */
+#tab-seido details{
   cursor:pointer;
-  border-radius:var(--radius);
-  background:var(--bg-card);
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-  margin-bottom:10px;
-  overflow:hidden;
 }
-#tab-seido .seido-card-summary{
-  display:flex;align-items:center;gap:12px;
-  padding:14px 16px;
+#tab-seido details summary{
   list-style:none;
 }
-#tab-seido .rc-body{
-  display:none; /* JSで詳細画面に表示するので常に非表示 */
-}
+#tab-seido details summary::-webkit-details-marker{display:none}
+
+/* 詳細画面オーバーレイ */
 .seido-detail-view{
   display:none;
   position:fixed;
@@ -1361,9 +1353,9 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   z-index:9999;
   background:var(--bg);
   overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
+  animation:slideInRight .22s ease;
 }
-.seido-detail-view.open{display:block;animation:slideInRight .22s ease}
+.seido-detail-view.open{display:block}
 @keyframes slideInRight{
   from{transform:translateX(40px);opacity:0}
   to{transform:none;opacity:1}
@@ -1392,6 +1384,33 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   max-width:var(--maxw);margin:0 auto;
 }
 
+/* サマリーをタップ可能カードに見せる（open状態のbodyは非表示） */
+#tab-seido details[open] > .rc-body,
+#tab-seido details[open] > div.rc-body{
+  display:none !important;
+}
+
+/* 制度一覧カード */
+.seido-list-card{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 16px;
+  background:var(--bg-card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  margin-bottom:10px;
+  cursor:pointer;
+  transition:.15s;
+}
+.seido-list-card:active{background:#fdf0e8;border-color:var(--c-act)}
+.seido-list-icon{
+  width:42px;height:42px;flex:none;border-radius:12px;
+  display:grid;place-items:center;font-size:1.3rem;
+  background:linear-gradient(135deg,rgba(217,122,165,.15),rgba(232,137,107,.1));
+}
+.seido-list-text{flex:1;min-width:0}
+.seido-list-text .rc-tag{font-size:.72rem;font-weight:700;color:var(--c-act);margin-bottom:2px}
+.seido-list-text .rc-title{font-size:.88rem;font-weight:700;color:var(--ink);line-height:1.4}
 
 </style>
 
@@ -3465,15 +3484,15 @@ function mnSwitchTab(id) {
   <div class="seido-group-head">🌱 はじめての方</div>
 
   <!-- 相談支援専門員に聞くことリスト -->
-  <div class="seido-card soudan-card">
-    <div class="seido-card-summary">
+  <details class="soudan-card">
+    <summary>
       <div class="rc-icon">👥</div>
       <div class="rc-htext">
         <div class="rc-tag">相談前の準備</div>
         <div class="rc-title">相談支援専門員に聞くことリスト</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">相談支援専門員は「制度の説明をする人」ではなく、<strong>家族の困りごとを整理して必要な支援につなぐ人</strong>です。分からないことは遠慮せず「何を聞けばいいか分からないです」と伝えて大丈夫です。</p>
 
@@ -3556,7 +3575,7 @@ function mnSwitchTab(id) {
 
       <div class="rc-note">💡 全部聞けなくても大丈夫です。「何を聞けばいいか分からないです」と伝えるだけで、相談支援専門員が整理してくれます。</div>
     </div>
-  </div>
+  </details>
 
   </div><!-- /seido-sub-hajimete -->
 
@@ -3565,15 +3584,15 @@ function mnSwitchTab(id) {
   <div class="seido-cat-head"><span class="seido-cat-num">1</span>🪪 手帳でできること</div>
 
   <!-- おむつ給付・配付カード -->
-  <div class="seido-card omutu-card">
-    <div class="seido-card-summary">
+  <details class="omutu-card">
+    <summary>
       <div class="rc-icon">👶</div>
       <div class="rc-htext">
         <div class="rc-tag">春日部市の制度</div>
         <div class="rc-title">💰 毎月のおむつ代を支える制度</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">重度の障がいがある方のおむつ代を軽減する制度が2つあります。<strong>紙おむつ配付事業（春日部市社会福祉協議会）</strong>と、<strong>日常生活用具給付（市の障がい福祉制度）</strong>です。手帳を持っていれば申請できる可能性があります。</p>
       <div class="rc-block">
@@ -3620,18 +3639,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-733-0220" class="rc-btn rc-btn-tel">📞 春日部市社会福祉協議会</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 障がい者割引カード -->
-  <div class="seido-card hosou-card">
-    <div class="seido-card-summary">
+  <details class="hosou-card">
+    <summary>
       <div class="rc-icon">🦽</div>
       <div class="rc-htext">
         <div class="rc-tag">障害者総合支援法の給付</div>
         <div class="rc-title">補装具費支給制度（補聴器・装具・車いすなど）</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">補聴器・装具（AFO/KAFOなど）・車いす・座位保持装置などは「補装具費支給制度」で費用の大部分が公費でまかなわれます。<strong>原則として費用の1割が自己負担</strong>（上限あり）で、残りが市区町村から支給されます。障害者手帳または指定難病受給者証が必要です。</p>
 
@@ -3665,18 +3684,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 障がい者割引カード -->
-  <div class="seido-card discount-card" id="discount-seido">
-    <div class="seido-card-summary">
+  <details class="discount-card" id="discount-seido">
+    <summary>
       <div class="rc-icon">🎫</div>
       <div class="rc-htext">
         <div class="rc-tag">障がい者手帳の活用</div>
         <div class="rc-title">障がい者割引・免除・控除 まとめ</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">手帳を取ったら、これだけ使えます。種類・等級・所得によって条件が変わるので、詳細は各窓口に確認を。知らずに使っていない割引がある家族も多いです。</p>
 
@@ -3764,7 +3783,7 @@ function mnSwitchTab(id) {
         <a href="https://share.google/rtj5r1BxL80oHvmXO" target="_blank" rel="noopener noreferrer" class="rc-btn" style="background:#f0f7ff;color:#3a6ea5;border:1px solid #b3d1f0;margin-top:8px;">📖 全国の割引・優遇情報はこちら｜障害者手帳で行こう！〜全国版〜</a>
       </div>
     </div>
-  </div>
+  </details>
 
   </div><!-- /seido-sub-techo -->
 
@@ -3810,15 +3829,15 @@ function mnSwitchTab(id) {
   <div id="seido-seikatsu"></div>
 
   <!-- 訪問看護カード -->
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #80ccaa;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eaf5ee,#f4fbf5);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);box-shadow:0 5px 14px rgba(45,138,96,.4);">🌱</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a38;">就学前の療育・発達支援</div>
         <div class="rc-title">児童発達支援——未就学児の通所支援</div>
       </div>
       <span class="rc-chev" style="color:#1a5a38;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
       <p class="rc-lead">児童発達支援は、障がいのある未就学児（0〜6歳）が通う発達支援サービスです。遊びや生活を通じて、コミュニケーション・運動・感覚などの発達をサポートします。</p>
       <div class="rc-block">
@@ -3844,16 +3863,16 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  </details>
+  <details style="border:1.5px solid #80ccaa;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eaf5ee,#f4fbf5);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);box-shadow:0 5px 14px rgba(45,138,96,.4);">🏫</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a38;">保育園・幼稚園での支援</div>
         <div class="rc-title">保育所等訪問支援——集団生活をサポート</div>
       </div>
       <span class="rc-chev" style="color:#1a5a38;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
       <p class="rc-lead">保育所等訪問支援は、障がいのある子どもが通う保育園・幼稚園・小学校などに、専門の支援員が訪問して集団生活への適応をサポートするサービスです。</p>
       <div class="rc-block">
@@ -3878,16 +3897,16 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card houmon-card">
-    <div class="seido-card-summary">
+  </details>
+  <details class="houmon-card">
+    <summary>
       <div class="rc-icon">🩺</div>
       <div class="rc-htext">
         <div class="rc-tag">医療的ケア児の在宅医療</div>
         <div class="rc-title">訪問看護——いつから・いつまで使えるか</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">医療的ケア児の訪問看護は<strong>生後すぐ（退院直後・0歳）から利用できます。</strong>年齢の上限は基本的になく、医師が必要と認めて訪問看護指示書を出したタイミングからいつでも始められます。</p>
       <div class="rc-block">
@@ -3928,16 +3947,16 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  </details>
+  <details style="border:1.5px solid #80ccaa;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eaf5ee,#f4fbf5);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);box-shadow:0 5px 14px rgba(45,138,96,.4);">🏠</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a38;">自宅での介護サービス</div>
         <div class="rc-title">居宅介護——ヘルパーが自宅に来てくれるサービス</div>
       </div>
       <span class="rc-chev" style="color:#1a5a38;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
       <p class="rc-lead">居宅介護は、障がいのある方の自宅にヘルパーが訪問して、日常生活をサポートする障害福祉サービスです。子どもから大人まで利用できます。</p>
       <div class="rc-block">
@@ -3971,16 +3990,16 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  </details>
+  <details style="border:1.5px solid #80ccaa;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eaf5ee,#f4fbf5);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);box-shadow:0 5px 14px rgba(45,138,96,.4);">👐</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a38;">重度障がい者の在宅生活を支える</div>
         <div class="rc-title">重度訪問介護——長時間・常時の在宅支援</div>
       </div>
       <span class="rc-chev" style="color:#1a5a38;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
       <p class="rc-lead">重度訪問介護は、重度の肢体不自由や重症心身障がいのある方が自宅で生活するための長時間・継続的なサポートサービスです。居宅介護より対象が限定されますが、より手厚い支援が受けられます。</p>
       <div class="rc-block">
@@ -3998,16 +4017,16 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  </details>
+  <details style="border:1.5px solid #80ccaa;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eaf5ee,#f4fbf5);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);box-shadow:0 5px 14px rgba(45,138,96,.4);">🛁</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a38;">自宅での入浴支援</div>
         <div class="rc-title">訪問入浴——自宅に浴槽を持ち込んで入浴介助</div>
       </div>
       <span class="rc-chev" style="color:#1a5a38;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
       <p class="rc-lead">訪問入浴は、自宅での入浴が困難な重度障がい者のために、専用の浴槽を持ち込んで入浴介助を行うサービスです。スタッフ（看護師1名＋介護員2名程度）がチームで訪問します。</p>
       <div class="rc-block">
@@ -4033,16 +4052,16 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card short-card">
-    <div class="seido-card-summary">
+  </details>
+  <details class="short-card">
+    <summary>
       <div class="rc-icon">🛌</div>
       <div class="rc-htext">
         <div class="rc-tag">レスパイト・医療的ケア対応</div>
         <div class="rc-title">医療的ケア児のショートステイ（短期入所）の探し方</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">医療的ケア児のショートステイは数が少なく、<strong>空きが出てから探しても間に合わないことが多い</strong>です。レスパイト目的でも早めに登録しておくことが大切です。まず相談窓口へ問い合わせましょう。</p>
 
@@ -4082,16 +4101,16 @@ function mnSwitchTab(id) {
         <a href="https://kawagoe.karugamonoie.jp/kakehashi/himself/index2.php" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 かけはし 施設一覧</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card respite-card">
-    <div class="seido-card-summary">
+  </details>
+  <details class="respite-card">
+    <summary>
       <div class="rc-icon">🛌</div>
       <div class="rc-htext">
         <div class="rc-tag">埼玉県の制度</div>
         <div class="rc-title">在宅難病患者一時入院（レスパイト入院）</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">在宅で療養している難病の方が、介護する人の休養・冠婚葬祭・急な用事・介護者の体調不良などのときに、埼玉県と契約した病院へ一時的に入院できる制度です。難病診療連携コーディネーターが入院先を調整してくれます。</p>
       <div class="rc-block">
@@ -4129,16 +4148,16 @@ function mnSwitchTab(id) {
         <a href="tel:048-830-3562" class="rc-btn rc-btn-tel">📞 疾病対策課 048-830-3562</a>
       </div>
     </div>
-  </div>
-  <div class="seido-card iko-card">
-    <div class="seido-card-summary">
+  </details>
+  <details class="iko-card">
+    <summary>
       <div class="rc-icon">🏥</div>
       <div class="rc-htext">
         <div class="rc-tag">15〜20歳ごろの重要テーマ</div>
         <div class="rc-title">移行期医療——小児科から大人の医療へ</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">医療的ケア児が成長すると、小児科・小児病院から成人向けの診療科・在宅診療医へ移行する時期が来ます。<strong>移行期は15〜20歳ごろが多く、早めに準備することが大切</strong>です。成人科は小児科より医療的ケアに慣れていないことがあるため、丁寧な引き継ぎが必要です。</p>
 
@@ -4196,22 +4215,22 @@ function mnSwitchTab(id) {
 
       <div class="rc-note">📌 移行期医療は制度的な「決まり」より「主治医との関係と計画づくり」がカギになります。一人で抱えず、相談支援専門員・訪問看護・ソーシャルワーカーも一緒に動いてもらうのがおすすめです。</div>
     </div>
-  </div>
+  </details>
 
   </div><!-- /seido-sub-seikatsu -->
 
   <!-- ④ 学校・進路 -->
   <div class="seido-subcontent" id="seido-sub-gakko">
   <div class="seido-cat-head"><span class="seido-cat-num">3</span>🎒 学校・進路</div>
-  <div class="seido-card gakko-card" id="gakkoCard">
-    <div class="seido-card-summary">
+  <details class="gakko-card" id="gakkoCard">
+    <summary>
       <div class="rc-icon">🏫</div>
       <div class="rc-htext">
         <div class="rc-tag">就学・教育</div>
         <div class="rc-title">学校の種類——何を選べる？</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">障がいのある子どもが通える学校は大きく3つ。重症心身障がい・医療的ケア児の多くは<strong>特別支援学校（肢体不自由・病弱）</strong>に進みます。<strong>年中〜年長で「就学相談」</strong>に申し込み、専門家と一緒に選んでいきます。</p>
       <div class="rc-block">
@@ -4299,17 +4318,17 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1111" class="rc-btn rc-btn-tel">📞 春日部市教育委員会</a>
       </div>
     </div>
-  </div>
+  </details>
   <!-- 放課後等デイサービスの種類カード -->
-  <div class="seido-card houday-card">
-    <div class="seido-card-summary">
+  <details class="houday-card">
+    <summary>
       <div class="rc-icon">🎨</div>
       <div class="rc-htext">
         <div class="rc-tag">放課後・長期休暇の居場所</div>
         <div class="rc-title">放課後等デイサービスの種類</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">放課後等デイサービスは、障がいのある子どもが放課後や長期休暇に通う福祉サービスです。事業所によって対象・専門性・雰囲気が大きく異なります。受給者証を取得してから利用できます。</p>
       <div class="rc-block">
@@ -4353,16 +4372,16 @@ function mnSwitchTab(id) {
         <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('gakko')">💡 関連：🏫 学校が心配を見る →</button>
       </div>
     </div>
-  </div>
-    <div class="seido-card sotsu-card">
-    <div class="seido-card-summary">
+  </details>
+    <details class="sotsu-card">
+    <summary>
       <div class="rc-icon">🌱</div>
       <div class="rc-htext">
         <div class="rc-tag">18歳以降の選択肢</div>
         <div class="rc-title">卒業後の進路——18歳からどこへ？</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">特別支援学校を卒業する18歳以降は、日中の居場所が<strong>学校から福祉サービスへ</strong>移ります。重症心身障がい・医療的ケア児は<strong>生活介護</strong>が主な選択肢です。卒業の2〜3年前から見学を始めましょう。</p>
       <div class="rc-block">
@@ -4396,18 +4415,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 生活介護カード -->
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #f0c080;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#fef6e8,#fff8f0);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#e08020,#b85e10);">🌞</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#b85e10;">18歳以降の日中の居場所</div>
         <div class="rc-title">生活介護の申請の流れ</div>
       </div>
       <span class="rc-chev" style="color:#b85e10;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #f0c080;">
       <p class="rc-lead">生活介護は、重症心身障がい・医療的ケアのある方が卒業後に通う日中の居場所です。入浴・食事・排泄などの身体介護と、創作活動・音楽・外出などのプログラムを組み合わせます。</p>
       <div class="rc-block">
@@ -4444,18 +4463,18 @@ function mnSwitchTab(id) {
         <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('sotsugo')">💡 関連：🏠 卒業後が心配を見る →</button>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 特別障害者手当カード -->
-  <div class="seido-card " id="tokubetsu-seido">
-    <div class="seido-card-summary">
+  <details id="tokubetsu-seido" style="border:1.5px solid #f0c080;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#fef6e8,#fff8f0);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#c45a9a,#8a3a6a);">💴</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#8a3a6a;">重度障がい者への手当</div>
         <div class="rc-title">特別障害者手当——20歳以降に申請できる</div>
       </div>
       <span class="rc-chev" style="color:#8a3a6a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #d4a8c8;">
       <p class="rc-lead">特別障害者手当は、精神または身体に著しく重度の障がいがあり、日常生活で常時特別の介護を必要とする在宅の20歳以上の方に支給される国の手当です。</p>
       <div class="rc-block">
@@ -4480,7 +4499,7 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   </div><!-- /seido-sub-gakko -->
 
@@ -4488,15 +4507,15 @@ function mnSwitchTab(id) {
   <div class="seido-subcontent" id="seido-sub-okane">
   <div class="seido-cat-head"><span class="seido-cat-num">4</span>💰 お金・将来への備え</div>
 
-  <div class="seido-card etc-card">
-    <div class="seido-card-summary">
+  <details class="etc-card">
+    <summary>
       <div class="rc-icon">🚗</div>
       <div class="rc-htext">
         <div class="rc-tag">知っておきたい盲点</div>
         <div class="rc-title">高速道路 障害者割引とETCカードの問題</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">重症心身障がい・医療的ケア児の家族の間では有名な問題です。高速道路の障害者割引をETCで受けるには原則として<strong>障害者本人名義のETCカードが必要</strong>。しかし本人はクレジット契約ができないため、ETCカードも作れず、割引が使えないという矛盾が長年指摘されていました。</p>
 
@@ -4552,18 +4571,18 @@ function mnSwitchTab(id) {
         <a href="https://www.driveplaza.com/etc/dis/etc_dis_handicapped/" target="_blank" rel="noopener" class="rc-btn rc-btn-web" style="background:#6b9e6b">🌐 NEXCO 障害者割引の詳細</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 心身障害者扶養共済カード -->
-  <div class="seido-card kyosai-card" id="kyosai-seido">
-    <div class="seido-card-summary">
+  <details class="kyosai-card" id="kyosai-seido">
+    <summary>
       <div class="rc-icon">🏦</div>
       <div class="rc-htext">
         <div class="rc-tag">埼玉県の制度</div>
         <div class="rc-title">心身障害者扶養共済制度</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">障がいのある方を扶養している保護者が毎月掛金を払い、<strong>保護者が死亡または重度障害になったとき、障がいのある方に終身で年金が支給される</strong>制度です。「親なき後」の備えとして、できるだけ早い加入が推奨されます。</p>
 
@@ -4625,18 +4644,18 @@ function mnSwitchTab(id) {
         <a href="https://www.pref.saitama.lg.jp/a0604/fukusiguide/guide2_7.html" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 埼玉県 扶養共済の詳細</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 障害年金 書類・通院記録整理カード -->
-  <div class="seido-card kiroku-card" id="nenkin-seido">
-    <div class="seido-card-summary">
+  <details class="kiroku-card" id="nenkin-seido">
+    <summary>
       <div class="rc-icon">📂</div>
       <div class="rc-htext">
         <div class="rc-tag">今から始める備え</div>
         <div class="rc-title">障害年金のための通院記録・書類整理</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead"><strong>カルテは最終受診から5年で廃棄される場合があります。</strong>障害年金の申請に必要な「初診日の証明」が、カルテがないためにできないケースは珍しくありません。記録は今から少しずつ残しておくことが、20歳の申請をスムーズにする一番の近道です。</p>
       <div class="rc-block">
@@ -4695,17 +4714,17 @@ function mnSwitchTab(id) {
         <a href="tel:0120956119" class="rc-btn rc-btn-tel">📞 無料相談 0120-956-119</a>
       </div>
     </div>
-  </div>
+  </details>
 
-  <div class="seido-card pension-card">
-    <div class="seido-card-summary">
+  <details class="pension-card">
+    <summary>
       <div class="rc-icon">📋</div>
       <div class="rc-htext">
         <div class="rc-tag">国の制度</div>
         <div class="rc-title">20歳前傷病による障害基礎年金</div>
       </div>
       <span class="rc-chev">▶</span>
-    </div>
+    </summary>
     <div class="rc-body">
       <p class="rc-lead">生まれつきの障がいや18歳未満で発症した病気・障がいがある場合、<strong>20歳になると本人名義で請求できる</strong>障害基礎年金です。保険料の納付要件が不要なため、多くの障がいのある方が対象になります。</p>
       <div class="rc-block">
@@ -4763,18 +4782,18 @@ function mnSwitchTab(id) {
         <a href="https://www.shougai-navi.com/intro/id000208.html" target="_blank" rel="noopener" class="rc-btn rc-btn-web" style="margin-top:6px;">📖 20歳前傷病のわかりやすい解説 →</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 特定障害者扶養信託カード -->
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#7a3a9a,#4a1a6a);">🏦</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#4a1a6a;">信託銀行が窓口</div>
         <div class="rc-title">特定障害者扶養信託——贈与税が非課税に</div>
       </div>
       <span class="rc-chev" style="color:#4a1a6a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #c4a8d8;">
       <p class="rc-lead">特定障害者扶養信託とは、親や祖父母が障がいのある子のために財産を信託銀行に預け、生活費として定期的に給付される制度です。通常なら課税される贈与でも、一定額まで非課税になります。</p>
 
@@ -4852,18 +4871,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 遺言書カード -->
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#9a3a3a,#6a1a1a);">📜</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#6a1a1a;">親なきあとの備え</div>
         <div class="rc-title">遺言書——障がいのある子どもがいる家庭の注意点</div>
       </div>
       <span class="rc-chev" style="color:#6a1a1a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #c8a8a8;">
       <p class="rc-lead">障がいのある子どもがいる家庭では、遺言書で「誰に・何を・どう使うか」を明確にしておくことが大切です。遺言がないと、相続手続きで障がいのある本人が不利になる場合があります。</p>
       <div class="rc-block">
@@ -4896,18 +4915,18 @@ function mnSwitchTab(id) {
         <a href="https://www.gov-online.go.jp/article/202009/entry-7835.html" target="_blank" rel="noopener" class="rc-btn rc-btn-web" style="margin-top:6px;">📖 政府広報 遺言書のこと →</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- エンディングノートカード -->
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#5a7a3a,#3a5a1a);">📔</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#3a5a1a;">親しか知らない情報を残す</div>
         <div class="rc-title">障がい者家族のエンディングノート</div>
       </div>
       <span class="rc-chev" style="color:#3a5a1a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #b8c8a8;">
       <p class="rc-lead">エンディングノートは遺言書と違い、法的効力はありませんが、親しか知らない情報を支援者・家族に伝えるための大切な記録です。障がいのある子どもを支える人が困らないよう、できるだけ具体的に残しておきましょう。</p>
       <div class="rc-block">
@@ -4938,18 +4957,18 @@ function mnSwitchTab(id) {
         <a href="mirai-notebook.html" target="_blank" rel="noopener" class="rc-btn rc-btn-web" style="background:#3a5a1a;color:#fff;border:none;">📓 みらい安心引き継ぎノートを開く →</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 家族信託カード -->
-  <div class="seido-card " id="shintaku-seido">
-    <div class="seido-card-summary">
+  <details id="shintaku-seido" style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2563c8,#1a4a9a);">🏦</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a4a9a;">財産を守る・つなぐ</div>
         <div class="rc-title">家族信託——親なきあとのお金の備え</div>
       </div>
       <span class="rc-chev" style="color:#1a4a9a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a8c8e8;">
       <p class="rc-lead">家族信託とは、親が元気なうちに、信頼できる家族（子どもや兄弟など）に財産の管理を任せる仕組みです。親が認知症になったり亡くなった後も、障がいのある子どものために財産を継続して使えます。</p>
       <div class="rc-block">
@@ -5050,18 +5069,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 成年後見制度カード -->
-  <div class="seido-card " id="koken-seido">
-    <div class="seido-card-summary">
+  <details id="koken-seido" style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#9b59b6,#6c3483);">⚖️</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#6c3483;">本人の権利を守る</div>
         <div class="rc-title">成年後見制度——いつ・どう使う？</div>
       </div>
       <span class="rc-chev" style="color:#6c3483;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #c8a8d8;">
       <p class="rc-lead">成年後見制度は、判断能力が十分でない方の財産管理や契約を、後見人がサポートする制度です。親が高齢になる前に準備しておくと安心です。</p>
       <div class="rc-block">
@@ -5215,17 +5234,17 @@ function mnSwitchTab(id) {
         <a href="tel:048-863-8521" class="rc-btn rc-btn-tel">📞 さいたま家庭裁判所</a>
       </div>
     </div>
-  </div>
+  </details>
 
-  <div class="seido-card ">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#7a3a9a,#4a1a6a);box-shadow:0 5px 14px rgba(122,58,154,.4);">🗂️</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#4a1a6a;">親なきあと対策</div>
         <div class="rc-title">資産管理・親なきあと——選択肢と我が家の場合</div>
       </div>
       <span class="rc-chev" style="color:#4a1a6a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #d0b8e8;">
       <p class="rc-lead">親なきあと問題は、まず全体像を知り、次に「我が家の場合どうするか」を考える流れが一番整理しやすいです。</p>
 
@@ -5366,25 +5385,25 @@ function mnSwitchTab(id) {
 
       <div class="rc-note">📌 このページは一般的な情報です。具体的な手続き・契約は、司法書士・弁護士・ファイナンシャルプランナーなどの専門家にご相談ください。</div>
     </div>
-  </div>
+  </details>
 
   </div><!-- /seido-sub-okane -->
 
   <!-- ⑥ 大人のサービス・制度 -->
   <div class="seido-subcontent" id="seido-sub-otona">
   <div class="seido-cat-head"><span class="seido-cat-num">5</span>🧑 大人のサービス・制度</div>
-  <div class="rc-note" style="margin-bottom:16px;">💡 障害基礎年金の詳しい申請方法は「4 🔮 将来への備え」の中にあります。</div>
+  <div class="rc-note" style="margin-bottom:16px;">💡 障害基礎年金の詳しい申請方法は「4 💰 お金・将来への備え」の中にあります。</div>
 
   <!-- グループホームカード -->
-  <div class="seido-card" style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2d8a60,#1a5a38);">🏡</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a38;">将来の住まい</div>
         <div class="rc-title">グループホームの探し方</div>
       </div>
       <span class="rc-chev" style="color:#1a5a38;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
       <p class="rc-lead">グループホームは、障がいのある方が少人数で共同生活を送る住まいです。医療的ケア対応のホームは少なく、空き待ちも長いため、<strong>早めの情報収集と見学が大切</strong>です。</p>
       <div class="rc-block">
@@ -5421,16 +5440,16 @@ function mnSwitchTab(id) {
         <button class="rc-btn" style="background:#f0e8ff;color:#4a1a6a;border:1px solid #d0b8f0;margin-top:8px;" onclick="goTab('sotsugo')">💡 関連：🏠 卒業後が心配を見る →</button>
       </div>
     </div>
-  </div>
-  <div class="seido-card" style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
-    <div class="seido-card-summary">
+  </details>
+  <details style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#2a8a7a,#1a5a50);">🛏️</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a50;">在宅生活を支える用具</div>
         <div class="rc-title">日常生活用具給付——吸引器・特殊寝台など</div>
       </div>
       <span class="rc-chev" style="color:#1a5a50;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a8d4c8;">
       <p class="rc-lead">日常生活用具給付等事業は、重度障がいのある方の日常生活を支える用具の購入費用を市区町村が給付する制度です。補装具費支給制度とは別の制度で、対象品目が異なります。</p>
       <div class="rc-block">
@@ -5459,18 +5478,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 障害支援区分更新カード -->
-  <div class="seido-card" style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#5a5a9a,#3a3a6a);">🔄</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#3a3a6a;">福祉サービスの土台</div>
         <div class="rc-title">障害支援区分——認定と更新の流れ</div>
       </div>
       <span class="rc-chev" style="color:#3a3a6a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #c8c8e8;">
       <p class="rc-lead">障害支援区分は、障害福祉サービスを利用するために必要な認定です。区分1〜6があり、数字が大きいほど支援の必要度が高いとされます。多くのサービスに区分の要件があるため、適切な区分を取得・維持することが大切です。</p>
       <div class="rc-block">
@@ -5505,18 +5524,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 施設入所支援カード -->
-  <div class="seido-card" style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#8a6a3a,#5a4020);">🏛️</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#5a4020;">24時間支援の住まい</div>
         <div class="rc-title">施設入所支援——申請の流れと注意点</div>
       </div>
       <span class="rc-chev" style="color:#5a4020;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #c8b8a8;">
       <p class="rc-lead">施設入所支援は、障がいのある方が障害者支援施設に入所して、夜間・休日の日常生活支援を受けるサービスです。重度の障がいや医療的ケアがある方が利用することが多いですが、<strong>待機期間が非常に長い</strong>ため早めの準備が必要です。</p>
       <div class="rc-block">
@@ -5542,18 +5561,18 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <!-- 自立生活援助カード -->
-  <div class="seido-card" style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
-    <div class="seido-card-summary">
+  <details style="border:1.5px solid #a0d0c8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#eef7f5,#f5fbfa);box-shadow:var(--shadow);margin-bottom:20px;">
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#3a8a3a,#1a5a1a);">🏡</div>
       <div class="rc-htext">
         <div class="rc-tag" style="color:#1a5a1a;">一人暮らしを支える</div>
         <div class="rc-title">自立生活援助——一人暮らしのサポート</div>
       </div>
       <span class="rc-chev" style="color:#1a5a1a;">▶</span>
-    </div>
+    </summary>
     <div class="rc-body" style="border-top:1px solid #a8c8a8;">
       <p class="rc-lead">自立生活援助は、施設やグループホームから一人暮らしに移行した方、または一人暮らしを希望する障がいのある方が、地域で安心して生活できるよう定期的な訪問や随時の相談支援を受けられるサービスです。</p>
       <div class="rc-block">
@@ -5578,14 +5597,13 @@ function mnSwitchTab(id) {
         <a href="tel:048-736-1131" class="rc-btn rc-btn-tel">📞 春日部市 障がい者支援課</a>
       </div>
     </div>
-  </div>
+  </details>
 
   <div style="background:#f0f4f7;border-radius:12px;padding:12px 14px;margin-top:4px;font-size:11.5px;color:#5a6a7a;line-height:1.8;text-align:center;">
     💡 このタブでご紹介した制度・手続き・金額は<strong>一般的な目安</strong>です。自治体・年度・障がいの状態によって対象条件や内容が異なります。申請の前に必ずお住まいの自治体窓口でご確認ください。
   </div>
 
-
-</div><!-- /seido-sub-otona -->
+  </div><!-- /seido-sub-otona -->
 
 </section>
 
@@ -5956,6 +5974,15 @@ function mnSwitchTab(id) {
   <div class="fav-list" id="favList"></div>
 </div>
 <div class="fav-back" id="favBack"></div>
+
+<!-- 制度カード一覧画面 -->
+<div class="seido-detail-view" id="seidoListView">
+  <div class="seido-detail-header">
+    <button class="seido-detail-back" id="seidoListBack">←</button>
+    <div class="seido-detail-title" id="seidoListTitle"></div>
+  </div>
+  <div class="seido-detail-body" id="seidoListBody"></div>
+</div>
 
 <!-- 制度詳細画面 -->
 <div class="seido-detail-view" id="seidoDetailView">
@@ -7347,87 +7374,103 @@ function init(){
   $("#favBack").addEventListener("click",closeFav);
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeFav();});
 
-  // 制度サブタブ
-  function initSeidoSubtabs(){
-    const stabs = $$(".seido-stab");
-    stabs.forEach(btn=>{
-      btn.addEventListener("click",(e)=>{
-        e.stopPropagation();
-        const key = btn.dataset.seido;
-        stabs.forEach(b=>b.classList.remove("active"));
-        btn.classList.add("active");
-        $$(".seido-subcontent").forEach(c=>c.classList.remove("active"));
-        const target = document.getElementById("seido-sub-"+key);
-        if(target) target.classList.add("active");
-        // サブタブ切り替え後はタブ上部へスクロール
-        const subtabsEl = document.getElementById("seidoSubtabs");
-        if(subtabsEl){
-          const headerH = document.querySelector("header.top")?.offsetHeight||140;
-          const y = subtabsEl.getBoundingClientRect().top+window.scrollY-headerH-6;
-          window.scrollTo({top:y,behavior:"smooth"});
-        }
-      });
-    });
-  }
-  initSeidoSubtabs();
+  // 制度サブタブ＋2段階全画面遷移
+  function initSeidoNav(){
+    const listView   = document.getElementById('seidoListView');
+    const listBody   = document.getElementById('seidoListBody');
+    const listTitle  = document.getElementById('seidoListTitle');
+    const listBack   = document.getElementById('seidoListBack');
+    const detailView = document.getElementById('seidoDetailView');
+    const detailBody = document.getElementById('seidoDetailBody');
+    const detailTitle= document.getElementById('seidoDetailTitle');
+    const detailBack = document.getElementById('seidoDetailBack');
 
-  // seido-subcontentへのイベントバブリングを防ぐ
-  document.querySelectorAll('.seido-subtabs').forEach(el=>{
-    el.addEventListener('click', e=>e.stopPropagation());
-  });
-  // seido-subcontent自体はクリックイベントを上に伝えない
-  document.querySelectorAll('.seido-subcontent').forEach(el=>{
-    el.addEventListener('click', e=>{
-      // seido-cardのクリックだけ通す、それ以外は止める
-      if(!e.target.closest('.seido-card')) e.stopPropagation();
-    });
-  });
-
-  // 制度タブ：詳細画面切り替え
-  function initSeidoDetail(){
-    const detailView  = document.getElementById('seidoDetailView');
-    const detailBody  = document.getElementById('seidoDetailBody');
-    const detailTitle = document.getElementById('seidoDetailTitle');
-    const backBtn     = document.getElementById('seidoDetailBack');
-
-    // bodyに直接移動（position:fixedが確実に効くように）
+    // body直下に移動
+    document.body.appendChild(listView);
     document.body.appendChild(detailView);
 
-    // 制度タブ内の全seido-cardにクリックを設定
-    document.querySelectorAll('#tab-seido .seido-card').forEach(card => {
-      // seido-subtabsの中のseido-stabボタン自体はスキップ
-      if(card.closest('.seido-subtabs')) return;
-      card.addEventListener('click', (e) => {
-        if(e.target.closest('.seido-stab')) return;
-        // クリックされたのがこのcard自身の直接のsummaryかチェック
-        // 別のseido-cardの中にいるならスキップ
-        const clickedCard = e.target.closest('.seido-card');
-        if(clickedCard !== card) return;
-        e.stopPropagation();
-        const body    = card.querySelector(':scope > .rc-body');
-        const titleEl = card.querySelector(':scope > .seido-card-summary .rc-title');
-        if(!body || !titleEl) return;
+    // サブタブラベル
+    const labels = {
+      hajimete:'🌱 はじめての方',
+      techo:   '🪪 手帳でできること',
+      seikatsu:'💪 生活を支える制度',
+      gakko:   '🎒 学校・進路',
+      okane:   '💰 お金・将来への備え',
+      otona:   '🧑 大人のサービス',
+    };
 
-        detailTitle.textContent = titleEl.textContent.trim();
-        detailBody.innerHTML    = body.innerHTML;
+    // カード一覧を全画面で開く
+    function openList(key){
+      const src = document.getElementById('seido-sub-'+key);
+      if(!src) return;
+      listTitle.textContent = labels[key] || key;
 
-        // チェックリストのイベントを再バインド
-        detailBody.querySelectorAll('.check-item').forEach(item => {
-          item.addEventListener('click', () => {
-            const checked = item.getAttribute('aria-checked') === 'true';
-            item.setAttribute('aria-checked', !checked);
-            item.classList.toggle('done', !checked);
-          });
+      // カード一覧をコピー（summaryだけのカードボタンを生成）
+      listBody.innerHTML = '';
+      src.querySelectorAll('details').forEach(det => {
+        const titleEl = det.querySelector('.rc-title');
+        const tagEl   = det.querySelector('.rc-tag');
+        const iconEl  = det.querySelector('.rc-icon');
+        if(!titleEl) return;
+
+        const btn = document.createElement('div');
+        btn.className = 'seido-list-card';
+        btn.innerHTML = `
+          <div class="seido-list-icon">${iconEl ? iconEl.innerHTML : ''}</div>
+          <div class="seido-list-text">
+            ${tagEl ? `<div class="rc-tag">${tagEl.innerHTML}</div>` : ''}
+            <div class="rc-title">${titleEl.innerHTML}</div>
+          </div>
+          <span class="rc-chev">›</span>
+        `;
+        btn.addEventListener('click', () => openDetail(det));
+        listBody.appendChild(btn);
+      });
+
+      listView.classList.add('open');
+      listView.scrollTop = 0;
+    }
+
+    // カード詳細を全画面で開く
+    function openDetail(det){
+      const body    = det.querySelector('.rc-body');
+      const titleEl = det.querySelector('.rc-title');
+      if(!body || !titleEl) return;
+
+      detailTitle.textContent = titleEl.textContent.trim();
+      detailBody.innerHTML = body.innerHTML;
+
+      // チェックリスト再バインド
+      detailBody.querySelectorAll('.check-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const checked = item.getAttribute('aria-checked') === 'true';
+          item.setAttribute('aria-checked', !checked);
+          item.classList.toggle('done', !checked);
         });
+      });
 
-        detailView.classList.add('open');
-        detailView.scrollTop = 0;
-        window.scrollTo({top:0});
+      detailView.classList.add('open');
+      detailView.scrollTop = 0;
+    }
+
+    // サブタブボタン
+    $$('.seido-stab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.seido;
+        $$('.seido-stab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        openList(key);
       });
     });
 
-    // 戻るボタン
-    backBtn.addEventListener('click', () => {
+    // 戻るボタン：詳細→一覧
+    detailBack.addEventListener('click', () => {
+      detailView.classList.remove('open');
+    });
+
+    // 戻るボタン：一覧→サブタブ
+    listBack.addEventListener('click', () => {
+      listView.classList.remove('open');
       detailView.classList.remove('open');
     });
 
@@ -7435,10 +7478,12 @@ function init(){
     window.addEventListener('popstate', () => {
       if(detailView.classList.contains('open')){
         detailView.classList.remove('open');
+      } else if(listView.classList.contains('open')){
+        listView.classList.remove('open');
       }
     });
   }
-  initSeidoDetail();
+  initSeidoNav();
 }
 init();
 </script>
