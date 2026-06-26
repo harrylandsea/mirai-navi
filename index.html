@@ -6456,10 +6456,10 @@ function goTab(id, scrollTargetId){
       $$(".seido-stab").forEach(b=>b.classList.remove("active"));
       const targetBtn = $(`.seido-stab[data-seido="${subKey}"]`);
       if(targetBtn) targetBtn.classList.add("active");
-      $$(".seido-subcontent").forEach(c=>c.classList.remove("active"));
-      const targetSub = document.getElementById("seido-sub-"+subKey);
-      if(targetSub) targetSub.classList.add("active");
+      // openListが定義されていれば呼ぶ
+      setTimeout(()=>{ if(typeof openSeidoList==='function') openSeidoList(subKey); },50);
     }
+    return;
   }
   if(scrollTargetId){
     setTimeout(()=>{
@@ -7399,8 +7399,8 @@ function init(){
       otona:   '🧑 大人のサービス',
     };
 
-    // カード一覧を全画面で開く
-    function openList(key){
+    // カード一覧を全画面で開く（goTabからも呼べるようにグローバル公開）
+    window.openSeidoList = function(key){
       const src = document.getElementById('seido-sub-'+key);
       if(!src) return;
       listTitle.textContent = labels[key] || key;
@@ -7459,7 +7459,7 @@ function init(){
         const key = btn.dataset.seido;
         $$('.seido-stab').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        openList(key);
+        window.openSeidoList(key);
       });
     });
 
