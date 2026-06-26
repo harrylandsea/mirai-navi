@@ -1332,7 +1332,7 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
 }
 .seido-stab.active::after{content:"✕";color:var(--c-act);}
 .seido-subcontent{display:none}
-.seido-subcontent.active{display:block;animation:fade .25s ease}
+.seido-subcontent.active{display:block !important;animation:fade .25s ease;min-height:100px}
 
 /* ===== 制度カード一覧（詳細切り替え方式） ===== */
 /* 制度カード（detailsをdivに変換済み） */
@@ -7375,6 +7375,13 @@ function init(){
   document.querySelectorAll('.seido-subtabs').forEach(el=>{
     el.addEventListener('click', e=>e.stopPropagation());
   });
+  // seido-subcontent自体はクリックイベントを上に伝えない
+  document.querySelectorAll('.seido-subcontent').forEach(el=>{
+    el.addEventListener('click', e=>{
+      // seido-cardのクリックだけ通す、それ以外は止める
+      if(!e.target.closest('.seido-card')) e.stopPropagation();
+    });
+  });
 
   // 制度タブ：詳細画面切り替え
   function initSeidoDetail(){
@@ -7392,8 +7399,13 @@ function init(){
       if(card.closest('.seido-subtabs')) return;
       card.addEventListener('click', (e) => {
         if(e.target.closest('.seido-stab')) return;
-        const body    = card.querySelector('.rc-body');
-        const titleEl = card.querySelector('.rc-title');
+        // クリックされたのがこのcard自身の直接のsummaryかチェック
+        // 別のseido-cardの中にいるならスキップ
+        const clickedCard = e.target.closest('.seido-card');
+        if(clickedCard !== card) return;
+        e.stopPropagation();
+        const body    = card.querySelector(':scope > .rc-body');
+        const titleEl = card.querySelector(':scope > .seido-card-summary .rc-title');
         if(!body || !titleEl) return;
 
         detailTitle.textContent = titleEl.textContent.trim();
