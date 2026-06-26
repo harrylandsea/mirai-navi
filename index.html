@@ -5981,7 +5981,7 @@ function mnSwitchTab(id) {
 <!-- 制度カード一覧画面 -->
 <div class="seido-detail-view" id="seidoListView">
   <div class="seido-detail-header">
-    <button class="seido-detail-back" id="seidoListBack">カテゴリ</button>
+    <button class="seido-detail-back" id="seidoListBack">カテゴリーに戻る</button>
     <div class="seido-detail-title" id="seidoListTitle"></div>
   </div>
   <div class="seido-detail-body" id="seidoListBody"></div>
@@ -5990,7 +5990,7 @@ function mnSwitchTab(id) {
 <!-- 制度詳細画面 -->
 <div class="seido-detail-view" id="seidoDetailView">
   <div class="seido-detail-header">
-    <button class="seido-detail-back" id="seidoDetailBack">一覧</button>
+    <button class="seido-detail-back" id="seidoDetailBack">一覧に戻る</button>
     <div class="seido-detail-title" id="seidoDetailTitle"></div>
   </div>
   <div class="seido-detail-body" id="seidoDetailBody"></div>
@@ -6455,13 +6455,18 @@ function goTab(id, scrollTargetId){
       "discount-seido":"techo",
     };
     const subKey = subMap[scrollTargetId];
-    if(subKey){
-      $$(".seido-stab").forEach(b=>b.classList.remove("active"));
-      const targetBtn = $(`.seido-stab[data-seido="${subKey}"]`);
-      if(targetBtn) targetBtn.classList.add("active");
-      // openListが定義されていれば呼ぶ
-      setTimeout(()=>{ if(typeof openSeidoList==='function') openSeidoList(subKey); },50);
-    }
+    setTimeout(()=>{
+      // IDに対応するdetailsを直接探して詳細画面を開く
+      const targetDet = document.getElementById(scrollTargetId);
+      if(targetDet && targetDet.tagName === 'DETAILS' && typeof window.openSeidoDetail === 'function'){
+        window.openSeidoDetail(targetDet);
+      } else if(subKey && typeof window.openSeidoList === 'function'){
+        $$(".seido-stab").forEach(b=>b.classList.remove("active"));
+        const targetBtn = $(`.seido-stab[data-seido="${subKey}"]`);
+        if(targetBtn) targetBtn.classList.add("active");
+        window.openSeidoList(subKey);
+      }
+    }, 50);
     return;
   }
   if(scrollTargetId){
@@ -7426,7 +7431,7 @@ function init(){
           </div>
           <span class="rc-chev">›</span>
         `;
-        btn.addEventListener('click', () => openDetail(det));
+        btn.addEventListener('click', () => window.openSeidoDetail(det, true));
         listBody.appendChild(btn);
       });
 
@@ -7435,8 +7440,8 @@ function init(){
       history.pushState({seido:'list', key}, '', '');
     }
 
-    // カード詳細を全画面で開く
-    function openDetail(det){
+    // カード詳細を全画面で開く（グローバル公開）
+    window.openSeidoDetail = function(det, fromList=false){
       const body    = det.querySelector('.rc-body');
       const titleEl = det.querySelector('.rc-title');
       if(!body || !titleEl) return;
@@ -7453,10 +7458,17 @@ function init(){
         });
       });
 
+      // 戻るボタンのラベルと動作を切り替え
+      detailBack.textContent = fromList ? '一覧に戻る' : '制度トップに戻る';
+      detailBack._fromList = fromList;
+
       detailView.classList.add('open');
       detailView.scrollTop = 0;
       history.pushState({seido:'detail'}, '', '');
-    }
+    };
+
+    // 一覧カードからの呼び出しはfromList=true
+    window.openSeidoDetail._fromList = false;
 
     // サブタブボタン
     $$('.seido-stab').forEach(btn => {
@@ -7468,9 +7480,14 @@ function init(){
       });
     });
 
-    // 戻るボタン：詳細→一覧
+    // 戻るボタン：詳細→一覧 or 制度トップ
     detailBack.addEventListener('click', () => {
       detailView.classList.remove('open');
+      if(!detailBack._fromList){
+        listView.classList.remove('open');
+        // 制度タブをアクティブに
+        goTab('seido');
+      }
     });
 
     // 戻るボタン：一覧→サブタブ
