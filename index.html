@@ -1369,12 +1369,15 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   display:flex;align-items:center;gap:12px;
 }
 .seido-detail-back{
-  width:38px;height:38px;border-radius:12px;flex:none;
-  display:grid;place-items:center;
-  background:var(--bg-soft);border:1px solid var(--line);
-  font-size:1.1rem;cursor:pointer;transition:.15s;
+  display:flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:20px;flex:none;
+  background:var(--c-act);color:#fff;
+  font-size:.85rem;font-weight:800;
+  cursor:pointer;transition:.15s;
+  border:none;
 }
-.seido-detail-back:active{background:#fde3b8}
+.seido-detail-back::before{content:"←";font-size:1rem}
+.seido-detail-back:active{opacity:.8}
 .seido-detail-title{
   font-size:.9rem;font-weight:800;color:var(--ink);
   flex:1;line-height:1.4;
@@ -5978,7 +5981,7 @@ function mnSwitchTab(id) {
 <!-- 制度カード一覧画面 -->
 <div class="seido-detail-view" id="seidoListView">
   <div class="seido-detail-header">
-    <button class="seido-detail-back" id="seidoListBack">←</button>
+    <button class="seido-detail-back" id="seidoListBack">カテゴリ</button>
     <div class="seido-detail-title" id="seidoListTitle"></div>
   </div>
   <div class="seido-detail-body" id="seidoListBody"></div>
@@ -5987,7 +5990,7 @@ function mnSwitchTab(id) {
 <!-- 制度詳細画面 -->
 <div class="seido-detail-view" id="seidoDetailView">
   <div class="seido-detail-header">
-    <button class="seido-detail-back" id="seidoDetailBack">←</button>
+    <button class="seido-detail-back" id="seidoDetailBack">一覧</button>
     <div class="seido-detail-title" id="seidoDetailTitle"></div>
   </div>
   <div class="seido-detail-body" id="seidoDetailBody"></div>
@@ -7429,6 +7432,7 @@ function init(){
 
       listView.classList.add('open');
       listView.scrollTop = 0;
+      history.pushState({seido:'list', key}, '', '');
     }
 
     // カード詳細を全画面で開く
@@ -7451,6 +7455,7 @@ function init(){
 
       detailView.classList.add('open');
       detailView.scrollTop = 0;
+      history.pushState({seido:'detail'}, '', '');
     }
 
     // サブタブボタン
@@ -7474,8 +7479,8 @@ function init(){
       detailView.classList.remove('open');
     });
 
-    // Androidの戻るボタン対応
-    window.addEventListener('popstate', () => {
+    // ブラウザ戻るボタン対応
+    window.addEventListener('popstate', (e) => {
       if(detailView.classList.contains('open')){
         detailView.classList.remove('open');
       } else if(listView.classList.contains('open')){
