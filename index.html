@@ -1356,13 +1356,14 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
 .seido-detail-view{
   display:none;
   position:fixed;
-  inset:0;
-  z-index:200;
+  top:0;left:0;
+  width:100vw;height:100vh;
+  z-index:9999;
   background:var(--bg);
   overflow-y:auto;
-  animation:slideInRight .22s ease;
+  -webkit-overflow-scrolling:touch;
 }
-.seido-detail-view.open{display:block}
+.seido-detail-view.open{display:block;animation:slideInRight .22s ease}
 @keyframes slideInRight{
   from{transform:translateX(40px);opacity:0}
   to{transform:none;opacity:1}
@@ -7357,12 +7358,7 @@ function init(){
         btn.classList.add("active");
         $$(".seido-subcontent").forEach(c=>c.classList.remove("active"));
         const target = document.getElementById("seido-sub-"+key);
-        if(target){
-          target.classList.add("active");
-          // デバッグ：activeになったか確認
-          target.style.outline = "3px solid red";
-          setTimeout(()=>{ target.style.outline = ""; }, 2000);
-        }
+        if(target) target.classList.add("active");
         // サブタブ切り替え後はタブ上部へスクロール
         const subtabsEl = document.getElementById("seidoSubtabs");
         if(subtabsEl){
@@ -7386,6 +7382,9 @@ function init(){
     const detailBody  = document.getElementById('seidoDetailBody');
     const detailTitle = document.getElementById('seidoDetailTitle');
     const backBtn     = document.getElementById('seidoDetailBack');
+
+    // bodyに直接移動（position:fixedが確実に効くように）
+    document.body.appendChild(detailView);
 
     // 制度タブ内の全seido-cardにクリックを設定
     document.querySelectorAll('#tab-seido .seido-card').forEach(card => {
