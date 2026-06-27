@@ -43,7 +43,7 @@
   --p-service:#7bb274;
   --p-story:  #d97aa5;
 
-  --fs: 15px;          /* 文字サイズ基準 */
+  --fs: 14px;          /* 文字サイズ基準 */
   --radius:   18px;
   --radius-sm:13px;
   --shadow:   0 2px 4px rgba(58,51,48,.04), 0 8px 24px rgba(58,51,48,.06);
@@ -5161,6 +5161,356 @@ function mnSwitchTab(id) {
         </div>
       </div>
 
+
+      <div class="rc-block">
+        <h5>📊 割引の受け方まるごと図解</h5>
+        <style>
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 20px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+
+  /* ヘッダー */
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #f0b8d0;
+    color: #7a2a4a;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 16px;
+    font-weight: 800;
+    color: #2d2d2d;
+    line-height: 1.4;
+  }
+
+  /* 年齢フェーズ帯 */
+  .phase {
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .phase.now {
+    background: #f0faf4;
+    border: 2px solid #80c8a0;
+  }
+  .phase.after {
+    background: #fffbf0;
+    border: 2px solid #f0c850;
+  }
+
+  .phase-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .phase-badge {
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1;
+    flex-shrink: 0;
+    text-align: center;
+    width: 56px;
+  }
+  .now .phase-badge { color: #2a8050; }
+  .after .phase-badge { color: #b07000; }
+
+  .phase-badge .unit {
+    font-size: 10px;
+    font-weight: 700;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .phase-label {
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .now .phase-label { color: #2a8050; }
+  .after .phase-label { color: #b07000; }
+
+  /* 支払いルート */
+  .route-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .route {
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+
+  .route-title {
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .route-title .rbadge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 20px;
+  }
+  .route.general .route-title { color: #2050a0; }
+  .route.general .rbadge { background: #dde8ff; color: #2050a0; }
+  .route.etcok .route-title { color: #307050; }
+  .route.etcok .rbadge { background: #d8f0e4; color: #207050; }
+  .route.etcng .route-title { color: #a06020; }
+  .route.etcng .rbadge { background: #ffeedd; color: #a06020; }
+
+  .pay-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .chip {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #f5f5f5;
+    color: #444;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .must-note {
+    font-size: 10.5px;
+    color: #c06080;
+    font-weight: 700;
+    margin-top: 6px;
+  }
+
+  .problem-note {
+    font-size: 11px;
+    color: #a06020;
+    font-weight: 600;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* ETC親名義OK */
+  .ok-note {
+    font-size: 11px;
+    color: #2a8050;
+    font-weight: 700;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* 矢印 */
+  .arrow-down {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    background: #d0607a;
+    border-radius: 20px;
+    padding: 6px 18px;
+    margin: 10px 0;
+    letter-spacing: 0.03em;
+  }
+
+  /* セクションタイトル */
+  .sec-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0 10px;
+  }
+  .sec-title::before, .sec-title::after {
+    content: '';
+    flex: 1;
+    border-top: 1.5px dashed #e8d8e0;
+  }
+
+  /* 3つの方法 */
+  .methods { display: flex; flex-direction: column; gap: 8px; }
+  .method {
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  .method.m1 { background: #f0f7ff; border: 1.5px solid #a8c8f0; }
+  .method.m2 { background: #f5f0ff; border: 1.5px solid #c0a8f0; }
+  .method.m3 { background: #f0faf4; border: 1.5px solid #a0d4b8; }
+
+  .method-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .m1 .method-icon { background: #ddeeff; }
+  .m2 .method-icon { background: #ebe0ff; }
+  .m3 .method-icon { background: #d4f0e0; }
+
+  .method-num { font-size: 10px; font-weight: 700; margin-bottom: 1px; }
+  .m1 .method-num { color: #4080c0; }
+  .m2 .method-num { color: #7050c0; }
+  .m3 .method-num { color: #308060; }
+
+  .method-title { font-size: 12.5px; font-weight: 800; color: #1a1a1a; line-height: 1.3; margin-bottom: 3px; }
+  .method-desc { font-size: 11px; color: #666; line-height: 1.6; }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+  .tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; }
+  .tag.good { background: #d8f0e4; color: #207050; }
+  .tag.note { background: #ffeedd; color: #a05020; }
+  .tag.warn { background: #ffeaea; color: #c03030; }
+
+  .footer-note {
+    margin-top: 16px;
+    font-size: 10.5px;
+    color: #bbb;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .footer-note a { color: #d08098; }
+</style>
+        <div class="etcig-wrap" style="margin-top:8px;"><div class="card">
+
+  <div class="header">
+    <div class="tag">📋 高速道路 障害者割引</div>
+    <h1>割引の受け方まるごと図解</h1>
+  </div>
+
+  <!-- 現状：20歳未満 -->
+  <div class="phase now">
+    <div class="phase-header">
+      <div class="phase-badge">20<span class="unit">歳未満</span></div>
+      <div class="phase-label">✅ 現状<br>（2026年4月〜）</div>
+    </div>
+    <div class="route-row">
+
+      <div class="route general">
+        <div class="route-title">🏁 一般レーン（停車・手帳提示）<span class="rbadge">いつでも使える</span></div>
+        <div class="pay-chips">
+          <span class="chip">💴 現金</span>
+          <span class="chip">💳 クレジットカード</span>
+          <span class="chip">🪪 ETCカード手渡し</span>
+        </div>
+        <div class="must-note">⚠️ 手帳提示が必須（ミライロIDアプリでも可）</div>
+      </div>
+
+      <div class="route etcok">
+        <div class="route-title">🚀 ETCノンストップ<span class="rbadge">親権者名義でOK</span></div>
+        <div class="ok-note">✅ 親権者・後見人名義のETCカードで登録できる<br>（18歳未満→20歳未満に2026年4月拡大）</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 矢印 -->
+  <div class="arrow-down">↓ 20歳の誕生日から状況が変わる</div>
+
+  <!-- 20歳以降 -->
+  <div class="phase after">
+    <div class="phase-header">
+      <div class="phase-badge">20<span class="unit">歳以降</span></div>
+      <div class="phase-label">⚠️ ここから問題が発生</div>
+    </div>
+    <div class="route-row">
+
+      <div class="route general">
+        <div class="route-title">🏁 一般レーン（停車・手帳提示）<span class="rbadge">引き続き使える</span></div>
+        <div class="pay-chips">
+          <span class="chip">💴 現金</span>
+          <span class="chip">💳 クレジットカード</span>
+          <span class="chip">🪪 ETCカード手渡し</span>
+        </div>
+        <div class="must-note">⚠️ 手帳提示が必須（ミライロIDアプリでも可）</div>
+      </div>
+
+      <div class="route etcng">
+        <div class="route-title">🚀 ETCノンストップ<span class="rbadge">本人名義が必要に</span></div>
+        <div class="problem-note">⚠️ 親名義では登録不可になる<br>本人はクレジット契約できず通常カードは作れない<br>→ 下の3つの方法で解決！</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 解決策 -->
+  <div class="arrow-down">↓ ETCノンストップを続けるには</div>
+  <div class="sec-title">💡 ETCノンストップを続ける3つの方法</div>
+
+  <div class="methods">
+
+    <div class="method m1">
+      <div class="method-icon">💳</div>
+      <div>
+        <div class="method-num">方法 1</div>
+        <div class="method-title">ETC家族カード（本人名義）</div>
+        <div class="method-desc">親のクレカに紐づく子ども名義カード。カード上の名義が本人ならOK。</div>
+        <div class="tags">
+          <span class="tag good">クレジット契約不要</span>
+          <span class="tag note">カード会社による</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="method m2">
+      <div class="method-icon">⚖️</div>
+      <div>
+        <div class="method-num">方法 2</div>
+        <div class="method-title">成年後見人等名義のETCカード</div>
+        <div class="method-desc">後見人・保佐人・補助人の名義で登録。成年後見制度の利用がETC継続に直結。</div>
+        <div class="tags">
+          <span class="tag good">制度上確実</span>
+          <span class="tag warn">申立て手続きが必要</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="method m3">
+      <div class="method-icon">🪪</div>
+      <div>
+        <div class="method-num">方法 3</div>
+        <div class="method-title">ETCパーソナルカード（本人名義）</div>
+        <div class="method-desc">高速道路6社発行・保証金制・クレジット審査なし。本人名義として認められる。</div>
+        <div class="tags">
+          <span class="tag good">審査なし</span>
+          <span class="tag note">保証金が必要</span>
+          <span class="tag note">発行まで時間がかかる</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="footer-note">
+    情報は2026年4月時点。各高速道路会社・窓口でご確認ください。<br>
+    <a href="https://harrylandsea.github.io/mirai-navi/">みらいナビ</a> より
+  </p>
+
+</div></div>
+      </div>
       <div class="rc-block">
         <h5>✅ 2026年4月に改善された点</h5>
         <p><strong>親権者や成年後見人等の名義のETCカードで登録できる年齢範囲が、18歳未満から20歳未満に拡大</strong>されました（全国の高速道路会社共通）。登録できる名義は、親権者・親権者に準ずる方・未成年後見人・成年後見人・保佐人・補助人です。</p>
@@ -5945,34 +6295,288 @@ function mnSwitchTab(id) {
         </div>
       </div>
 
-      <div class="rc-block">
-        <h5 style="color:#4a1a6a;">👨‍👩‍👧‍👦 きょうだい児がいる</h5>
-        <ul>
-          <li>障害年金＋扶養共済で生活基盤を確保</li>
-          <li>家族で役割分担を決めておく</li>
-          <li>必要に応じて家族信託を活用</li>
-        </ul>
-        <div class="rc-note" style="margin-top:8px;">💡 「全部をきょうだいに任せる」ではなく、支援者も含めたチームづくりが大切。</div>
-      </div>
+
 
       <div class="rc-block">
-        <h5 style="color:#4a1a6a;">👨‍👩‍👧 一人っ子</h5>
-        <ul>
-          <li>障害年金＋扶養共済で生活基盤を確保</li>
-          <li>成年後見制度の早めの検討</li>
-          <li>グループホームの情報収集を早めに始める</li>
-        </ul>
-        <div class="rc-note" style="margin-top:8px;">💡 親族以外の支援体制づくりが重要。相談支援専門員との関係を深めておく。</div>
-      </div>
+        <h5 style="color:#4a1a6a;">🏠 我が家の場合、どう考える？</h5>
+        <style>
+  .card {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 24px 20px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .header .tag {
+    display: inline-block;
+    background: #d8c0f0;
+    color: #5a2a80;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+  }
+  .header h1 {
+    font-size: 16px;
+    font-weight: 800;
+    color: #2d2d2d;
+    line-height: 1.4;
+  }
+  .header .sub { font-size: 11px; color: #999; margin-top: 3px; }
 
-      <div class="rc-block">
-        <h5 style="color:#4a1a6a;">👤 頼れる親族がいない</h5>
-        <ul>
-          <li>障害年金＋扶養共済＋信託銀行の組み合わせを検討</li>
-          <li>成年後見制度（専門家後見人）</li>
-          <li>相談支援専門員・地域の支援ネットワークづくり</li>
-        </ul>
-        <div class="rc-note" style="margin-top:8px;">💡 「お金」よりも「支えてくれる人」を増やすことが最優先。</div>
+  /* 質問 */
+  .question {
+    background: #f5f0ff;
+    border: 2px solid #c0a0e8;
+    border-radius: 14px;
+    padding: 14px 16px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .question .q-label { font-size: 10px; font-weight: 700; color: #8060b0; margin-bottom: 5px; }
+  .question .q-text { font-size: 14px; font-weight: 800; color: #3a1a60; }
+
+  /* アコーディオン */
+  .acc-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; }
+
+  .acc-item { border-radius: 12px; overflow: hidden; }
+  .acc-item.siblings { border: 1.5px solid #f0c880; }
+  .acc-item.only     { border: 1.5px solid #c0a8e8; }
+  .acc-item.alone    { border: 1.5px solid #f0a0a0; }
+
+  .acc-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    text-align: left;
+    gap: 8px;
+  }
+  .siblings .acc-btn { background: #fff8f0; color: #a05020; }
+  .only .acc-btn     { background: #f8f4ff; color: #6030a0; }
+  .alone .acc-btn    { background: #fff4f4; color: #a03030; }
+
+  .acc-btn .btn-left { display: flex; align-items: center; gap: 8px; }
+  .acc-btn .btn-icon { font-size: 20px; }
+  .acc-btn .btn-sub { font-size: 10px; font-weight: 600; color: #999; margin-top: 1px; }
+
+  .acc-btn .chevron {
+    font-size: 12px;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+    color: #bbb;
+  }
+  .acc-item.open .chevron { transform: rotate(90deg); }
+
+  /* 中身 */
+  .acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .acc-item.open .acc-body { max-height: 600px; }
+
+  .acc-inner {
+    padding: 4px 16px 14px;
+  }
+  .siblings .acc-inner { background: #fff8f0; }
+  .only .acc-inner     { background: #f8f4ff; }
+  .alone .acc-inner    { background: #fff4f4; }
+
+  .divider-line {
+    height: 1px;
+    margin-bottom: 12px;
+  }
+  .siblings .divider-line { background: #f0d8b0; }
+  .only .divider-line     { background: #d8c8f0; }
+  .alone .divider-line    { background: #f0c0c0; }
+
+  .ci-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+  .ci {
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .ci-icon { flex-shrink: 0; font-size: 14px; }
+
+  .case-tip {
+    font-size: 11px;
+    color: #777;
+    line-height: 1.6;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 8px;
+  }
+
+  /* 共通 */
+  .common-msg {
+    background: #f0f0ff;
+    border: 1.5px solid #b0b0e8;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .common-msg .cm-title { font-size: 12px; font-weight: 800; color: #4040a0; margin-bottom: 8px; }
+  .pillar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .pillar {
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11px;
+    color: #333;
+    line-height: 1.4;
+  }
+  .pillar strong { color: #4040a0; display: block; margin-bottom: 1px; }
+
+  /* メッセージ */
+  .navi-msg {
+    background: #fff0f8;
+    border-left: 4px solid #e070a0;
+    border-radius: 0 12px 12px 0;
+    padding: 12px 14px;
+  }
+  .navi-msg .nm-label { font-size: 10px; font-weight: 700; color: #a04070; margin-bottom: 5px; }
+  .navi-msg .nm-text { font-size: 12px; color: #333; line-height: 1.65; }
+  .navi-msg .nm-text strong { color: #a04070; }
+
+  .footer-note { margin-top: 14px; font-size: 10.5px; color: #bbb; text-align: center; }
+  .footer-note a { color: #d08098; }
+</style>
+        <div class="ona-wrap" style="margin-top:8px;"><div class="card">
+
+  <div class="header">
+    <div class="tag">💜 親なきあと対策</div>
+    <h1>我が家の場合、どう考える？</h1>
+    <p class="sub">当てはまるケースをタップしてください</p>
+  </div>
+
+  <div class="question">
+    <div class="q-label">まず確認</div>
+    <div class="q-text">頼れる家族はいますか？</div>
+  </div>
+
+  <div class="acc-list">
+
+    <div class="acc-item siblings">
+      <button class="acc-btn" onclick="toggle(this)">
+        <div class="btn-left">
+          <span class="btn-icon">👨‍👩‍👧‍👦</span>
+          <div>
+            <div>きょうだい児がいる</div>
+            <div class="btn-sub">役割分担と信託の活用がポイント</div>
+          </div>
+        </div>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <div class="divider-line"></div>
+          <div class="ci-list">
+            <div class="ci"><span class="ci-icon">💴</span>障害年金＋扶養共済で生活基盤を確保</div>
+            <div class="ci"><span class="ci-icon">👥</span>家族で役割分担を決めておく</div>
+            <div class="ci"><span class="ci-icon">🏦</span>必要に応じて家族信託を活用</div>
+          </div>
+          <div class="case-tip">💡「全部きょうだいに任せる」ではなく、支援者も含めたチームづくりが大切</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item only">
+      <button class="acc-btn" onclick="toggle(this)">
+        <div class="btn-left">
+          <span class="btn-icon">🧒</span>
+          <div>
+            <div>一人っ子</div>
+            <div class="btn-sub">早めの成年後見・住む場所の準備が鍵</div>
+          </div>
+        </div>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <div class="divider-line"></div>
+          <div class="ci-list">
+            <div class="ci"><span class="ci-icon">💴</span>障害年金＋扶養共済で生活基盤を確保</div>
+            <div class="ci"><span class="ci-icon">⚖️</span>成年後見制度を早めに検討</div>
+            <div class="ci"><span class="ci-icon">🏠</span>グループホームの情報収集を早めに始める</div>
+          </div>
+          <div class="case-tip">💡 親族以外の支援体制づくりが重要。相談支援専門員との関係を深めておく</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acc-item alone">
+      <button class="acc-btn" onclick="toggle(this)">
+        <div class="btn-left">
+          <span class="btn-icon">🙋</span>
+          <div>
+            <div>頼れる親族がいない</div>
+            <div class="btn-sub">「お金」より「支えてくれる人」が最優先</div>
+          </div>
+        </div>
+        <span class="chevron">▶</span>
+      </button>
+      <div class="acc-body">
+        <div class="acc-inner">
+          <div class="divider-line"></div>
+          <div class="ci-list">
+            <div class="ci"><span class="ci-icon">💴</span>障害年金＋扶養共済＋信託銀行の組合せを検討</div>
+            <div class="ci"><span class="ci-icon">⚖️</span>成年後見制度（専門家後見人）</div>
+            <div class="ci"><span class="ci-icon">🤝</span>相談支援専門員・地域の支援ネットワークづくり</div>
+          </div>
+          <div class="case-tip">💡「お金」よりも「支えてくれる人」を増やすことが最優先</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 共通の4本柱 -->
+  <div class="common-msg">
+    <div class="cm-title">🔑 どのケースにも共通する4つの柱</div>
+    <div class="pillar-grid">
+      <div class="pillar"><strong>① 生活費の基盤</strong>障害年金・扶養共済</div>
+      <div class="pillar"><strong>② 資産の管理</strong>家族信託・信託銀行・後見</div>
+      <div class="pillar"><strong>③ 住む場所</strong>グループホーム・施設</div>
+      <div class="pillar"><strong>④ 支えてくれる人</strong>後見人・相談支援専門員・地域</div>
+    </div>
+  </div>
+
+  <div class="navi-msg">
+    <div class="nm-label">💜 みらいナビからのメッセージ</div>
+    <div class="nm-text">
+      親なきあと対策で大切なのは、<strong>「お金をたくさん残すこと」だけではありません</strong>。この4つを少しずつ整えることが、本当の意味での「親なきあと対策」です。
+    </div>
+  </div>
+
+  <p class="footer-note"><a href="https://harrylandsea.github.io/mirai-navi/">みらいナビ</a> より</p>
+
+</div></div>
+        <script>
+          function toggleOyanakiato(btn) {
+            const item = btn.closest('.on-acc-item');
+            item.classList.toggle('on-open');
+          }
+        </script>
       </div>
 
       <div class="rc-block">
