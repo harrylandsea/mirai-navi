@@ -280,6 +280,41 @@ body {
   font-weight: 700;
   margin-left: 4px;
 }
+
+/* ---- アコーディオン結果タブ ---- */
+.acc-section { margin-bottom:10px; border-radius:12px; overflow:hidden; border:1.5px solid var(--border); }
+.acc-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 14px; cursor:pointer; user-select:none;
+  background:linear-gradient(135deg,#fdf8fa,#fff);
+  border:none; width:100%; text-align:left;
+  transition:background .15s;
+}
+.acc-header:hover { background:linear-gradient(135deg,#fdeef3,#f3eef8); }
+.acc-header.open { background:linear-gradient(135deg,#fdeef3,#f3eef8); border-bottom:1.5px solid var(--border); }
+.acc-title { font-size:.88rem; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; }
+.acc-right { display:flex; align-items:center; gap:8px; }
+.acc-chevron { font-size:.75rem; color:var(--sub); transition:transform .2s; }
+.acc-header.open .acc-chevron { transform:rotate(180deg); }
+.acc-body { display:none; padding:14px; }
+.acc-body.open { display:block; }
+/* 最初のセクションはデフォルトで開く */
+.acc-section:first-child .acc-body { display:block; }
+.acc-section:first-child .acc-header { background:linear-gradient(135deg,#fdeef3,#f3eef8); border-bottom:1.5px solid var(--border); }
+.acc-section:first-child .acc-chevron { transform:rotate(180deg); }
+
+/* 印刷用スタイル */
+@media print {
+  .header, .input-panel, .run-btn, #result-placeholder,
+  button, .no-print { display: none !important; }
+  body { background: #fff; color: #000; font-size: 11pt; }
+  .result-panel { position: static !important; border: none; box-shadow: none; margin: 0; }
+  .result-head { background: none !important; color: #000 !important; font-size: 14pt; border-bottom: 2pt solid #333; }
+  .layout { display: block !important; }
+  .consultation-sheet { page-break-before: always; }
+  .print-only { display: block !important; }
+}
+.print-only { display: none; }
 </style>
 </head>
 <body>
@@ -313,6 +348,14 @@ body {
         <div class="sec-title">🧍 本人の状態</div>
         <span class="sec-badge badge-gray" id="badge-person">未入力</span>
       </div>
+      <div class="sec-body" style="padding:10px 14px 0;">
+        <div class="field" style="max-width:200px;">
+          <label>本人の年齢</label>
+          <input type="number" id="p-age" placeholder="例：32" min="0" max="80"
+            style="width:100%;" oninput="onPersonAgeInput();liveUpdate()">
+          <div id="p-age-hint" style="font-size:.7rem;color:var(--sub);margin-top:4px;min-height:1em;"></div>
+        </div>
+      </div>
       <div class="sec-body triple">
         <div class="field">
           <label>判断能力</label>
@@ -341,6 +384,7 @@ body {
             <option value="heavy">気管切開・人工呼吸器</option>
             <option value="heavy2">胃ろう・経管栄養</option>
             <option value="mid">吸引・酸素療法</option>
+            <option value="visit">通院同行・定期受診（頓服含む）</option>
             <option value="light">服薬管理のみ</option>
             <option value="none">医療ケアなし</option>
           </select>
@@ -358,11 +402,11 @@ body {
       <div class="sec-body triple">
         <div class="field">
           <label>総資産(万円)</label>
-          <input type="number" id="a-total" placeholder="例：3000" oninput="liveUpdate()">
+          <input type="number" id="a-total" placeholder="例：3000" oninput="validateAssets();liveUpdate()">
         </div>
         <div class="field">
           <label>現預金(万円)</label>
-          <input type="number" id="a-cash" placeholder="例：1000" oninput="liveUpdate()">
+          <input type="number" id="a-cash" placeholder="例：1000" oninput="validateAssets();liveUpdate()">
         </div>
         <div class="field">
           <label>不動産</label>
@@ -374,6 +418,7 @@ body {
           </select>
         </div>
       </div>
+      <div id="asset-warning" style="display:none;margin:0 14px 10px;padding:8px 12px;border-radius:8px;font-size:.75rem;line-height:1.6;"></div>
     </div>
 
     <!-- ② 親のタイムライン -->
@@ -582,6 +627,51 @@ function getParentStage(age, health) {
   return 'ready';
 }
 
+// ---- 本人年齢ヒント表示 ----
+function onPersonAgeInput() {
+  const age = parseInt(document.getElementById('p-age').value) || 0;
+  const hint = document.getElementById('p-age-hint');
+  if (!age) { hint.textContent = ''; return; }
+  const msgs = [];
+  if (age < 20) msgs.push('障害年金はまだ受給前（20歳から対象）');
+  else msgs.push('障害年金の受給年齢（受給確認推奨）');
+  if (age >= 40) msgs.push('施設・GH移行の検討が現実的な時期');
+  hint.textContent = msgs.join('　／　');
+}
+
+// ---- 資産入力バリデーション ----
+function validateAssets() {
+  const totalEl = document.getElementById('a-total');
+  const cashEl = document.getElementById('a-cash');
+  const warnEl = document.getElementById('asset-warning');
+  const total = parseFloat(totalEl.value) || 0;
+  const cash = parseFloat(cashEl.value) || 0;
+  const warnings = [];
+
+  // 万円単位なのに円で入力した可能性（1億万円＝10000万円超）
+  if (total > 10000) warnings.push('⚠️ 総資産が1億円（10,000万円）を超えています。単位は「万円」です。例：3,000万円 → 3000 と入力してください。');
+  if (cash > 10000) warnings.push('⚠️ 現預金が1億円（10,000万円）を超えています。単位は「万円」でご入力ください。');
+  // 現預金 > 総資産
+  if (total > 0 && cash > 0 && cash > total) warnings.push('⚠️ 現預金が総資産を超えています。現預金は総資産の内数です。入力値をご確認ください。');
+
+  if (warnings.length > 0) {
+    warnEl.style.display = 'block';
+    warnEl.style.background = '#fff5f5';
+    warnEl.style.border = '1.5px solid #fc8181';
+    warnEl.style.color = '#9b2c2c';
+    warnEl.innerHTML = warnings.join('<br>');
+    // 警告中は入力枠を赤くする
+    if (total > 10000) totalEl.style.borderColor = '#fc8181';
+    else totalEl.style.borderColor = '';
+    if (cash > 10000 || (total > 0 && cash > total)) cashEl.style.borderColor = '#fc8181';
+    else cashEl.style.borderColor = '';
+  } else {
+    warnEl.style.display = 'none';
+    totalEl.style.borderColor = '';
+    cashEl.style.borderColor = '';
+  }
+}
+
 // ---- 居住連動で生活費選択肢を絞る ----
 const costOptions = {
   home:     [ ['5','〜5万円'], ['10','5〜10万円'], ['15','10〜15万円'] ],
@@ -602,6 +692,7 @@ function filterCost() {
 
 // ---- スコア計算 ----
 function calcScores() {
+  const personAge = parseInt(document.getElementById('p-age').value) || 0;
   const judgment = document.getElementById('p-judgment').value;
   const body = document.getElementById('p-body').value;
   const medical = document.getElementById('p-medical').value;
@@ -625,36 +716,45 @@ function calcScores() {
   const parentAge = parseInt(document.getElementById('parent-age').value) || 0;
   const parentHealth = document.getElementById('parent-health').value;
 
-  // 後見リスク（0〜10）
-  // ※ 金額の多寡に関わらず、判断能力がない場合は後見人が必要（法律上の原則）
-  // ここでの「リスク」は「後見手続きの複雑さ・準備不足による混乱リスク」を指す
+  // ─── 後見リスク（0〜12、riskLabelはmax=12で評価）───
+  // 「リスク」＝後見手続きの複雑さ・準備不足による混乱リスク
   let kokenRisk = 0;
-  if (judgment === 'none') kokenRisk += 4;   // 判断能力なし→後見確実に必要
-  else if (judgment === 'low') kokenRisk += 3; // 判断能力低い→ほぼ後見必要
-  else if (judgment === 'mid') kokenRisk += 1; // 一部あり→状況次第
-  if (medical === 'heavy' || medical === 'heavy2') kokenRisk += 1; // 重度医療→後見負担増
-  if (will === 'no') kokenRisk += 2;   // 遺言なし→相続時に後見人必須
+  if (judgment === 'none') kokenRisk += 4;
+  else if (judgment === 'low') kokenRisk += 3;
+  else if (judgment === 'mid') kokenRisk += 1;
+  // 身体状況：全介助は後見人の業務量が増え選任が難航しやすい
+  if (body === 'full') kokenRisk += 2;
+  else if (body === 'partial') kokenRisk += 1;
+  if (medical === 'heavy' || medical === 'heavy2') kokenRisk += 1;
+  if (will === 'no') kokenRisk += 2;
   else if (will === 'plan') kokenRisk += 1;
-  if (trust === 'no') kokenRisk += 1;  // 信託なし→後見依存度が高まる
-  else if (trust === 'plan') kokenRisk += 1;
-  if (sibling === 'conflict') kokenRisk += 1; // きょうだい対立→後見人選任が紛争化
-  if (keyPerson === 'none') kokenRisk += 1;   // キーパーソン不在→後見人頼みに
+  if (trust === 'no') kokenRisk += 1;
+  else if (trust === 'plan') kokenRisk += 0.5;
+  if (sibling === 'conflict') kokenRisk += 1;
+  if (keyPerson === 'none') kokenRisk += 1;
+  // 後見制度を知らない＝準備も遅れやすい
+  if (guardian === 'none') kokenRisk += 1;
+  // ベースライン補正：判断能力がない/低い場合は後見が法的に必須
+  if (judgment === 'none') kokenRisk = Math.max(kokenRisk, 8);
+  else if (judgment === 'low') kokenRisk = Math.max(kokenRisk, 5);
 
-  // 財産拘束度（0〜10）
+  // ─── 財産拘束度（0〜12）───
   let lockRisk = 0;
   if (totalAsset > 3000) lockRisk += 3;
   else if (totalAsset > 1000) lockRisk += 2;
   else if (totalAsset > 0) lockRisk += 1;
-  if (estate !== 'none' && estate !== '') lockRisk += 2;
-  if (trust === 'no') lockRisk += 2;
+  if (estate === 'multi') lockRisk += 3;
+  else if (estate === 'home') lockRisk += 1;
+  // 信託なし＝後見人が全資産を管理→拘束度大
+  if (trust === 'no') lockRisk += 3;
   else if (trust === 'plan') lockRisk += 1;
+  // 信託あり＝信託外資産のみ後見→拘束軽減
+  else if (trust === 'yes') lockRisk = Math.max(lockRisk - 1, 0);
   if (guardian === 'none') lockRisk += 2;
   else if (guardian === 'some') lockRisk += 1;
-  // ※ 現預金は総資産に含まれるため二重カウント回避のため削除
-  // 代わりに「現預金が総資産の大部分を占める」＝流動性リスクとして加点
   if (totalAsset > 0 && cashAsset / totalAsset > 0.7) lockRisk += 1;
 
-  // 家族自由度（0〜10）
+  // ─── 家族自由度（0〜12）───
   let familyFreedom = 0;
   if (keyPerson === 'stable') familyFreedom += 3;
   else if (keyPerson === 'unstable') familyFreedom += 1;
@@ -662,33 +762,68 @@ function calcScores() {
   else if (involve === 'mid') familyFreedom += 1;
   if (sibling === 'coop') familyFreedom += 2;
   else if (sibling === 'neutral') familyFreedom += 1;
-  if (trust === 'yes') familyFreedom += 2;
+  else if (sibling === 'conflict') familyFreedom -= 2; // 対立は自由度を下げる
+  if (trust === 'yes') familyFreedom += 3;
+  else if (trust === 'plan') familyFreedom += 1;
+  if (will === 'yes') familyFreedom += 1;
+  familyFreedom = Math.max(familyFreedom, 0);
 
-  // 資金持続性
+  // ─── 資金持続性（後見費用込み）───
   const deficit = cost - income;
-  const yearlyDeficit = deficit > 0 ? deficit * 12 : 0;
-  const years = yearlyDeficit > 0 ? Math.round((totalAsset / yearlyDeficit) * 10) / 10 : null;
+  // 後見費用：後見リスク高なら月2.5万、中なら月1.5万、低なら0を加算
+  const kokenFee = kokenRisk >= 8 ? 2.5 : kokenRisk >= 5 ? 1.5 : 0;
+  const adjDeficit = deficit + kokenFee;
+  const yearlyDeficit = adjDeficit > 0 ? adjDeficit * 12 : 0;
+  // 月赤字が3万円未満（実質収支均衡レベル）は「長期/均衡」扱い、上限も99年でキャップ
+  const BALANCE_THRESHOLD = 3; // 万円/月
+  const rawYears = yearlyDeficit > 0 ? totalAsset / yearlyDeficit : null;
+  const years = (rawYears !== null && adjDeficit >= BALANCE_THRESHOLD)
+    ? Math.round(Math.min(rawYears, 99) * 10) / 10
+    : null;
+  const rawYearsNoFee = (deficit >= BALANCE_THRESHOLD && totalAsset > 0) ? totalAsset / (deficit * 12) : null;
+  const yearsNoFee = rawYearsNoFee !== null ? Math.round(Math.min(rawYearsNoFee, 99) * 10) / 10 : null;
+  // 本人の推定支援必要年数（平均余命80歳を目安）
+  const supportYearsNeeded = personAge > 0 ? Math.max(80 - personAge, 0) : null;
+  // 資金が支援期間をカバーできるか
+  const fundingGap = (supportYearsNeeded !== null && years !== null)
+    ? Math.round((years - supportYearsNeeded) * 10) / 10
+    : null;
 
-  // 推奨ルート
-  let route = 'hybrid';
-  if (intent === 'safe' || (judgment === 'none' && trust !== 'yes')) route = 'guardian';
-  else if (intent === 'flex' || trust === 'yes' || trust === 'plan') route = 'trust';
-  else if (keyPerson === 'stable' && involve === 'strong') route = 'hybrid';
-  else if (keyPerson === 'none' || sibling === 'conflict') route = 'guardian';
+  // ─── 緊急度スコア（ルート判定に使用）───
+  const urgency = (judgment === 'none' ? 3 : judgment === 'low' ? 2 : 0)
+    + (will === 'no' ? 2 : will === 'plan' ? 1 : 0)
+    + (keyPerson === 'none' ? 2 : 0)
+    + (parentHealth === 'poor' ? 2 : parentHealth === 'some' ? 1 : 0);
 
-  return { kokenRisk, lockRisk, familyFreedom, years, deficit, route, totalAsset, parentAge, parentHealth, sibAges };
+  // ─── 推奨ルート（緊急度・意向・環境の複合判定）───
+  let route;
+  if (intent === 'safe') {
+    route = 'guardian';
+  } else if (intent === 'flex') {
+    // 判断能力なし×信託未準備なら信託より後見を優先
+    route = (judgment === 'none' && trust === 'no') ? 'guardian' : 'trust';
+  } else {
+    // 未選択・家族負担軽減
+    if (judgment === 'none' && trust !== 'yes') route = 'guardian';
+    else if (urgency >= 5 && trust === 'no') route = 'guardian';
+    else if (trust === 'yes' || (keyPerson === 'stable' && involve === 'strong' && trust !== 'no')) route = 'trust';
+    else if (keyPerson === 'none' || sibling === 'conflict') route = 'guardian';
+    else route = 'hybrid';
+  }
+
+  return { kokenRisk, lockRisk, familyFreedom, years, yearsNoFee, kokenFee, deficit, route, totalAsset, parentAge, parentHealth, sibAges, urgency, personAge, supportYearsNeeded, fundingGap };
 }
 
-function riskLabel(score, max=10) {
+function riskLabel(score, max=12) {
   const r = score / max;
-  if (r >= 0.7) return { text: '高い', cls: 'red' };
-  if (r >= 0.4) return { text: '中程度', cls: 'yellow' };
+  if (r >= 0.65) return { text: '高い', cls: 'red' };
+  if (r >= 0.35) return { text: '中程度', cls: 'yellow' };
   return { text: '低い', cls: 'green' };
 }
-function freedomLabel(score, max=10) {
+function freedomLabel(score, max=12) {
   const r = score / max;
-  if (r >= 0.6) return { text: '高い', cls: 'green' };
-  if (r >= 0.3) return { text: '中程度', cls: 'yellow' };
+  if (r >= 0.55) return { text: '高い', cls: 'green' };
+  if (r >= 0.25) return { text: '中程度', cls: 'yellow' };
   return { text: '低い', cls: 'red' };
 }
 
@@ -752,13 +887,13 @@ function liveUpdate() {
     const costNum = parseFloat(costVal) || 0;
     const incomeNum = parseFloat(incomeVal) || 0;
     const deficit = costNum - incomeNum;
-    const yearlyDeficit = deficit > 0 ? deficit * 12 : 0;
+    const yearlyDeficit = deficit >= 3 ? deficit * 12 : 0; // 月3万未満赤字は均衡扱い
     if (yearlyDeficit > 0 && s.totalAsset > 0) {
-      const yrs = Math.round((s.totalAsset / yearlyDeficit) * 10) / 10;
+      const yrs = Math.round(Math.min(s.totalAsset / yearlyDeficit, 99) * 10) / 10;
       const ll = yrs < 10 ? 'red' : yrs < 20 ? 'yellow' : 'green';
       setBadge('badge-life', '資金：約' + yrs + '年', ll);
     } else if (s.totalAsset > 0) {
-      setBadge('badge-life', '資金：長期', 'green');
+      setBadge('badge-life', '資金：長期安定', 'green');
     } else {
       setBadge('badge-life', '収支確認中', 'yellow');
     }
@@ -828,7 +963,7 @@ function runDiagnosis() {
         ]},
         { phase: '1〜2年以内', color: '#8a6000', bg: '#fff8e8', border: '#f0c060', list: [
           '家族信託契約の設計・締結',
-          '本人名義の資産を安全圏（500万円以下）に整理',
+          '本人名義の資産を安全圏（500万円以下※）に整理',
           '信託口座の開設と管理フローの確認'
         ]},
         { phase: '長期で考える', color: '#2f855a', bg: '#f0fff4', border: '#68d391', list: [
@@ -841,11 +976,11 @@ function runDiagnosis() {
     hybrid: {
       cls: 'green',
       title: '🔀 ルートC：ハイブリッド型',
-      items: ['本人名義を500万円以下に抑え、後見人の管理負担・報酬を最小化', '残りはきょうだい・信託で柔軟に管理', '遺言書＋遺言執行者の指定で相続手続きを円滑に', '※ 判断能力がない場合、金額に関わらず後見人は必要です', '※ 500万円の意味・資産の分け方は専門家にご相談ください'],
+      items: ['本人名義を500万円以下※に抑え、後見人の管理負担・報酬を最小化', '残りはきょうだい・信託で柔軟に管理', '遺言書＋遺言執行者の指定で相続手続きを円滑に', '※ 判断能力がない場合、金額に関わらず後見人は必要です', '※ 500万円：家庭裁判所の実務において、本人名義の預貯金が多額の場合に後見監督人の選任リスクや報酬が上がりやすくなる性質を考慮した目安です。詳細は専門家にご相談ください'],
       steps: [
         { phase: '今すぐ', color: '#9b2c2c', bg: '#fff5f5', border: '#fc8181', list: [
           '遺言書を作成する（遺言執行者も指定）',
-          '本人名義を500万円以下に抑え、後見人の管理コストを最小化',
+          '本人名義を500万円以下※に抑え、後見人の管理コストを最小化',
           'きょうだいと役割・管理方針を話し合う'
         ]},
         { phase: '1〜2年以内', color: '#8a6000', bg: '#fff8e8', border: '#f0c060', list: [
@@ -949,9 +1084,9 @@ function runDiagnosis() {
     + '</div>'
     + '</div>';
 
-  // ルート理由ボックス
-  const routeReasonHtml = '<div style="margin-top:8px;padding:8px 12px;background:#f9f9f9;border-radius:8px;border:1px solid #eee;">'
-    + '<div style="font-size:.72rem;color:var(--sub);font-weight:700;margin-bottom:4px;">このルートを提案する理由</div>'
+  // ルート理由ボックス（強調スタイル）
+  const routeReasonHtml = '<div style="margin-top:10px;padding:10px 12px;background:linear-gradient(135deg,#fdf8fa,#f3eef8);border-radius:10px;border:1.5px solid #c4a8d8;">'
+    + '<div style="font-size:.75rem;color:#6a2a98;font-weight:800;margin-bottom:6px;">💡 このルートを提案した理由</div>'
     + reasonsHtml
     + '</div>';
 
@@ -983,9 +1118,33 @@ function runDiagnosis() {
   let yearsHtml = '';
   if (s.years !== null) {
     const yc = s.years < 10 ? 'red' : s.years < 20 ? 'yellow' : 'green';
-    yearsHtml = `<div class="risk-row"><span class="risk-label">💴 資金持続年数</span><span class="risk-val ${yc}">約 ${s.years} 年</span></div>`;
+    const feeNote = s.kokenFee > 0
+      ? `<div style="font-size:.7rem;color:var(--sub);margin-top:2px;">後見費用（月${s.kokenFee}万円）込み。費用除外なら約${s.yearsNoFee}年</div>`
+      : '';
+    // 支援必要年数との比較
+    let coverNote = '';
+    if (s.supportYearsNeeded !== null && s.fundingGap !== null) {
+      if (s.fundingGap >= 0) {
+        coverNote = `<div style="font-size:.7rem;color:var(--green);margin-top:2px;">✅ 本人の推定支援期間（約${s.supportYearsNeeded}年）をカバーできる見込み</div>`;
+      } else {
+        const shortage = Math.abs(s.fundingGap);
+        coverNote = `<div style="font-size:.7rem;color:var(--red);margin-top:2px;">⚠️ 推定支援期間（約${s.supportYearsNeeded}年）に対し約${shortage}年分が不足する見込み</div>`;
+      }
+    } else if (s.supportYearsNeeded !== null) {
+      coverNote = `<div style="font-size:.7rem;color:var(--sub);margin-top:2px;">本人の推定支援期間：約${s.supportYearsNeeded}年（収支均衡のため長期対応可）</div>`;
+    }
+    yearsHtml = `<div class="risk-row" style="flex-direction:column;align-items:flex-start;gap:2px;">
+      <div style="display:flex;justify-content:space-between;width:100%;"><span class="risk-label">💴 資金持続年数</span><span class="risk-val ${yc}">約 ${s.years} 年</span></div>
+      ${feeNote}${coverNote}
+    </div>`;
   } else if (s.totalAsset > 0) {
-    yearsHtml = `<div class="risk-row"><span class="risk-label">💴 資金持続年数</span><span class="risk-val green">収支均衡 / 長期</span></div>`;
+    const supportNote = s.supportYearsNeeded !== null
+      ? `<div style="font-size:.7rem;color:var(--sub);margin-top:2px;">本人の推定支援期間：約${s.supportYearsNeeded}年（収支均衡のため長期対応可）</div>`
+      : '';
+    yearsHtml = `<div class="risk-row" style="flex-direction:column;align-items:flex-start;gap:2px;">
+      <div style="display:flex;justify-content:space-between;width:100%;"><span class="risk-label">💴 資金持続年数</span><span class="risk-val green">収支均衡 / 長期</span></div>
+      ${supportNote}
+    </div>`;
   }
 
   // 親年齢ステージ
@@ -1041,7 +1200,7 @@ function runDiagnosis() {
       const adults = s.sibAges.filter(a => a >= 18).map(a => a + '歳').join('・');
       const sibStatus = adults
         ? '未成年（' + minors + '）・成人（' + adults + '）のきょうだいがいます。最年少が18歳になるまであと約' + minorYears + '年です。'
-        : '未成年（' + minors + '）のきょうだいがいます。最年少が18歳になるまであと約' + minorYears + '年です。';
+        : '未成年のきょうだい（' + minors + '）のみいます。最年少が18歳になるまであと約' + minorYears + '年です。';
       sibMsg = sibStatus + '受託者・管理者への就任は18歳以降です。';
       sibItems = [
         '今は親が全ての管理を担う時期',
@@ -1079,34 +1238,171 @@ function runDiagnosis() {
       + '</div></div>';
   }
 
-  const html = `
-    ${summaryHtml}
-    ${warningHtml}
-    <div class="risk-row"><span class="risk-label">⚖️ 後見リスク</span><span class="risk-val ${kr.cls}">${kr.text}</span></div>
-    <div class="risk-row"><span class="risk-label">🔒 財産拘束度</span><span class="risk-val ${ar.cls}">${ar.text}</span></div>
-    <div class="risk-row"><span class="risk-label">👨‍👩‍👧 家族自由度</span><span class="risk-val ${ff.cls}">${ff.text}</span></div>
-    ${yearsHtml}
-    <div class="route-box ${rc.cls}" style="margin-top:14px;">
-      <div class="route-title ${rc.cls}">${rc.title}</div>
-      ${rc.items.map(i => `<div class="route-item">${i}</div>`).join('')}
-      ${routeReasonHtml}
-    </div>
-    ${medicalHtml}
-    ${parentStageHtml}
-    ${sibHtml}
-    <div style="margin-top:14px;font-size:.82rem;font-weight:800;color:var(--text);">🗓️ こんな流れがおすすめ</div>
-    ${stepsHtml}
-    <div style="margin-top:14px;border:1.5px solid #a8c8e8;border-radius:10px;overflow:hidden;">
-      <div style="background:#f0f6ff;padding:8px 12px;font-size:.8rem;font-weight:800;color:#1a4a7a;">👀 家族で「見える化」する仕組みを作る</div>
-      <div style="padding:10px 12px;">
-        <div style="font-size:.75rem;color:var(--sub);margin-bottom:8px;line-height:1.6;">診断結果や準備状況に関わらず、将来の管理者（きょうだい等）がいつでも本人の収支を確認できる体制を整えておくことが重要です。</div>
-        <div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">01</span><span>本人名義口座は代理人登録や明細共有の仕組みを整え、管理者全員が収支を把握できる状態にする</span></div>
-        <div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">02</span><span>支援用資金（きょうだい名義等）も収支を定期的に共有・確認できる仕組みにする</span></div>
-        <div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">03</span><span>年1回以上の家族会議で収支・生活状況・役割分担を確認する</span></div>
-        <div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">04</span><span>「知らなかった」を防ぐことが、長期間続く支援体制の土台になる</span></div>
-      </div>
-    </div>
-  `;
+  // ⑤ 専門家への相談シート
+  const sheetPersonAge = document.getElementById('p-age').value ? document.getElementById('p-age').value + '歳' : '未入力';
+  const sheetParentAge = document.getElementById('parent-age').value || '未入力';
+  const sheetParentHealth = {'good':'良好','some':'持病あり','poor':'要注意'}[document.getElementById('parent-health').value] || '未入力';
+  const sheetJudgment = {'none':'なし','low':'低い','mid':'一部あり','full':'あり'}[document.getElementById('p-judgment').value] || '未入力';
+  const sheetMedical = {'heavy':'気管切開・人工呼吸器','heavy2':'胃ろう・経管栄養','mid':'吸引・酸素療法','visit':'通院同行・定期受診（頓服含む）','light':'服薬管理のみ','none':'医療ケアなし'}[document.getElementById('p-medical').value] || '未入力';
+  const sheetHome = {'home':'在宅','gh':'グループホーム','facility':'施設入所'}[document.getElementById('l-home').value] || '未入力';
+  const sheetWill = {'yes':'作成済み','plan':'検討中','no':'未作成'}[document.getElementById('lg-will').value] || '未入力';
+  const sheetTrust = {'yes':'利用したい（検討中含む）','no':'予定なし','plan':'よくわからない'}[document.getElementById('lg-trust').value] || '未入力';
+  const sheetSibAges = s.sibAges.length > 0 ? s.sibAges.join('歳・') + '歳' : 'なし';
+  const sheetRoute = {'guardian':'ルートA：後見中心型','trust':'ルートB：家族信託型','hybrid':'ルートC：ハイブリッド型'}[s.route] || '';
+  const sheetTotalAsset = document.getElementById('a-total').value ? document.getElementById('a-total').value + '万円' : '未入力';
+  const sheetCash = document.getElementById('a-cash').value ? document.getElementById('a-cash').value + '万円' : '未入力';
+
+  // 主な相談内容を自動生成
+  const consultItems = [];
+  if (sheetWill === '未作成') consultItems.push('遺言書（公正証書）が未作成のため、相続時の口座凍結・遺産分割協議リスクを回避したい');
+  else if (sheetWill === '検討中') consultItems.push('遺言書の作成タイミングと内容（遺言執行者の指定を含む）について相談したい');
+  if (sheetTrust !== '利用したい（検討中含む）') consultItems.push('家族信託の仕組みと、我が家に向いているかどうかを確認したい');
+  else consultItems.push('家族信託の設計・受託者の選び方・組成タイミングについて相談したい');
+  if (document.getElementById('p-judgment').value === 'none' || document.getElementById('p-judgment').value === 'low') {
+    consultItems.push('本人の判断能力が限定的なため、任意後見・法定後見の使い分けと手続きの流れを知りたい');
+  }
+  if (s.totalAsset > 500) consultItems.push('本人名義の資産を500万円以下に整理するための生前贈与・資産移転の具体的な方法を知りたい');
+  if (s.sibAges.some(a => a < 18)) consultItems.push('未成年のきょうだいが成人するまでの間の資産管理・後見体制をどう設計するか相談したい');
+
+  const consultItemsHtml = consultItems.slice(0, 4).map((item, i) =>
+    '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:8px;padding:4px 0;border-bottom:1px solid #f0e8f5;">'
+    + '<span style="color:#6a2a98;font-weight:800;flex-shrink:0;">▶</span>'
+    + '<span>' + item + '</span></div>'
+  ).join('');
+
+  const consultHtml = '<div class="consultation-sheet" style="margin-top:20px;border:2.5px solid #c4a8d8;border-radius:12px;overflow:hidden;">'
+    + '<div style="background:linear-gradient(135deg,#f3eef8,#fdeef3);padding:12px 14px;border-bottom:1.5px solid #c4a8d8;">'
+    + '<div style="font-size:.9rem;font-weight:800;color:#6a2a98;margin-bottom:2px;">📋 専門家への相談シート</div>'
+    + '<div style="font-size:.72rem;color:#8a6070;line-height:1.5;">この画面を印刷またはスクリーンショットして、司法書士・行政書士等の専門家にお見せください。</div>'
+    + '</div>'
+    + '<div style="padding:12px 14px;">'
+
+    + '<div style="margin-bottom:12px;">'
+    + '<div style="font-size:.75rem;font-weight:800;color:#6a2a98;border-left:3px solid #c4a8d8;padding-left:8px;margin-bottom:6px;">👨‍👩‍👧 我が家の現状</div>'
+    + '<table style="width:100%;font-size:.75rem;border-collapse:collapse;">'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;width:42%;white-space:nowrap;">本人の年齢</td><td style="font-weight:700;">' + sheetPersonAge + '</td></tr>'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;width:42%;white-space:nowrap;">管理者（親）年齢</td><td style="font-weight:700;">' + sheetParentAge + '歳 / ' + sheetParentHealth + '</td></tr>'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;">きょうだい</td><td style="font-weight:700;">' + sheetSibAges + '</td></tr>'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;">総資産 / 現預金</td><td style="font-weight:700;">' + sheetTotalAsset + ' / ' + sheetCash + '</td></tr>'
+    + '</table>'
+    + '</div>'
+
+    + '<div style="margin-bottom:12px;">'
+    + '<div style="font-size:.75rem;font-weight:800;color:#6a2a98;border-left:3px solid #c4a8d8;padding-left:8px;margin-bottom:6px;">🧍 本人の状況</div>'
+    + '<table style="width:100%;font-size:.75rem;border-collapse:collapse;">'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;width:42%;white-space:nowrap;">判断能力</td><td style="font-weight:700;">' + sheetJudgment + '</td></tr>'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;">医療的ケア</td><td style="font-weight:700;">' + sheetMedical + '</td></tr>'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;">居住形態</td><td style="font-weight:700;">' + sheetHome + '</td></tr>'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;">遺言書</td><td style="font-weight:700;">' + sheetWill + '</td></tr>'
+    + '<tr><td style="color:var(--sub);padding:3px 6px 3px 0;">家族信託</td><td style="font-weight:700;">' + sheetTrust + '</td></tr>'
+    + '</table>'
+    + '</div>'
+
+    + '<div style="margin-bottom:12px;">'
+    + '<div style="font-size:.75rem;font-weight:800;color:#6a2a98;border-left:3px solid #c4a8d8;padding-left:8px;margin-bottom:6px;">🎯 主な相談内容</div>'
+    + consultItemsHtml
+    + '</div>'
+
+    + '<div style="margin-bottom:12px;">'
+    + '<div style="font-size:.75rem;font-weight:800;color:#6a2a98;border-left:3px solid #c4a8d8;padding-left:8px;margin-bottom:4px;">🧭 シミュレーター診断結果</div>'
+    + '<div style="font-size:.75rem;line-height:1.8;">'
+    + '後見リスク：<strong>' + kr.text + '</strong>　財産拘束度：<strong>' + ar.text + '</strong>　家族自由度：<strong>' + ff.text + '</strong><br>'
+    + '推奨ルート：<strong>' + sheetRoute + '</strong>'
+    + '</div>'
+    + '</div>'
+
+    + '<div style="display:flex;gap:8px;margin-top:4px;" class="no-print">'
+    + '<button onclick="window.print()" style="flex:1;padding:10px;background:linear-gradient(135deg,#8a4ab0,#6a2a98);color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:800;cursor:pointer;">🖨️ 印刷する</button>'
+    + '<button onclick="copySheet()" style="flex:1;padding:10px;background:linear-gradient(135deg,#e8896b,#d97aa5);color:#fff;border:none;border-radius:8px;font-size:.82rem;font-weight:800;cursor:pointer;" id="copy-btn">📋 テキストでコピー</button>'
+    + '</div>'
+    + '</div></div>';
+
+  // コピー用テキスト生成
+  window._sheetCopyText = [
+    '【専門家への相談シート】',
+    '',
+    '■ 我が家の現状',
+    '本人の年齢：' + sheetPersonAge + '　支援推定期間：' + (s.supportYearsNeeded !== null ? '約' + s.supportYearsNeeded + '年' : '未入力'),
+    '管理者（親）年齢：' + sheetParentAge + '歳 / ' + sheetParentHealth,
+    'きょうだい：' + sheetSibAges,
+    '総資産：' + sheetTotalAsset + '　現預金：' + sheetCash,
+    '',
+    '■ 本人の状況',
+    '判断能力：' + sheetJudgment,
+    '医療的ケア：' + sheetMedical,
+    '居住形態：' + sheetHome,
+    '遺言書：' + sheetWill,
+    '家族信託：' + sheetTrust,
+    '',
+    '■ 主な相談内容',
+    ...consultItems.slice(0, 4).map((item, i) => (i+1) + '. ' + item),
+    '',
+    '■ シミュレーター診断結果（みらいナビ）',
+    '後見リスク：' + kr.text + '　財産拘束度：' + ar.text + '　家族自由度：' + ff.text,
+    '推奨ルート：' + sheetRoute,
+  ].join('\n');
+
+  // ─── アコーディオン構造で結果を5ブロックに整理 ───
+  function accSection(id, emoji, title, badgeText, badgeCls, bodyHtml, isOpen) {
+    const openCls = isOpen ? ' open' : '';
+    const openBody = isOpen ? ' open' : '';
+    return `<div class="acc-section">
+      <button class="acc-header${openCls}" onclick="toggleAcc('${id}')">
+        <span class="acc-title">${emoji} ${title}</span>
+        <span class="acc-right">
+          <span class="sec-badge badge-${badgeCls}" style="font-size:.7rem;">${badgeText}</span>
+          <span class="acc-chevron">▼</span>
+        </span>
+      </button>
+      <div class="acc-body${openBody}" id="acc-${id}">${bodyHtml}</div>
+    </div>`;
+  }
+
+  // ブロック①：総合判定（デフォルト開）
+  const block1 = summaryHtml + warningHtml
+    + '<div class="risk-row"><span class="risk-label">⚖️ 後見リスク</span><span class="risk-val ' + kr.cls + '">' + kr.text + '</span></div>'
+    + '<div class="risk-row"><span class="risk-label">🔒 財産拘束度</span><span class="risk-val ' + ar.cls + '">' + ar.text + '</span></div>'
+    + '<div class="risk-row"><span class="risk-label">👨‍👩‍👧 家族自由度</span><span class="risk-val ' + ff.cls + '">' + ff.text + '</span></div>'
+    + yearsHtml;
+  const badge1Cls = kr.cls === 'red' || ar.cls === 'red' ? 'red' : kr.cls === 'green' && ar.cls === 'green' ? 'green' : 'yellow';
+  const badge1Text = badge1Cls === 'red' ? '要確認' : badge1Cls === 'green' ? '良好' : '準備中';
+
+  // ブロック②：法的準備ルート
+  const block2 = '<div class="route-box ' + rc.cls + '" style="margin-bottom:14px;">'
+    + '<div class="route-title ' + rc.cls + '">' + rc.title + '</div>'
+    + rc.items.map(i => '<div class="route-item">' + i + '</div>').join('')
+    + routeReasonHtml + '</div>'
+    + medicalHtml;
+  const badge2Cls = s.route === 'guardian' ? 'yellow' : s.route === 'trust' ? 'green' : 'green';
+  const badge2Text = s.route === 'guardian' ? 'ルートA' : s.route === 'trust' ? 'ルートB' : 'ルートC';
+
+  // ブロック③：資金・タイムライン
+  const block3 = parentStageHtml + sibHtml
+    + '<div style="margin-top:14px;font-size:.82rem;font-weight:800;color:var(--text);">🗓️ こんな流れがおすすめ</div>'
+    + stepsHtml;
+  const badge3Cls = s.years !== null ? (s.years < 10 ? 'red' : s.years < 20 ? 'yellow' : 'green') : 'gray';
+  const badge3Text = s.years !== null ? '約' + s.years + '年' : '要入力';
+
+  // ブロック④：見える化の仕組み
+  const block4 = '<div style="border:1.5px solid #a8c8e8;border-radius:10px;overflow:hidden;">'
+    + '<div style="background:#f0f6ff;padding:8px 12px;font-size:.8rem;font-weight:800;color:#1a4a7a;">👀 家族で「見える化」する仕組みを作る</div>'
+    + '<div style="padding:10px 12px;">'
+    + '<div style="font-size:.75rem;color:var(--sub);margin-bottom:8px;line-height:1.6;">診断結果や準備状況に関わらず、将来の管理者（きょうだい等）がいつでも本人の収支を確認できる体制を整えておくことが重要です。</div>'
+    + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">01</span><span>本人名義口座は代理人登録や明細共有の仕組みを整え、管理者全員が収支を把握できる状態にする</span></div>'
+    + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">02</span><span>支援用資金（きょうだい名義等）も収支を定期的に共有・確認できる仕組みにする</span></div>'
+    + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">03</span><span>年1回以上の家族会議で収支・生活状況・役割分担を確認する</span></div>'
+    + '<div style="font-size:.78rem;line-height:1.9;display:flex;gap:6px;"><span style="color:#1a4a7a;font-weight:800;flex-shrink:0;">04</span><span>「知らなかった」を防ぐことが、長期間続く支援体制の土台になる</span></div>'
+    + '</div></div>';
+
+  // ブロック⑤：相談シート
+  const block5 = consultHtml;
+
+  const html = accSection('summary','📊','総合判定', badge1Text, badge1Cls, block1, true)
+    + accSection('legal','⚖️','推奨ルートと法的準備', badge2Text, badge2Cls, block2, false)
+    + accSection('finance','💴','資金・タイムライン', badge3Text, badge3Cls, block3, false)
+    + accSection('visual','👀','家族の「見える化」', 'チェック', 'gray', block4, false)
+    + accSection('sheet','📋','専門家への相談シート', '印刷可', 'gray', block5, false);
+
 
 
   document.getElementById('result-placeholder').style.display = 'none';
@@ -1117,6 +1413,36 @@ function runDiagnosis() {
   setTimeout(() => {
     document.getElementById('result-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
+}
+// ---- アコーディオン開閉 ----
+function toggleAcc(id) {
+  const body = document.getElementById('acc-' + id);
+  const header = body ? body.previousElementSibling : null;
+  if (!body || !header) return;
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  header.classList.toggle('open', !isOpen);
+}
+
+// ---- 相談シートのテキストコピー ----
+function copySheet() {
+  const text = window._sheetCopyText || '';
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    if (btn) { btn.textContent = '✅ コピーしました'; setTimeout(() => { btn.textContent = '📋 テキストでコピー'; }, 2000); }
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const btn = document.getElementById('copy-btn');
+    if (btn) { btn.textContent = '✅ コピーしました'; setTimeout(() => { btn.textContent = '📋 テキストでコピー'; }, 2000); }
+  });
 }
 </script>
 
