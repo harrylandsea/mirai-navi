@@ -54,6 +54,25 @@
   --shadow:   0 2px 4px rgba(58,51,48,.04), 0 8px 24px rgba(58,51,48,.06);
 }
 
+html.dark{
+  --bg:#17140f;
+  --bg-card:#221e18;
+  --bg-soft:#2a251d;
+  --ink:#eee6d8;
+  --ink-soft:#c4b8a4;
+  --ink-faint:#8a7c68;
+  --line:#3a3226;
+  --line-soft:#2e2820;
+}
+.dark-btn,.fav-btn{
+  padding:5px 9px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg-soft);color:var(--ink-faint);font-size:.86rem;
+  cursor:pointer;transition:.18s;
+}
+.dark-btn:hover,.fav-btn:hover{background:#fde3b8;}
+.fav-btn.saved{background:var(--c6);color:#fff;border-color:var(--c6);}
+
+
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html{scroll-behavior:smooth;font-size:var(--fs);}
 body{
@@ -332,10 +351,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="nav-title">
       <div>
         春日部市 福祉ガイド
-        <div class="nav-sub"><span style="color:var(--c6);font-weight:700;">みらいナビ</span> — 地域版</div>
+        <div class="nav-sub"><span style="color:var(--c6);font-weight:700;">みらいナビ</span></div>
       </div>
     </div>
     <div class="fsbtns">
+      <button class="dark-btn" id="darkToggle" title="ダークモード切替">🌙</button>
+      <button class="fav-btn" id="favBtn" title="しおりをつける">🔖</button>
       <button class="fsbtn" onclick="setFs(12,this)">小</button>
       <button class="fsbtn on" onclick="setFs(14,this)">中</button>
       <button class="fsbtn" onclick="setFs(16,this)">大</button>
@@ -826,6 +847,39 @@ function setFs(px, btn) {
   document.querySelectorAll('.fsbtn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
 }
+
+// ダークモード
+(function(){
+  const KEY='mirai-dark';
+  const btn=document.getElementById('darkToggle');
+  const apply=(on)=>{
+    document.documentElement.classList.toggle('dark',on);
+    btn.textContent = on ? '☀️' : '🌙';
+  };
+  let saved=false;
+  try{ saved = localStorage.getItem(KEY)==='1'; }catch(e){}
+  apply(saved);
+  btn.addEventListener('click',()=>{
+    const on=!document.documentElement.classList.contains('dark');
+    apply(on);
+    try{ localStorage.setItem(KEY, on?'1':'0'); }catch(e){}
+  });
+})();
+
+// しおり（このページを保存）
+(function(){
+  const KEY='mirai-fav-kasukabe';
+  const btn=document.getElementById('favBtn');
+  let saved=false;
+  try{ saved = localStorage.getItem(KEY)==='1'; }catch(e){}
+  if(saved){ btn.classList.add('saved'); btn.textContent='🔖 保存済み'; }
+  btn.addEventListener('click',()=>{
+    saved=!saved;
+    btn.classList.toggle('saved',saved);
+    btn.textContent = saved ? '🔖 保存済み' : '🔖';
+    try{ localStorage.setItem(KEY, saved?'1':'0'); }catch(e){}
+  });
+})();
 
 // ================================================================
 //  ポップアップ

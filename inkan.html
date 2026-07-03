@@ -24,7 +24,7 @@
   --c-home:#b08bc4;
   --c-act:#d97aa5;
   --c-support:#5fb3b3;
-  --fs:14px;
+  --fs:16px;
   --radius:18px;
   --radius-sm:13px;
   --shadow:0 2px 4px rgba(58,51,48,.04),0 8px 24px rgba(58,51,48,.06);
@@ -233,8 +233,23 @@ p:last-child{margin-bottom:0;}
   display:flex;align-items:center;gap:5px;
   margin-bottom:18px;flex-wrap:wrap;
 }
-.breadcrumb a{color:var(--c-connect);}
-.breadcrumb span{color:var(--ink-faint);}
+html.dark{
+  --bg:#17140f;
+  --bg-card:#221e18;
+  --bg-soft:#2a251d;
+  --ink:#eee6d8;
+  --ink-soft:#c4b8a4;
+  --ink-faint:#8a7c68;
+  --line:#3a3226;
+  --line-soft:#2e2820;
+}
+.dark-btn,.fav-btn{
+  padding:5px 9px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg-soft);color:var(--ink-faint);font-size:.86rem;
+  cursor:pointer;transition:.18s;
+}
+.dark-btn:hover,.fav-btn:hover{background:#fde3b8;}
+.fav-btn.saved{background:var(--c-act);color:#fff;border-color:var(--c-act);}
 </style>
 </head>
 <body>
@@ -245,13 +260,14 @@ p:last-child{margin-bottom:0;}
       <div class="brand-logo">🧭</div>
       <div class="brand-text">
         <span style="color:var(--c-act);">みらいナビ</span>
-        <small class="brand-sub">障がい児と家族のナビゲーション</small>
       </div>
     </div>
     <div class="fsbtns">
-      <button class="fsbtn" onclick="setFs(12,this)">小</button>
-      <button class="fsbtn on" onclick="setFs(14,this)">中</button>
-      <button class="fsbtn" onclick="setFs(16,this)">大</button>
+      <button class="dark-btn" id="darkToggle" title="ダークモード切替">🌙</button>
+      <button class="fav-btn" id="favBtn" title="しおりをつける">🔖</button>
+      <button class="fsbtn" onclick="setFs('s',this)">小</button>
+      <button class="fsbtn on" onclick="setFs('m',this)">中</button>
+      <button class="fsbtn" onclick="setFs('l',this)">大</button>
     </div>
   </div>
 </header>
@@ -645,15 +661,61 @@ function tog(head){
   const body = head.nextElementSibling;
   body.classList.toggle('open');
 }
-function setFs(px, btn){
-  document.documentElement.style.fontSize = px + 'px';
+function setFs(size, btn){
+  const sizes = {s:'14px', m:'16px', l:'19px'};
+  document.documentElement.style.fontSize = sizes[size];
   document.querySelectorAll('.fsbtn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
+  try { localStorage.setItem('mirai-fs', size); } catch(e){}
 }
+try {
+  const savedFs = localStorage.getItem('mirai-fs') || 'm';
+  const sizes = {s:'14px', m:'16px', l:'19px'};
+  document.documentElement.style.fontSize = sizes[savedFs];
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.querySelectorAll('.fsbtn').forEach(b => b.classList.remove('on'));
+    const idx = {s:0,m:1,l:2}[savedFs];
+    const btns = document.querySelectorAll('.fsbtn');
+    if(btns[idx]) btns[idx].classList.add('on');
+  });
+} catch(e){}
 // 最初のセクションは開いた状態
 document.querySelectorAll('.sec-head.open').forEach(h => {
   h.nextElementSibling.classList.add('open');
 });
+
+// ダークモード
+(function(){
+  const KEY='mirai-dark';
+  const btn=document.getElementById('darkToggle');
+  const apply=(on)=>{
+    document.documentElement.classList.toggle('dark',on);
+    btn.textContent = on ? '☀️' : '🌙';
+  };
+  let saved=false;
+  try{ saved = localStorage.getItem(KEY)==='1'; }catch(e){}
+  apply(saved);
+  btn.addEventListener('click',()=>{
+    const on=!document.documentElement.classList.contains('dark');
+    apply(on);
+    try{ localStorage.setItem(KEY, on?'1':'0'); }catch(e){}
+  });
+})();
+
+// しおり（このページを保存）
+(function(){
+  const KEY='mirai-fav-inkan';
+  const btn=document.getElementById('favBtn');
+  let saved=false;
+  try{ saved = localStorage.getItem(KEY)==='1'; }catch(e){}
+  if(saved){ btn.classList.add('saved'); btn.textContent='🔖 保存済み'; }
+  btn.addEventListener('click',()=>{
+    saved=!saved;
+    btn.classList.toggle('saved',saved);
+    btn.textContent = saved ? '🔖 保存済み' : '🔖';
+    try{ localStorage.setItem(KEY, saved?'1':'0'); }catch(e){}
+  });
+})();
 </script>
 </body>
 </html>
