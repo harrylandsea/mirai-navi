@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>障がいのある子と印鑑証明問題 — みらいナビ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&family=Kosugi&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fbf7f0;
+  --bg-card:#ffffff;
+  --bg-soft:#fdf3e8;
+  --ink:#3a3330;
+  --ink-soft:#6b625c;
+  --ink-faint:#9a8f87;
+  --line:#ece2d4;
+  --line-soft:#f3ebe0;
+  --c-live:#e8896b;
+  --c-play:#f0b13e;
+  --c-grow:#7bb274;
+  --c-connect:#5b9bd5;
+  --c-home:#b08bc4;
+  --c-act:#d97aa5;
+  --c-support:#5fb3b3;
+  --fs:14px;
+  --radius:18px;
+  --radius-sm:13px;
+  --shadow:0 2px 4px rgba(58,51,48,.04),0 8px 24px rgba(58,51,48,.06);
+  --shadow-lg:0 6px 14px rgba(58,51,48,.08),0 22px 50px rgba(58,51,48,.11);
+  --maxw:680px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{font-size:var(--fs);scroll-behavior:smooth;}
+body{
+  font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.8;
+  -webkit-font-smoothing:antialiased;padding-bottom:60px;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 80% -5%,rgba(240,177,62,.10),transparent 60%),
+    radial-gradient(700px 500px at -5% 100%,rgba(91,155,213,.08),transparent 60%);
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px;position:relative;z-index:1;}
+
+/* ── ヘッダー ── */
+header{
+  position:sticky;top:0;z-index:60;
+  background:rgba(251,247,240,.94);
+  backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--line-soft);
+}
+.hd-inner{
+  max-width:var(--maxw);margin:0 auto;
+  padding:11px 16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.brand{display:flex;align-items:center;gap:9px;}
+.brand-logo{
+  width:32px;height:32px;border-radius:50%;flex:none;
+  display:grid;place-items:center;font-size:16px;
+  background:linear-gradient(135deg,#fde3b8,#f7c873);
+  box-shadow:0 4px 12px rgba(240,177,62,.35);
+}
+.brand-text{font-family:"Kosugi",sans-serif;font-size:.88rem;font-weight:400;letter-spacing:.06em;}
+.brand-sub{display:block;font-size:.6rem;font-weight:600;color:var(--ink-faint);margin-top:-2px;}
+.fsbtns{display:flex;gap:3px;}
+.fsbtn{
+  padding:4px 8px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg-soft);color:var(--ink-faint);font-weight:700;font-size:.72rem;
+  cursor:pointer;transition:.18s;
+}
+.fsbtn.on{background:var(--c-act);color:#fff;border-color:var(--c-act);}
+.fsbtn:hover{background:#fde3b8;}
+
+/* ── ページ本体 ── */
+.page{padding:20px 0 10px;}
+
+/* ── アラートバナー ── */
+.alert{
+  background:linear-gradient(135deg,#fdece6,#fff6ef);
+  border:1.5px solid #f3c9b8;border-radius:var(--radius);
+  padding:18px 20px;margin-bottom:20px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.alert::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--c-live);}
+.alert-label{font-size:.7rem;font-weight:800;letter-spacing:.12em;color:var(--c-live);margin-bottom:4px;}
+.alert-title{font-size:1.05rem;font-weight:800;margin-bottom:6px;}
+.alert-body{font-size:.86rem;color:var(--ink-soft);line-height:1.85;}
+
+/* ── セクション ── */
+.sec{margin-bottom:18px;}
+.sec-head{
+  display:flex;align-items:center;gap:10px;
+  padding:13px 16px;
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:var(--radius);
+  cursor:pointer;user-select:none;
+  box-shadow:var(--shadow);transition:transform .18s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.sec-head::before{content:"";position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--sec-c,var(--c-act));}
+.sec-head:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);}
+.sec-icon{font-size:1.3rem;flex:none;}
+.sec-title{font-weight:800;font-size:.94rem;flex:1;}
+.sec-chev{color:var(--ink-faint);font-size:.7rem;flex:none;transition:transform .25s;}
+.sec-head.open .sec-chev{transform:rotate(90deg);}
+
+.sec-body{
+  display:none;
+  background:var(--bg-card);
+  border:1px solid var(--line);border-top:none;
+  border-radius:0 0 var(--radius) var(--radius);
+  padding:16px 18px 20px;
+  font-size:.86rem;line-height:1.9;color:var(--ink-soft);
+}
+.sec-body.open{display:block;animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── コンテンツ部品 ── */
+.lead{
+  font-size:.92rem;font-weight:700;color:var(--ink);
+  margin-bottom:12px;line-height:1.7;
+}
+p{margin-bottom:10px;}
+p:last-child{margin-bottom:0;}
+
+.box{
+  background:var(--bg-soft);border:1px solid var(--line);
+  border-radius:var(--radius-sm);padding:13px 15px;margin:12px 0;
+}
+.box-title{font-weight:800;font-size:.82rem;color:var(--ink);margin-bottom:7px;}
+
+.law-box{
+  background:rgba(91,155,213,.07);border:1px solid rgba(91,155,213,.25);
+  border-radius:var(--radius-sm);padding:13px 15px;margin:12px 0;
+  font-size:.82rem;
+}
+.law-box-title{font-weight:800;color:#2a6aaa;margin-bottom:6px;font-size:.78rem;letter-spacing:.06em;}
+.law-box ul{padding-left:16px;}
+.law-box li{margin-bottom:4px;color:var(--ink-soft);}
+
+.warn-box{
+  background:rgba(232,137,107,.08);border:1px solid rgba(232,137,107,.3);
+  border-radius:var(--radius-sm);padding:13px 15px;margin:12px 0;font-size:.82rem;
+}
+.warn-box-title{font-weight:800;color:#c05a30;margin-bottom:6px;}
+
+/* タイムライン式ステップ */
+.steps{margin:14px 0;}
+.step{
+  display:flex;gap:13px;align-items:flex-start;
+  padding:13px 15px;
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:var(--radius-sm);margin-bottom:8px;
+  box-shadow:0 1px 4px rgba(58,51,48,.05);
+  position:relative;overflow:hidden;
+}
+.step::before{content:"";position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--step-c,var(--c-act));}
+.step-num{
+  width:28px;height:28px;border-radius:50%;flex:none;
+  display:grid;place-items:center;font-size:.78rem;font-weight:800;color:#fff;
+  background:var(--step-c,var(--c-act));
+}
+.step-body{flex:1;}
+.step-title{font-weight:800;font-size:.88rem;color:var(--ink);margin-bottom:3px;}
+.step-desc{font-size:.8rem;color:var(--ink-soft);line-height:1.8;}
+.step-tag{
+  display:inline-block;font-size:.66rem;font-weight:700;
+  padding:2px 8px;border-radius:10px;margin-top:5px;
+}
+
+/* 比較表 */
+.compare{width:100%;border-collapse:collapse;font-size:.8rem;margin:12px 0;}
+.compare th{
+  background:var(--bg-soft);color:var(--ink);font-weight:800;
+  padding:9px 11px;border:1px solid var(--line);text-align:left;
+}
+.compare td{padding:9px 11px;border:1px solid var(--line);color:var(--ink-soft);vertical-align:top;}
+.compare tr:nth-child(even) td{background:#fdfaf6;}
+.ok{color:#4a8e44;font-weight:700;}
+.ng{color:#c05a30;font-weight:700;}
+.ca{color:#a07010;font-weight:700;}
+
+/* 地域確認カード */
+.region-card{
+  background:linear-gradient(135deg,#f4edf7,#f8f4ff);
+  border:1.5px solid #d8c8ec;border-radius:var(--radius);
+  padding:16px 18px;margin:14px 0;
+}
+.region-card-title{font-weight:800;font-size:.88rem;color:var(--c-home);margin-bottom:10px;}
+.region-row{
+  display:flex;align-items:flex-start;gap:8px;
+  padding:8px 0;border-bottom:1px solid #e4d8f4;font-size:.82rem;
+}
+.region-row:last-child{border-bottom:none;}
+.region-label{font-weight:800;color:var(--ink);min-width:80px;flex:none;}
+.region-val{color:var(--ink-soft);flex:1;}
+
+/* 注意書き */
+.note{
+  background:var(--bg-soft);border-radius:var(--radius-sm);
+  padding:10px 13px;font-size:.76rem;color:var(--ink-faint);
+  line-height:1.7;margin-top:10px;
+}
+
+/* CTA */
+.cta{
+  background:linear-gradient(135deg,#fdece6,#fff6ef);
+  border:1.5px solid #f3c9b8;border-radius:var(--radius);
+  padding:18px 20px;margin-top:24px;text-align:center;
+}
+.cta p{font-size:.86rem;color:var(--ink-soft);margin-bottom:12px;}
+.cta a{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--c-live);color:#fff;
+  padding:10px 22px;border-radius:22px;
+  font-size:.86rem;font-weight:800;
+  box-shadow:0 4px 14px rgba(232,137,107,.35);
+  transition:.18s;
+}
+.cta a:hover{opacity:.88;}
+
+/* パンくず */
+.breadcrumb{
+  font-size:.72rem;color:var(--ink-faint);
+  display:flex;align-items:center;gap:5px;
+  margin-bottom:18px;flex-wrap:wrap;
+}
+.breadcrumb a{color:var(--c-connect);}
+.breadcrumb span{color:var(--ink-faint);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-inner">
+    <div class="brand">
+      <div class="brand-logo">🌟</div>
+      <div class="brand-text">
+        みらいナビ
+        <small class="brand-sub">障がい児と家族のナビゲーション</small>
+      </div>
+    </div>
+    <div class="fsbtns">
+      <button class="fsbtn" onclick="setFs(12,this)">小</button>
+      <button class="fsbtn on" onclick="setFs(14,this)">中</button>
+      <button class="fsbtn" onclick="setFs(16,this)">大</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+<div class="page">
+
+  <!-- パンくず -->
+  <nav class="breadcrumb">
+    <a href="index.html">みらいナビ</a>
+    <span>›</span>
+    <span>親なきあと</span>
+    <span>›</span>
+    <span>印鑑証明問題</span>
+  </nav>
+
+  <!-- アラートバナー -->
+  <div class="alert">
+    <div class="alert-label">⚠️ 親なきあとの準備・18歳前に知っておきたいこと</div>
+    <div class="alert-title">障がいのある子と印鑑証明問題</div>
+    <div class="alert-body">
+      日常生活では不要な印鑑証明書。でも<strong>親が亡くなったあと、残された子の相続手続き</strong>で突然必要になり、大きな壁になることがあります。親なきあとの財産管理の第一歩として、早めに知っておくことで選択肢が広がります。
+    </div>
+  </div>
+
+  <!-- 自治体注記 -->
+  <div class="note" style="margin-bottom:16px;background:rgba(91,155,213,.07);border:1px solid rgba(91,155,213,.2);">
+    📌 <strong style="color:#2a6aaa;">このページを読む前に：</strong>印鑑登録制度の運用は自治体ごとに異なります。本ページの情報は一般的な説明であり、お住まいの自治体の窓口で必ずご確認ください。
+  </div>
+
+  <!-- ① なぜ問題になるか -->
+  <div class="sec">
+    <div class="sec-head open" style="--sec-c:#e8896b" onclick="tog(this)">
+      <span class="sec-icon">🔍</span>
+      <span class="sec-title">なぜ問題になるのか</span>
+      <span class="sec-chev">▶</span>
+    </div>
+    <div class="sec-body open">
+      <p class="lead">普段は不要。でも相続の瞬間に必要になる。</p>
+      <p>遺言がない場合、親が亡くなると遺産分割協議が必要になります。このとき相続人全員の<strong>実印＋印鑑証明書</strong>が求められます。障がいのある子が相続人に含まれる場合、この「印鑑証明書」が取れないと相続手続き全体が止まります。</p>
+
+      <div class="warn-box">
+        <div class="warn-box-title">🚨 印鑑証明が必要になる場面</div>
+        遺産分割協議書への押印 / 預貯金の相続手続き / 不動産の相続登記
+      </div>
+
+      <p>逆に言えば、<strong>日常の福祉サービスの契約では印鑑証明は不要</strong>です。ヘルパー・デイサービス・グループホームの契約は認印で足ります。困るのは相続のときだけ、でもその一点が致命的になります。</p>
+
+      <!-- 図①：相続フロー -->
+      <div style="margin:16px 0;">
+        <div style="font-size:.74rem;font-weight:800;letter-spacing:.08em;color:var(--ink-faint);margin-bottom:10px;">📊 遺言の有無で変わる相続の流れ</div>
+        <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);">
+          <!-- 起点 -->
+          <div style="background:#f3ebe0;padding:11px;text-align:center;font-weight:800;font-size:.86rem;">親が亡くなる</div>
+          <!-- 分岐ライン -->
+          <div style="display:flex;border-top:1px solid var(--line);">
+            <!-- 遺言あり -->
+            <div style="flex:1;border-right:1px solid var(--line);padding:12px 10px;">
+              <div style="text-align:center;font-size:.72rem;font-weight:800;color:#4a8e44;background:rgba(123,178,116,.12);border-radius:8px;padding:4px 0;margin-bottom:10px;">遺言あり ✅</div>
+              <div class="flow-item" style="background:rgba(123,178,116,.08);border:1px solid rgba(123,178,116,.25);border-radius:9px;padding:9px 10px;margin-bottom:7px;text-align:center;font-size:.78rem;color:var(--ink-soft);">遺産分割協議<br><span style="font-size:.68rem;color:#4a8e44;font-weight:700;">不要</span></div>
+              <div style="text-align:center;font-size:.8rem;color:var(--ink-faint);">↓</div>
+              <div style="background:rgba(123,178,116,.08);border:1px solid rgba(123,178,116,.25);border-radius:9px;padding:9px 10px;margin:7px 0;text-align:center;font-size:.78rem;color:var(--ink-soft);">印鑑証明<br><span style="font-size:.68rem;color:#4a8e44;font-weight:700;">不要</span></div>
+              <div style="text-align:center;font-size:.8rem;color:var(--ink-faint);">↓</div>
+              <div style="background:#7bb274;border-radius:9px;padding:9px 10px;margin-top:7px;text-align:center;font-size:.8rem;font-weight:800;color:#fff;">手続き完了 ✅</div>
+            </div>
+            <!-- 遺言なし -->
+            <div style="flex:1;padding:12px 10px;">
+              <div style="text-align:center;font-size:.72rem;font-weight:800;color:#c05a30;background:rgba(232,137,107,.12);border-radius:8px;padding:4px 0;margin-bottom:10px;">遺言なし ⚠️</div>
+              <div style="background:rgba(232,137,107,.08);border:1px solid rgba(232,137,107,.25);border-radius:9px;padding:9px 10px;margin-bottom:7px;text-align:center;font-size:.78rem;color:var(--ink-soft);">遺産分割協議<br><span style="font-size:.68rem;color:#c05a30;font-weight:700;">必要</span></div>
+              <div style="text-align:center;font-size:.8rem;color:var(--ink-faint);">↓</div>
+              <div style="background:rgba(232,137,107,.08);border:1px solid rgba(232,137,107,.25);border-radius:9px;padding:9px 10px;margin:7px 0;text-align:center;font-size:.78rem;color:var(--ink-soft);">印鑑証明<br><span style="font-size:.68rem;color:#c05a30;font-weight:700;">全員分必要</span></div>
+              <div style="text-align:center;font-size:.8rem;color:var(--ink-faint);">↓</div>
+              <div style="background:#e8896b;border-radius:9px;padding:9px 10px;margin-top:7px;text-align:center;font-size:.8rem;font-weight:800;color:#fff;">取れない場合<br>手続き停止 ⚠️</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ② 法令上のルール -->
+  <div class="sec">
+    <div class="sec-head" style="--sec-c:#5b9bd5" onclick="tog(this)">
+      <span class="sec-icon">📋</span>
+      <span class="sec-title">法令上のルール（全国共通）</span>
+      <span class="sec-chev">▶</span>
+    </div>
+    <div class="sec-body">
+      <div class="law-box">
+        <div class="law-box-title">📌 各市印鑑条例（全国ほぼ共通）</div>
+        <ul>
+          <li>15歳未満の者 → 登録不可</li>
+          <li>意思能力を有しない者 → 登録不可</li>
+          <li>成年被後見人 → 法定代理人同行など一定の条件で登録できる場合あり（自治体による）</li>
+        </ul>
+      </div>
+
+      <p>令和2年4月の条例改正で「成年被後見人」から<strong>「意思能力を有しない者」</strong>に改められました。これにより、成年後見がついていなくても意思能力がないと判断されれば登録できません。逆に、成年後見がついていても本人に意思能力があれば、法定代理人同行のうえで登録できる自治体もあります。</p>
+
+      <div class="box">
+        <div class="box-title">💡 意思能力とは</div>
+        「印鑑登録する意思の表示をすることができる」かどうか。言葉が話せなくても、頷きや相槌で意思確認できれば登録可とした自治体の例もあります。判断は窓口の裁量に委ねられており、全国統一基準はありません。
+        <div style="margin-top:9px;padding-top:9px;border-top:1px solid var(--line-soft);font-size:.8rem;color:var(--ink-soft);">
+          <strong style="color:var(--ink);">窓口での確認内容の例（自治体によって異なります）</strong><br>
+          氏名・住所・生年月日などの確認、「印鑑登録をしたい」という意思確認が行われることがあります。具体的な方法は自治体によって異なるため、事前に電話で確認しておくと安心です。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ グレーゾーン -->
+  <div class="sec">
+    <div class="sec-head" style="--sec-c:#f0b13e" onclick="tog(this)">
+      <span class="sec-icon">⚖️</span>
+      <span class="sec-title">グレーゾーン — 自治体によってまちまち</span>
+      <span class="sec-chev">▶</span>
+    </div>
+    <div class="sec-body">
+      <p class="lead">「どこまでの意思能力で登録できるか」は自治体によって差異があります。</p>
+
+      <table class="compare">
+        <thead>
+          <tr><th>ケース</th><th>登録</th><th>備考</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>成年後見あり・本人が来庁・法定代理人同行</td>
+            <td class="ok">○</td>
+            <td>多くの自治体で可</td>
+          </tr>
+          <tr>
+            <td>成年後見なし・軽〜中度知的障がい</td>
+            <td class="ca">△</td>
+            <td>窓口判断による</td>
+          </tr>
+          <tr>
+            <td>言葉は出ないが頷き・相槌あり</td>
+            <td class="ca">△</td>
+            <td>認めた自治体の例あり</td>
+          </tr>
+          <tr>
+            <td>重度・意思表示が困難</td>
+            <td class="ng">✕</td>
+            <td>成年後見が必要になる場合が多い</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>「意思能力があると思うのに断られた」「重度なのに登録できた」の両方の話があります。<strong>事前に窓口へ電話確認するのが必須</strong>です。</p>
+    </div>
+  </div>
+
+  <!-- ④ 15〜18歳の窓 -->
+  <div class="sec">
+    <div class="sec-head" style="--sec-c:#d97aa5" onclick="tog(this)">
+      <span class="sec-icon">⏰</span>
+      <span class="sec-title">15〜17歳は大切な準備期間</span>
+      <span class="sec-chev">▶</span>
+    </div>
+    <div class="sec-body">
+      <p class="lead">まず自治体に確認することが最初の一歩。対応は自治体によって大きく異なります。</p>
+
+      <div class="warn-box">
+        <div class="warn-box-title">⚠️ 自治体によって対応がまったく違います</div>
+        「登録できた」「断られた」の両方の事例があります。窓口担当者の判断・意思確認の方法・必要書類まで、市区町村ごとに異なります。<strong>まず電話で確認してから動く</strong>のが鉄則です。
+      </div>
+
+      <div class="steps">
+        <div class="step" style="--step-c:#d97aa5">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">15歳になったら印鑑を作る</div>
+            <div class="step-desc">シャチハタ不可。三文判でも可だが、実印用の印鑑（フルネームか苗字）を用意する。</div>
+          </div>
+        </div>
+        <div class="step" style="--step-c:#d97aa5">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">事前に市役所へ電話確認</div>
+            <div class="step-desc">「知的障がいのある子の印鑑登録をしたいが、親が同行すれば可能か」と確認する。自治体によって必要書類が違う。</div>
+          </div>
+        </div>
+        <div class="step" style="--step-c:#d97aa5">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">本人＋親（法定代理人）で窓口へ</div>
+            <div class="step-desc">未成年者の登録時は、法定代理人（親権者）の同意書または同行が必要な自治体が多い。親の印鑑証明書も持参を。</div>
+          </div>
+        </div>
+        <div class="step" style="--step-c:#d97aa5">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">印鑑登録証（カード）を大切に保管</div>
+            <div class="step-desc">印鑑証明書を取得するときに必要。引っ越したら転居先で再登録が必要になる。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="warn-box">
+        <div class="warn-box-title">📌 18歳以降について</div>
+        18歳以降でも、本人に意思能力があると判断されれば登録できる自治体があります。一方で15〜17歳であっても、意思能力がないと判断されれば登録できないケースもあります。本当の分かれ目は年齢ではなく<strong>「意思能力」と自治体の運用</strong>です。だからこそ、15〜17歳のうちに自治体へ相談・確認しておくことが大切です。
+      </div>
+
+      <!-- 地域確認カード -->
+      <div class="region-card">
+        <div class="region-card-title">📞 各自治体の相談窓口へ電話確認を</div>
+        <div class="region-row">
+          <span class="region-label">聞く窓口</span>
+          <span class="region-val">市区町村の<strong>市民課</strong>または<strong>戸籍住民課</strong></span>
+        </div>
+        <div class="region-row">
+          <span class="region-label">聞く内容</span>
+          <span class="region-val">「知的障がいのある子（15〜17歳）の印鑑登録を、親が同行して申請できますか？必要な書類を教えてください」</span>
+        </div>
+        <div class="region-row">
+          <span class="region-label">確認ポイント</span>
+          <span class="region-val">① 親同行でOKか<br>② 必要書類（親の印鑑証明・同意書など）<br>③ 本人の意思確認の方法</span>
+        </div>
+        <div class="note">📝 運用は自治体によって異なります。「できない」と言われた場合も、別の窓口担当者に再確認する価値があります。</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑤ 対策の3つの選択肢 -->
+  <div class="sec">
+    <div class="sec-head" style="--sec-c:#7bb274" onclick="tog(this)">
+      <span class="sec-icon">🛡️</span>
+      <span class="sec-title">対策の3つの選択肢</span>
+      <span class="sec-chev">▶</span>
+    </div>
+    <div class="sec-body">
+      <!-- 図②：対策選択フロー -->
+      <div style="margin-bottom:18px;">
+        <div style="font-size:.74rem;font-weight:800;letter-spacing:.08em;color:var(--ink-faint);margin-bottom:10px;">📊 どの対策を選ぶか</div>
+        <div style="background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);font-size:.8rem;">
+          <div style="background:#f3ebe0;border-radius:9px;padding:9px;text-align:center;font-weight:800;margin-bottom:10px;">今の状況を確認する</div>
+          <div style="border-left:3px solid var(--c-act);padding:8px 10px;background:rgba(217,122,165,.06);border-radius:0 9px 9px 0;margin-bottom:8px;">
+            <div style="font-weight:800;color:var(--c-act);margin-bottom:6px;">子は15〜17歳？</div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;background:rgba(123,178,116,.12);border:1px solid rgba(123,178,116,.3);border-radius:8px;padding:8px;text-align:center;">
+                <div style="font-weight:800;color:#4a8e44;font-size:.72rem;">YES</div>
+                <div style="color:var(--ink-soft);margin-top:3px;">→ まず自治体に<br>電話確認 📞</div>
+                <div style="margin-top:5px;font-size:.7rem;background:#7bb274;color:#fff;border-radius:6px;padding:3px 6px;font-weight:700;">対策①へ</div>
+              </div>
+              <div style="flex:1;background:rgba(240,177,62,.10);border:1px solid rgba(240,177,62,.3);border-radius:8px;padding:8px;text-align:center;">
+                <div style="font-weight:800;color:#a07010;font-size:.72rem;">NO（18歳以上）</div>
+                <div style="color:var(--ink-soft);margin-top:3px;">→ 遺言・信託を<br>検討する</div>
+                <div style="margin-top:5px;font-size:.7rem;background:#f0b13e;color:#fff;border-radius:6px;padding:3px 6px;font-weight:700;">対策②③へ</div>
+              </div>
+            </div>
+          </div>
+          <div style="border-left:3px solid var(--c-play);padding:8px 10px;background:rgba(240,177,62,.06);border-radius:0 9px 9px 0;">
+            <div style="font-weight:800;color:#a07010;margin-bottom:6px;">親が元気なうちに動けるか？</div>
+            <div style="display:flex;gap:8px;">
+              <div style="flex:1;background:rgba(91,155,213,.10);border:1px solid rgba(91,155,213,.25);border-radius:8px;padding:8px;text-align:center;">
+                <div style="font-weight:800;color:#2a6aaa;font-size:.72rem;">YES</div>
+                <div style="color:var(--ink-soft);margin-top:3px;">→ 公正証書遺言<br>家族信託を準備</div>
+                <div style="margin-top:5px;font-size:.7rem;background:#5b9bd5;color:#fff;border-radius:6px;padding:3px 6px;font-weight:700;">対策②③へ</div>
+              </div>
+              <div style="flex:1;background:rgba(176,139,196,.10);border:1px solid rgba(176,139,196,.25);border-radius:8px;padding:8px;text-align:center;">
+                <div style="font-weight:800;color:#6a4a8a;font-size:.72rem;">急ぎ・困った</div>
+                <div style="color:var(--ink-soft);margin-top:3px;">→ 成年後見人が<br>代替手続き</div>
+                <div style="margin-top:5px;font-size:.7rem;background:#b08bc4;color:#fff;border-radius:6px;padding:3px 6px;font-weight:700;">成年後見へ</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step" style="--step-c:#d97aa5">
+          <div class="step-num">①</div>
+          <div class="step-body">
+            <div class="step-title">まず自治体へ電話確認 → 15〜17歳の間に登録を目指す</div>
+            <div class="step-desc">対応は自治体によって大きく異なります。「できる」「できない」「条件付き」どれもあり得るため、動く前に必ず窓口へ確認を。親権者として手続きを進められるこの時期に相談しておくのが安心。</div>
+            <span class="step-tag" style="background:rgba(217,122,165,.12);color:#b85a8a;">まず電話一本から</span>
+          </div>
+        </div>
+        <div class="step" style="--step-c:#f0b13e">
+          <div class="step-num">②</div>
+          <div class="step-body">
+            <div class="step-title">親が公正証書遺言を作成する</div>
+            <div class="step-desc">公正証書遺言を作成しておくことで、遺産分割協議が不要になるケースが多く、印鑑証明の問題を避けやすくなります。費用は内容によるが数万円〜。</div>
+            <div style="margin-top:8px;padding:9px 11px;background:rgba(240,177,62,.08);border-radius:8px;font-size:.76rem;color:var(--ink-soft);line-height:1.7;">
+              ⚠️ <strong style="color:#a07010;">遺留分に注意</strong>：障がいのある子や他の相続人の遺留分・生活資金への配慮も必要です。遺言の内容は公証人・司法書士・弁護士などの専門家へ相談すると安心です。
+            </div>
+            <span class="step-tag" style="background:rgba(240,177,62,.12);color:#a07010;">親が元気なうちに</span>
+          </div>
+        </div>
+        <div class="step" style="--step-c:#5b9bd5">
+          <div class="step-num">③</div>
+          <div class="step-body">
+            <div class="step-title">家族信託を使う</div>
+            <div class="step-desc">財産を信託しておけば、相続発生時に財産が凍結しない。遺産分割協議も不要になるため印鑑証明問題を根本から回避できる。専門家（司法書士・弁護士）への相談が必要。</div>
+            <span class="step-tag" style="background:rgba(91,155,213,.12);color:#2a6aaa;">長期計画として</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-title">💡 実務で多い組み合わせ</div>
+        ①（印鑑登録）＋②（遺言）のセットが現実的。①だけでも大きな安心になります。③の家族信託は費用・手間がかかるぶん、財産管理全体を整理したい場合に有効です。
+      </div>
+    </div>
+  </div>
+
+  <!-- ⑥ 成年後見との関係 -->
+  <div class="sec">
+    <div class="sec-head" style="--sec-c:#b08bc4" onclick="tog(this)">
+      <span class="sec-icon">🏛️</span>
+      <span class="sec-title">成年後見との関係</span>
+      <span class="sec-chev">▶</span>
+    </div>
+    <div class="sec-body">
+      <p>成年後見が開始すると、多くの場合は印鑑登録に影響します。現在は、本人に意思能力があり法定代理人が同行するなど一定の条件を満たせば登録できる自治体もあります。運用は自治体によって異なります。</p>
+
+      <div class="warn-box">
+        <div class="warn-box-title">⚠️ 注意</div>
+        「相続が必要だから後見をつけよう」→「でも後見をつけたら印鑑登録に影響する」という矛盾が生じる場合があります。後見をつけた場合、印鑑証明が必要な場面では<strong>後見人の印鑑証明書で代替</strong>することになります。
+      </div>
+
+      <div class="box">
+        <div class="box-title">💡 後見人の印鑑証明で代替できる</div>
+        被後見人の印鑑証明が取れなくても、後見人が代わりに契約・手続きを行い、後見人の実印＋印鑑証明書を使います。ただし後見制度は一度始めると本人が亡くなるまで終わらないため、慎重な判断が必要です。
+      </div>
+
+      <p>後見制度の詳細は「成年後見シミュレーター」もご覧ください。</p>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <p>「どの対策が自分たちに合っているか」相談したい方へ</p>
+    <a href="index.html">みらいナビで制度を確認する →</a>
+  </div>
+
+  <div class="box" style="margin-top:20px;border-left:4px solid var(--c-act);border-radius:var(--radius-sm);padding:14px 16px;">
+    <div class="box-title" style="color:var(--c-act);">📌 親なきあとの準備として</div>
+    印鑑証明の問題は、「親なきあと」に起こるさまざまな手続きの入り口のひとつです。事前に準備しておくことで、相続・財産管理をスムーズに進めやすくなります。
+  </div>
+
+  <!-- 次に読むおすすめ -->
+  <div style="margin-top:24px;">
+    <div style="font-size:.74rem;font-weight:800;letter-spacing:.08em;color:var(--ink-faint);margin-bottom:10px;">📚 次に読むおすすめ</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <a href="index.html#seiken" style="display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 15px;box-shadow:var(--shadow);text-decoration:none;transition:.18s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform='none'">
+        <span style="font-size:1.4rem;flex:none;">🏛️</span>
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:.88rem;color:var(--ink);">成年後見制度</div>
+          <div style="font-size:.74rem;color:var(--ink-faint);margin-top:1px;">印鑑登録できない場合の代替手段・後見人の役割</div>
+        </div>
+        <span style="color:var(--ink-faint);font-size:.8rem;">→</span>
+      </a>
+      <a href="index.html#shintaku" style="display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 15px;box-shadow:var(--shadow);text-decoration:none;transition:.18s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform='none'">
+        <span style="font-size:1.4rem;flex:none;">🤝</span>
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:.88rem;color:var(--ink);">家族信託</div>
+          <div style="font-size:.74rem;color:var(--ink-faint);margin-top:1px;">相続時の財産凍結を回避・印鑑証明問題の根本解決</div>
+        </div>
+        <span style="color:var(--ink-faint);font-size:.8rem;">→</span>
+      </a>
+      <a href="index.html#yuigon" style="display:flex;align-items:center;gap:12px;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:13px 15px;box-shadow:var(--shadow);text-decoration:none;transition:.18s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform='none'">
+        <span style="font-size:1.4rem;flex:none;">📝</span>
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:.88rem;color:var(--ink);">公正証書遺言</div>
+          <div style="font-size:.74rem;color:var(--ink-faint);margin-top:1px;">遺産分割協議を不要にする・遺留分への配慮</div>
+        </div>
+        <span style="color:var(--ink-faint);font-size:.8rem;">→</span>
+      </a>
+      <a href="index.html#simulator" style="display:flex;align-items:center;gap:12px;border-radius:var(--radius-sm);padding:13px 15px;text-decoration:none;transition:.18s;border:1.5px solid var(--c-act);background:rgba(217,122,165,.06);" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform='none'">
+        <span style="font-size:1.4rem;flex:none;">🧭</span>
+        <div style="flex:1;">
+          <div style="font-weight:800;font-size:.88rem;color:var(--c-act);">親なきあとシミュレーター</div>
+          <div style="font-size:.74rem;color:var(--ink-faint);margin-top:1px;">家族の状況から最適な準備プランを確認する</div>
+        </div>
+        <span style="color:var(--c-act);font-size:.8rem;font-weight:800;">→</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:16px;">
+    📅 このページの情報は2025年時点のものです。法令・条例は変更になる場合があります。重要な手続きの前には必ず各窓口へご確認ください。
+  </div>
+
+</div>
+</div>
+
+<script>
+function tog(head){
+  head.classList.toggle('open');
+  const body = head.nextElementSibling;
+  body.classList.toggle('open');
+}
+function setFs(px, btn){
+  document.documentElement.style.fontSize = px + 'px';
+  document.querySelectorAll('.fsbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+// 最初のセクションは開いた状態
+document.querySelectorAll('.sec-head.open').forEach(h => {
+  h.nextElementSibling.classList.add('open');
+});
+</script>
+</body>
+</html>

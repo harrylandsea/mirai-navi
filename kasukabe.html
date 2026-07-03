@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>春日部市 障がい者福祉ガイド — みらいナビ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&family=Kosugi&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:        #fbf7f0;
+  --bg-card:   #ffffff;
+  --bg-soft:   #fdf3e8;
+  --ink:       #3a3330;
+  --ink-soft:  #6b625c;
+  --ink-faint: #9a8f87;
+  --line:      #ece2d4;
+  --line-soft: #f3ebe0;
+
+  /* みらいナビ 7色 */
+  --c1: #e8896b;
+  --c2: #f0b13e;
+  --c3: #7bb274;
+  --c4: #5b9bd5;
+  --c5: #b08bc4;
+  --c6: #d97aa5;
+  --c7: #5fb3b3;
+
+  /* 旧変数をみらいナビ色へ差し替え */
+  --accent:     #d97aa5;
+  --accent-dim: rgba(217,122,165,0.10);
+  --blue:       #5b9bd5;
+  --blue-dim:   rgba(91,155,213,0.10);
+  --green:      #7bb274;
+  --green-dim:  rgba(123,178,116,0.10);
+  --pink:       #d97aa5;
+  --pink-dim:   rgba(217,122,165,0.10);
+  --yellow:     #f0b13e;
+  --yellow-dim: rgba(240,177,62,0.10);
+  --orange:     #e8896b;
+
+  /* 互換用（旧ダーク変数 → ライト対応）*/
+  --surface:  var(--bg-card);
+  --surface2: var(--bg-soft);
+  --border:   var(--line);
+  --border2:  var(--line-soft);
+  --text:     var(--ink);
+  --muted:    var(--ink-faint);
+
+  --fs:       14px;
+  --radius:   16px;
+  --radius-sm:11px;
+  --shadow:   0 2px 4px rgba(58,51,48,.04), 0 8px 24px rgba(58,51,48,.06);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;font-size:var(--fs);}
+body{
+  font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic UI",sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.8;
+  -webkit-font-smoothing:antialiased;min-height:100vh;padding-bottom:60px;
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(900px 500px at 80% -5%, rgba(240,177,62,.10), transparent 60%),
+    radial-gradient(700px 500px at -5% 100%, rgba(91,155,213,.08), transparent 60%);
+}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+
+/* ── ナビ ── */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(251,247,240,.94);
+  backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--line-soft);
+  padding:10px 16px 0;
+  position:relative;z-index:100;
+}
+.nav-inner{display:flex;justify-content:space-between;align-items:center;padding-bottom:9px;}
+.nav-title{
+  font-size:0.9em;font-weight:800;letter-spacing:.04em;
+  font-family:"Kosugi",sans-serif;
+  color:var(--ink);display:flex;align-items:center;gap:7px;
+}
+.nav-title::before{
+  content:"🌟";width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:14px;
+  background:linear-gradient(135deg,#fde3b8,#f7c873);box-shadow:0 3px 8px rgba(240,177,62,.3);
+}
+.nav-sub{font-size:0.62em;font-weight:600;color:var(--ink-faint);margin-top:-2px;letter-spacing:.02em;font-family:"Noto Sans JP",sans-serif;}
+.nav-tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{
+  flex:0 0 auto;padding:9px 15px;font-size:.84em;font-weight:700;
+  color:var(--ink-faint);cursor:pointer;border:none;background:none;
+  border-bottom:2.5px solid transparent;white-space:nowrap;transition:.18s;
+  display:flex;align-items:center;gap:5px;
+}
+.nav-tab:hover{color:var(--ink-soft);}
+.nav-tab.on{color:var(--c6);border-bottom-color:var(--c6);}
+
+/* フォントサイズ */
+.fsbtns{display:flex;gap:3px;}
+.fsbtn{
+  padding:4px 9px;font-size:.72em;font-weight:700;
+  border:1px solid var(--line);border-radius:8px;
+  background:var(--bg-soft);color:var(--ink-faint);cursor:pointer;transition:.18s;
+}
+.fsbtn.on{background:var(--c6);color:#fff;border-color:var(--c6);}
+.fsbtn:hover{background:#fde3b8;}
+
+/* ── パネル ── */
+.panel{display:none;padding:16px;position:relative;z-index:1;}
+.panel.on{display:block;animation:fade .28s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ── 検索 ── */
+.search-bar{
+  display:flex;align-items:center;
+  background:var(--bg-card);
+  border:1.5px solid var(--line);
+  border-radius:var(--radius);
+  margin-bottom:16px;
+  transition:border-color .2s;
+  box-shadow:var(--shadow);
+}
+.search-bar:focus-within{border-color:var(--c6);}
+.search-bar input{
+  flex:1;background:none;border:none;
+  padding:13px 14px;font-size:.94em;
+  color:var(--ink);outline:none;
+  font-family:"Noto Sans JP",sans-serif;
+}
+.search-bar input::placeholder{color:var(--ink-faint);}
+.search-bar .clr{padding:0 14px;color:var(--ink-faint);font-size:1.1em;cursor:pointer;display:none;}
+
+/* ── タイムライン ── */
+.timeline{position:relative;padding-left:20px;}
+.timeline::before{
+  content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;border-radius:2px;
+  background:linear-gradient(to bottom,#e8896b,#f0b13e,#7bb274,#5b9bd5,#b08bc4,#d97aa5,#5fb3b3);
+}
+
+.ch{position:relative;margin-bottom:14px;}
+.ch-dot{
+  position:absolute;left:-17px;top:16px;
+  width:11px;height:11px;border-radius:50%;
+  border:2.5px solid var(--bg);z-index:1;
+  box-shadow:0 2px 6px rgba(0,0,0,.12);
+}
+
+.ch-head{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;
+  cursor:pointer;user-select:none;
+  box-shadow:var(--shadow);
+  transition:transform .18s, box-shadow .18s;
+}
+.ch-head:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(58,51,48,.10);}
+.ch-head-inner{display:flex;align-items:center;padding:13px 15px;gap:9px;}
+.ch-icon{font-size:1.2em;flex:0 0 auto;}
+.ch-title{font-weight:800;font-size:.94em;flex:1;color:var(--ink);}
+.ch-badge{
+  font-size:.66em;font-weight:700;padding:3px 8px;
+  border-radius:20px;flex:0 0 auto;
+}
+.ch-chevron{color:var(--ink-faint);font-size:.65em;flex:0 0 auto;transition:transform .25s;}
+.ch-head.open .ch-chevron{transform:rotate(90deg);}
+
+.ch-body{display:none;border-top:1px solid var(--line-soft);background:var(--bg);}
+.ch-body.open{display:block;}
+
+.item{border-bottom:1px solid var(--line-soft);cursor:pointer;user-select:none;}
+.item:last-child{border-bottom:none;}
+.item-head{display:flex;align-items:center;padding:11px 15px;gap:8px;}
+.item-prefix{color:var(--ink-faint);font-size:.75em;flex:0 0 auto;}
+.item-name{font-size:.87em;flex:1;color:var(--ink-soft);}
+.item-chevron{color:var(--ink-faint);font-size:.6em;flex:0 0 auto;transition:transform .25s;}
+.item.open .item-chevron{transform:rotate(90deg);}
+
+.item-detail{
+  display:none;padding:11px 15px 15px 36px;
+  background:var(--bg-card);
+  border-top:1px solid var(--line-soft);
+}
+.item-detail.open{display:block;}
+.item-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.itag{font-size:.68em;font-weight:700;padding:3px 9px;border-radius:20px;border:1px solid;}
+.itag-s{background:rgba(91,155,213,.10);color:#3a7ec8;border-color:rgba(91,155,213,.3);}
+.itag-r{background:rgba(123,178,116,.10);color:#4a8e44;border-color:rgba(123,178,116,.3);}
+.itag-p{background:rgba(217,122,165,.10);color:#b85a8a;border-color:rgba(217,122,165,.3);}
+.itag-a{background:rgba(240,177,62,.10);color:#a07010;border-color:rgba(240,177,62,.3);}
+.item-text{font-size:.84em;line-height:1.85;color:var(--ink-soft);}
+.item-text ul{padding-left:16px;}
+.item-text li{margin-bottom:4px;}
+.item-text strong{color:var(--ink);font-weight:800;}
+
+/* ── フィルター ── */
+.filter-wrap{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:16px;margin-bottom:16px;
+  box-shadow:var(--shadow);
+}
+.filter-wrap h2{font-size:.8em;color:var(--ink);font-weight:800;letter-spacing:.05em;margin-bottom:13px;}
+.filter-group{margin-bottom:11px;}
+.filter-group-label{font-size:.72em;color:var(--ink-faint);margin-bottom:7px;font-weight:700;}
+.filter-btns{display:flex;flex-wrap:wrap;gap:5px;}
+.fbtn{
+  padding:6px 12px;font-size:.78em;font-weight:700;
+  border:1.5px solid var(--line);background:var(--bg-soft);
+  color:var(--ink-faint);border-radius:20px;cursor:pointer;transition:all .15s;
+}
+.fbtn:active{transform:scale(0.95);}
+.fbtn.on-s{background:rgba(91,155,213,.12);color:#3a7ec8;border-color:#5b9bd5;}
+.fbtn.on-r{background:rgba(123,178,116,.12);color:#4a8e44;border-color:#7bb274;}
+.fbtn.on-p{background:rgba(217,122,165,.12);color:#b85a8a;border-color:#d97aa5;}
+.filter-reset{
+  padding:6px 13px;font-size:.78em;font-weight:700;
+  border:1.5px solid var(--line);background:none;
+  color:var(--ink-faint);border-radius:20px;cursor:pointer;margin-top:5px;
+  transition:.15s;
+}
+.filter-reset:hover{background:var(--bg-soft);}
+.filter-count{font-size:.8em;color:var(--c3);font-weight:800;margin-top:10px;min-height:1.2em;}
+
+.item.hl .item-head{background:rgba(217,122,165,.06);}
+.item.hidden{display:none;}
+.ch.hidden{display:none;}
+
+/* ── 窓口カード ── */
+.contact-section{margin-bottom:24px;}
+.contact-section-title{
+  font-size:.7em;font-weight:800;letter-spacing:.1em;
+  color:var(--ink-faint);text-transform:uppercase;
+  margin-bottom:10px;padding-left:2px;
+}
+.ccard{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;margin-bottom:10px;
+  box-shadow:var(--shadow);
+}
+.ccard-head{padding:13px 15px;display:flex;align-items:flex-start;gap:11px;}
+.ccard-icon{font-size:1.4em;flex:0 0 auto;margin-top:1px;}
+.ccard-info{}
+.ccard-name{font-weight:800;font-size:.92em;line-height:1.3;margin-bottom:2px;color:var(--ink);}
+.ccard-desc{font-size:.75em;color:var(--ink-faint);line-height:1.4;}
+.ccard-body{padding:11px 15px 15px;border-top:1px solid var(--line-soft);background:var(--bg-soft);}
+.ccard-meta{font-size:.8em;color:var(--ink-faint);line-height:1.9;margin-bottom:10px;}
+.ccard-meta span{color:var(--ink-soft);}
+.ccard-actions{display:flex;flex-wrap:wrap;gap:7px;}
+.caction{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:8px 14px;border-radius:22px;text-decoration:none;
+  font-size:.82em;font-weight:700;border:1.5px solid;transition:opacity .15s;
+}
+.caction:active{opacity:.7;}
+.caction-tel{background:rgba(217,122,165,.10);color:#b85a8a;border-color:#d97aa5;}
+.caction-web{background:rgba(123,178,116,.10);color:#4a8e44;border-color:#7bb274;}
+.caction-map{background:rgba(91,155,213,.10);color:#3a7ec8;border-color:#5b9bd5;}
+
+.sub-ccard{
+  background:var(--bg-card);border-radius:11px;
+  padding:12px 14px;margin-bottom:8px;border-left:4px solid;
+  box-shadow:0 1px 4px rgba(58,51,48,.06);
+}
+.sub-ccard:last-child{margin-bottom:0;}
+.sub-ccard-name{font-weight:800;font-size:.86em;margin-bottom:2px;color:var(--ink);}
+.sub-ccard-sub{font-size:.72em;color:var(--ink-faint);margin-bottom:6px;}
+.sub-ccard-addr{font-size:.78em;color:var(--ink-faint);margin-bottom:7px;}
+.sub-ccard-actions{display:flex;flex-wrap:wrap;gap:5px;}
+.sub-action{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 11px;border-radius:18px;text-decoration:none;
+  font-size:.78em;font-weight:700;border:1.5px solid;transition:opacity .15s;
+}
+.sub-action:active{opacity:.7;}
+
+.other-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line-soft);}
+.other-row:last-child{border-bottom:none;}
+.other-label{font-size:.84em;font-weight:700;color:var(--ink);}
+.other-sub{font-size:.72em;color:var(--ink-faint);margin-top:1px;}
+.notice{
+  background:var(--bg-soft);border:1px solid var(--line);
+  border-radius:11px;padding:11px 14px;
+  font-size:.74em;color:var(--ink-faint);line-height:1.7;margin-top:4px;
+}
+
+/* ── マップ ── */
+#mm-outer{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;
+  touch-action:none;cursor:grab;
+  box-shadow:var(--shadow);
+}
+#mm-svg{display:block;width:100%;max-height:62vh;user-select:none;}
+.mm-note{text-align:center;font-size:.74em;color:var(--ink-faint);padding:8px 0 2px;}
+
+/* ── ポップアップ ── */
+#popup{display:none;position:fixed;inset:0;z-index:200;background:rgba(58,51,48,0.45);backdrop-filter:blur(6px);padding:16px;align-items:flex-end;}
+#popup.show{display:flex;}
+.popup-box{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:18px 18px 13px 13px;
+  width:100%;max-height:70vh;overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:0 -4px 32px rgba(58,51,48,.14);
+  animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:none;opacity:1;}}
+.popup-head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:15px 17px;border-bottom:1px solid var(--line-soft);flex:0 0 auto;
+}
+#popup-title{font-weight:800;font-size:.92em;color:var(--c6);flex:1;padding-right:10px;line-height:1.4;}
+.popup-close{
+  background:var(--bg-soft);border:1px solid var(--line);
+  color:var(--ink-faint);width:28px;height:28px;border-radius:50%;
+  cursor:pointer;font-size:1em;flex:0 0 auto;
+  display:flex;align-items:center;justify-content:center;
+}
+#popup-body{overflow-y:auto;padding:14px 17px 20px;font-size:.84em;line-height:1.85;color:var(--ink-soft);}
+#popup-body ul{padding-left:16px;}
+#popup-body li{margin-bottom:5px;}
+#popup-body strong{color:var(--ink);font-weight:800;}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-title">
+      <div>
+        春日部市 福祉ガイド
+        <div class="nav-sub">みらいナビ — 地域版</div>
+      </div>
+    </div>
+    <div class="fsbtns">
+      <button class="fsbtn" onclick="setFs(12,this)">小</button>
+      <button class="fsbtn on" onclick="setFs(14,this)">中</button>
+      <button class="fsbtn" onclick="setFs(16,this)">大</button>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab on" onclick="goTab('list',this)">📋 サービス一覧</button>
+    <button class="nav-tab" onclick="goTab('filter',this)">🔍 手帳で絞込</button>
+    <button class="nav-tab" onclick="goTab('map',this)">🗺️ マップ</button>
+    <button class="nav-tab" onclick="goTab('contact',this)">📞 窓口・連絡先</button>
+  </div>
+</nav>
+
+<!-- ① サービス一覧 -->
+<div class="panel on" id="tab-list">
+  <div class="search-bar">
+    <input id="search" placeholder="キーワードで検索（例：タクシー、免除、p23）">
+    <span class="clr" id="clr">✕</span>
+  </div>
+  <div class="timeline" id="list-root"></div>
+</div>
+
+<!-- ② 手帳で絞込 -->
+<div class="panel" id="tab-filter">
+  <div class="filter-wrap">
+    <h2>お持ちの手帳・等級を選択</h2>
+    <div class="filter-group">
+      <div class="filter-group-label" style="color:var(--blue);">📘 身体障害者手帳</div>
+      <div class="filter-btns">
+        <button class="fbtn" data-t="s" data-g="1" onclick="tgF(this)">1級</button>
+        <button class="fbtn" data-t="s" data-g="2" onclick="tgF(this)">2級</button>
+        <button class="fbtn" data-t="s" data-g="3" onclick="tgF(this)">3級</button>
+        <button class="fbtn" data-t="s" data-g="4" onclick="tgF(this)">4〜6級</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-label" style="color:var(--green);">📗 療育手帳</div>
+      <div class="filter-btns">
+        <button class="fbtn" data-t="r" data-g="ma" onclick="tgF(this)">○A（最重度）</button>
+        <button class="fbtn" data-t="r" data-g="a" onclick="tgF(this)">A（重度）</button>
+        <button class="fbtn" data-t="r" data-g="b" onclick="tgF(this)">B（中軽度）</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-label" style="color:var(--pink);">📕 精神障害者保健福祉手帳</div>
+      <div class="filter-btns">
+        <button class="fbtn" data-t="p" data-g="1" onclick="tgF(this)">1級</button>
+        <button class="fbtn" data-t="p" data-g="2" onclick="tgF(this)">2級</button>
+        <button class="fbtn" data-t="p" data-g="3" onclick="tgF(this)">3級</button>
+      </div>
+    </div>
+    <button class="filter-reset" onclick="resetF()">↺ すべて表示に戻す</button>
+    <div class="filter-count" id="fcount"></div>
+  </div>
+  <div class="timeline" id="filter-root"></div>
+</div>
+
+<!-- ③ マップ -->
+<div class="panel" id="tab-map">
+  <div id="mm-outer">
+    <svg id="mm-svg" viewBox="0 0 680 680"></svg>
+  </div>
+  <p class="mm-note">カテゴリ・ノードをタップすると詳細が表示されます</p>
+</div>
+
+<!-- ④ 窓口・連絡先 -->
+<div class="panel" id="tab-contact">
+
+  <div class="contact-section">
+    <div class="contact-section-title">主要窓口</div>
+
+    <div class="ccard">
+      <div class="ccard-head" style="background:rgba(217,122,165,.07);">
+        <div class="ccard-icon">🏛️</div>
+        <div class="ccard-info">
+          <div class="ccard-name" style="color:#b85a8a;">春日部市役所 障がい者支援課</div>
+          <div class="ccard-desc">各種手帳・手当・援護の総合窓口</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="ccard-meta">
+          📍 <span>〒344-8577 春日部市中央七丁目2番地1（本庁舎2階）</span><br>
+          🕐 <span>平日 8:30〜17:15</span><br>
+          📠 <span>FAX 048-733-0220</span>
+        </div>
+        <div class="ccard-actions">
+          <a href="tel:048-736-1131" class="caction caction-tel">📞 048-736-1131</a>
+          <a href="https://www.city.kasukabe.lg.jp/soshikikarasagasu/shogaishashienka/index.html" target="_blank" class="caction caction-web">🌐 公式HP</a>
+          <a href="https://www.google.com/maps/search/春日部市役所+埼玉県" target="_blank" class="caction caction-map">🗺️ 地図</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-head" style="background:rgba(123,178,116,.07);">
+        <div class="ccard-icon">🤝</div>
+        <div class="ccard-info">
+          <div class="ccard-name" style="color:#4a8e44;">春日部市社会福祉協議会（あしすと春日部）</div>
+          <div class="ccard-desc">総合福祉センター内・福祉全般の相談</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="ccard-meta">
+          📍 <span>〒344-0067 春日部市中央二丁目24番地1</span><br>
+          🕐 <span>平日 8:15〜17:00</span>
+        </div>
+        <div class="ccard-actions">
+          <a href="tel:048-762-1081" class="caction caction-tel">📞 048-762-1081</a>
+          <a href="https://kasukabeshishakyo.or.jp/" target="_blank" class="caction caction-web">🌐 公式HP</a>
+          <a href="https://www.google.com/maps/search/春日部市+あしすと春日部" target="_blank" class="caction caction-map">🗺️ 地図</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ccard">
+      <div class="ccard-head" style="background:rgba(91,155,213,.07);">
+        <div class="ccard-icon">💼</div>
+        <div class="ccard-info">
+          <div class="ccard-name" style="color:#3a7ec8;">春日部市障害者就労支援センター</div>
+          <div class="ccard-desc">15歳以上の就労相談・職場開拓（無料）</div>
+        </div>
+      </div>
+      <div class="ccard-body">
+        <div class="ccard-meta">
+          📍 <span>〒344-0005 春日部市樋堀369-1（リサイクルショップ内）</span><br>
+          🕐 <span>月〜金 8:30〜17:15（祝日・年末年始除く）</span>
+        </div>
+        <div class="ccard-actions">
+          <a href="tel:048-752-7483" class="caction caction-tel">📞 048-752-7483</a>
+          <a href="https://www.city.kasukabe.lg.jp/soshikikarasagasu/shogaishashienka/gyomuannai/3/1/1/5157.html" target="_blank" class="caction caction-web">🌐 詳細</a>
+          <a href="https://www.google.com/maps/search/春日部市+樋堀369" target="_blank" class="caction caction-map">🗺️ 地図</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-section">
+    <div class="contact-section-title">専門相談支援事業所（市委託・相談無料）</div>
+    <div class="ccard">
+      <div class="ccard-body" style="padding-top:14px;">
+        <div class="sub-ccard" style="border-color:#5b9bd5;">
+          <div class="sub-ccard-name" style="color:#3a7ec8;">障害者支援センター えん</div>
+          <div class="sub-ccard-sub">主に身体障害の相談</div>
+          <div class="sub-ccard-addr">📍 春日部市大場1281-1</div>
+          <div class="sub-ccard-actions">
+            <a href="tel:048-737-3011" class="sub-action" style="background:rgba(91,155,213,.10);color:#3a7ec8;border-color:#5b9bd5;">📞 048-737-3011</a>
+            <a href="https://www.google.com/maps/search/春日部市大場1281-1" target="_blank" class="sub-action" style="background:rgba(91,155,213,.10);color:#3a7ec8;border-color:#5b9bd5;">🗺️ 地図</a>
+          </div>
+        </div>
+        <div class="sub-ccard" style="border-color:#7bb274;">
+          <div class="sub-ccard-name" style="color:#4a8e44;">障害者生活支援ルーム ともに</div>
+          <div class="sub-ccard-sub">主に知的障害の相談</div>
+          <div class="sub-ccard-addr">📍 春日部市谷原3-12-6 メゾンロ-リエ101</div>
+          <div class="sub-ccard-actions">
+            <a href="tel:048-797-7377" class="sub-action" style="background:rgba(123,178,116,.10);color:#4a8e44;border-color:#7bb274;">📞 048-797-7377</a>
+            <a href="https://www.tomonifukushikai.or.jp/pages/79/" target="_blank" class="sub-action" style="background:rgba(123,178,116,.10);color:#4a8e44;border-color:#7bb274;">🌐 詳細</a>
+            <a href="https://www.google.com/maps/search/春日部市谷原3-12-6" target="_blank" class="sub-action" style="background:rgba(123,178,116,.10);color:#4a8e44;border-color:#7bb274;">🗺️ 地図</a>
+          </div>
+        </div>
+        <div class="sub-ccard" style="border-color:#d97aa5;">
+          <div class="sub-ccard-name" style="color:#b85a8a;">障害者生活支援センター たけさと</div>
+          <div class="sub-ccard-sub">主に精神障害の相談</div>
+          <div class="sub-ccard-addr">📍 春日部市大場1564-1</div>
+          <div class="sub-ccard-actions">
+            <a href="tel:048-733-6870" class="sub-action" style="background:rgba(217,122,165,.10);color:#b85a8a;border-color:#d97aa5;">📞 048-733-6870</a>
+            <a href="https://seitenkai.com/custom1.html" target="_blank" class="sub-action" style="background:rgba(217,122,165,.10);color:#b85a8a;border-color:#d97aa5;">🌐 詳細</a>
+            <a href="https://www.google.com/maps/search/春日部市大場1564-1" target="_blank" class="sub-action" style="background:rgba(217,122,165,.10);color:#b85a8a;border-color:#d97aa5;">🗺️ 地図</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-section">
+    <div class="contact-section-title">関連窓口</div>
+    <div class="ccard">
+      <div class="ccard-body" style="padding-top:14px;padding-bottom:6px;">
+        <div class="other-row">
+          <div>
+            <div class="other-label">春日部年金事務所</div>
+            <div class="other-sub">障害年金の相談・申請</div>
+          </div>
+          <a href="tel:048-731-2133" class="caction caction-tel" style="white-space:nowrap;font-size:0.8rem;">📞 048-731-2133</a>
+        </div>
+        <div class="other-row">
+          <div>
+            <div class="other-label">春日部市 市民税課</div>
+            <div class="other-sub">住民税・軽自動車税の減免</div>
+          </div>
+          <a href="tel:048-736-1111" class="caction caction-tel" style="white-space:nowrap;font-size:0.8rem;">📞 048-736-1111</a>
+        </div>
+        <div class="other-row">
+          <div>
+            <div class="other-label">埼玉県 東部県税事務所</div>
+            <div class="other-sub">自動車税の減免</div>
+          </div>
+          <a href="tel:048-731-3030" class="caction caction-tel" style="white-space:nowrap;font-size:0.8rem;">📞 048-731-3030</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notice">
+    ※掲載情報は2026年6月現在のものです。変更になる場合がありますので、訪問前にご確認ください。
+  </div>
+</div>
+
+<!-- ポップアップ -->
+<div id="popup" onclick="if(event.target===this)closePopup()">
+  <div class="popup-box">
+    <div class="popup-head">
+      <div id="popup-title"></div>
+      <button class="popup-close" onclick="closePopup()">✕</button>
+    </div>
+    <div id="popup-body"></div>
+  </div>
+</div>
+
+<script>
+// ================================================================
+//  データ定義
+//  tags: s=身体 r=療育 p=精神
+//  grades: s→1/2/3/4, r→ma/a/b, p→1/2/3
+// ================================================================
+const COLORS = ['#e8896b','#f0b13e','#7bb274','#5b9bd5','#b08bc4','#d97aa5','#5fb3b3'];
+
+const DATA = [
+ {title:'相談窓口・各種手帳',icon:'🪪',page:'P.1-3',items:[
+  {title:'相談窓口一覧',tags:[{t:'all'}],
+   text:'・<strong>春日部市役所 障がい者支援課</strong>：各種手帳受付・手当給付・援護。☎ 048-736-1131\n・<strong>障害者就労支援センター</strong>：15歳以上の就労相談・職場開拓（無料）。☎ 048-752-7483\n・<strong>社会福祉協議会（あしすと春日部）</strong>：総合福祉センター内。☎ 048-762-1081\n・専門相談：えん（身体）☎ 048-737-3011 ／ ともに（知的）☎ 048-797-7377 ／ たけさと（精神）☎ 048-733-6870'},
+  {title:'身体障害者手帳',tags:[{t:'s',g:['1','2','3','4']}],
+   text:'・<strong>対象</strong>：視覚・聴覚・肢体・心臓・じん臓・呼吸器等に永続する障害がある方。\n・<strong>手続き</strong>：指定医師の診断書を添えて申請。事前相談が必要。'},
+  {title:'療育手帳',tags:[{t:'r',g:['ma','a','b']}],
+   text:'・<strong>対象</strong>：児童相談所（18歳未満）または知的障害者更生相談所で知的障害と判定された方。\n・<strong>手続き</strong>：判定前に窓口での申請手続きが必要。'},
+  {title:'精神障害者保健福祉手帳',tags:[{t:'p',g:['1','2','3']}],
+   text:'・<strong>対象</strong>：精神障害・発達障害のため日常生活に制約があり、初診日から6か月経過している方。\n・<strong>有効期間</strong>：2年間。障害年金受給者は年金証書で診断書の代用可。'},
+  {title:'デジタル手帳 ミライロID',tags:[{t:'all'}],
+   text:'・<strong>概要</strong>：スマホアプリに手帳を登録し画面提示で利用可能。\n・<strong>使える場所</strong>：約4,200の交通機関・レジャー施設など。'},
+ ]},
+ {title:'医療費の助成・制度',icon:'🏥',page:'P.4-8',items:[
+  {title:'重度心身障害者医療費助成',tags:[{t:'s',g:['1','2','3']},{t:'r',g:['ma','a','b']},{t:'p',g:['1']}],
+   text:'・<strong>内容</strong>：保険診療の自己負担額を助成（実質無料化）。\n・<strong>対象</strong>：身体1〜3級・療育○A/A/B・精神1級等。\n・<strong>方法</strong>：埼玉県内は現物給付（窓口払い不要）、県外は償還払い。'},
+  {title:'後期高齢者医療制度の障害認定',tags:[{t:'s',g:['1','2','3']},{t:'r',g:['ma','a']},{t:'p',g:['1']}],
+   text:'・<strong>対象</strong>：65歳以上で一定の障害がある方。65〜74歳でも申請可能。\n・<strong>注意</strong>：△は一部該当。詳細は窓口へ。'},
+  {title:'自立支援医療（精神通院）',tags:[{t:'p',g:['1','2','3']}],
+   text:'・<strong>内容</strong>：精神疾患の通院医療費の自己負担を原則1割に軽減。'},
+  {title:'自立支援医療（更生医療）',tags:[{t:'s',g:['1','2','3','4']}],
+   text:'・<strong>内容</strong>：18歳以上。障害を除去・軽減する手術等の治療費支給（原則1割）。\n・<strong>例</strong>：人工関節、人工透析など。事前申請必須。'},
+  {title:'自立支援医療（育成医療）',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']}],
+   text:'・<strong>内容</strong>：18歳未満の児童対象。障害を改善する医療費の自己負担を軽減。'},
+ ]},
+ {title:'手当・障害年金',icon:'💰',page:'P.9-13',items:[
+  {title:'特別障害者手当',tags:[{t:'s',g:['1','2']},{t:'r',g:['ma','a']},{t:'p',g:['1']}],
+   text:'・<strong>対象</strong>：20歳以上で重度障害が重複し、常時特別の介護を必要とする在宅の方。\n・<strong>対象外</strong>：施設入所者・3か月以上入院中の方。所得制限あり。'},
+  {title:'障害児福祉手当',tags:[{t:'s',g:['1','2']},{t:'r',g:['ma','a']},{t:'p',g:['1']}],
+   text:'・<strong>対象</strong>：20歳未満で重度障害がある在宅の方。所得制限あり。'},
+  {title:'特別児童扶養手当',tags:[{t:'s',g:['1','2','3']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2']}],
+   text:'・<strong>対象</strong>：障害のある20歳未満の児童を育てている父母・養育者。\n・<strong>支給</strong>：年3回（4月・8月・11月）。施設入所・公的年金受給中は対象外。所得制限あり。'},
+  {title:'心身障害者扶養共済制度',tags:[{t:'s',g:['1','2','3']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2']}],
+   text:'・<strong>概要</strong>：障害者を扶養する65歳未満の保護者が加入。保護者死亡・重度障害時に生涯年金を支給。'},
+  {title:'障害基礎年金・障害厚生年金',tags:[{t:'all'}],
+   text:'・<strong>障害基礎年金</strong>：国民年金加入中の初診日が対象（1・2級）。\n・<strong>障害厚生年金</strong>：厚生年金加入中の初診日が対象。窓口：年金事務所 ☎ 048-731-2133'},
+ ]},
+ {title:'日常生活の支援',icon:'🤝',page:'P.14-21',items:[
+  {title:'補装具費の支給',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2']}],
+   text:'・<strong>内容</strong>：車椅子・義肢・装具・補聴器・重度障害者用意思伝達装置等の購入・修理費支給。原則1割負担。'},
+  {title:'日常生活用具の給付・貸与',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2']}],
+   text:'・<strong>内容</strong>：特殊寝台・入浴補助用具・ストーマ装具など日常生活を容易にする用具の給付（原則1割負担）。'},
+  {title:'自立支援給付 / 障害児通所給付',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   text:'・<strong>介護・訓練等給付</strong>：居宅介護（ヘルパー）・重度訪問介護・短期入所・就労支援など。\n・<strong>障害児通所給付</strong>：児童発達支援・放課後等デイサービスなど。1割負担。'},
+  {title:'移動支援 / 日中一時支援',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   text:'・<strong>移動支援</strong>：外出が困難な障害者のガイドヘルパーによるサポート。\n・<strong>日中一時支援</strong>：障害者（児）の日中一時預かり・見守り支援。'},
+  {title:'重度障害者等訪問入浴サービス',tags:[{t:'s',g:['1','2']},{t:'r',g:['ma','a']},{t:'p',g:['1']}],
+   text:'・<strong>内容</strong>：家庭での入浴が困難な在宅重度障害者に移動入浴車で訪問。原則週1回。\n・<strong>対象</strong>：肢体不自由1・2級、療育○A・A、精神1級等。'},
+  {title:'レスパイト（家族の休息支援）',tags:[{t:'s',g:['1','2']},{t:'r',g:['ma','a']},{t:'p',g:['1']}],
+   checklist:['障害者手帳','医師の意見書・指示書（医療的ケアがある場合）','印鑑','埼玉県の調査票（在宅重度心身障害者手当の認定がある場合）'],
+   text:'・<strong>レスパイトとは</strong>：在宅で介護する家族が休息（レスパイト＝小休止）を取れるよう、本人を一時的に預かったり訪問支援する仕組みの総称です。\n・<strong>短期入所（ショートステイ）</strong>：施設に数日間宿泊。介護者の病気・冠婚葬祭・休養時などに利用。\n・<strong>日中一時支援</strong>：日中の数時間〜1日、施設で見守り・活動支援。\n・<strong>在宅レスパイト（医療的ケア児者向け）</strong>：訪問看護師が自宅を訪問し、家族に代わって医療的ケア（人工呼吸器管理・吸引・経管栄養等）を一定時間担当。\n・<strong>対象の目安</strong>：肢体不自由1・2級、療育○A・A、医療的ケアが必要な重症心身障害児者など。埼玉県の調査票で認定される場合あり。\n・<strong>窓口</strong>：障がい者支援課 ☎ 048-736-1131'},
+  {title:'成年後見制度',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   checklist:['本人の戸籍謄本','医師の診断書（専用様式）','印鑑','本人の財産に関する資料'],
+   text:'・<strong>内容</strong>：認知症・知的障害・精神障害などで判断能力が不十分な方の財産管理や契約を、家庭裁判所が選任した後見人が支援する制度。\n・<strong>市の支援</strong>：申立て費用や後見人報酬の助成（成年後見制度利用支援事業）あり。\n・<strong>相談先</strong>：あしすと春日部（権利擁護）☎ 048-762-1081'},
+ ]},
+ {title:'社会参加・移動支援',icon:'🚗',page:'P.22-27',items:[
+  {title:'福祉タクシー利用券 / 燃料費助成',tags:[{t:'s',g:['1','2','3']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2']}],
+   text:'・<strong>内容</strong>：福祉タクシー利用券またはガソリン代助成券を交付。\n・<strong>注意</strong>：どちらか一方の選択制。'},
+  {title:'運転免許取得費 / 自動車改造費補助',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']}],
+   text:'・<strong>免許取得補助</strong>：障害者本人が免許取得する際の費用一部補助。\n・<strong>自動車改造費補助</strong>：就労・通勤等のため自ら運転する車の改造費を<strong>上限10万円</strong>まで補助。改造前に申請必須。'},
+  {title:'リフト付自動車貸出 / 思いやり駐車場',tags:[{t:'s',g:['1','2','3']},{t:'r',g:['ma','a']}],
+   text:'・<strong>リフト付自動車貸出</strong>：車椅子対応リフト付き自動車を貸出（春日部市社協）。\n・<strong>思いやり駐車場</strong>：埼玉県パーキング・パーミット制度。障害者専用駐車スペース利用証の交付。'},
+  {title:'手話通訳者・要約筆記者の派遣',tags:[{t:'s',g:['3','4']}],
+   text:'・<strong>内容</strong>：聴覚・言語障害者の医療・職業・生活等のコミュニケーション支援に派遣。'},
+  {title:'ヘルプマーク・ヘルプカード',tags:[{t:'all'}],
+   text:'・<strong>内容</strong>：配慮が必要なことを周囲に知らせるマーク・カードの無料配布。'},
+ ]},
+ {title:'税の免除・控除・減免',icon:'⚖️',page:'P.28-31',items:[
+  {title:'所得税・住民税の障害者控除',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   text:'・<strong>概要</strong>：本人または扶養親族が手帳所持者の場合、一定の金額が所得から控除される。'},
+  {title:'贈与税非課税 / マル優（利子非課税）',tags:[{t:'s',g:['1','2']},{t:'r',g:['ma','a']},{t:'p',g:['1']}],
+   text:'・<strong>贈与税非課税</strong>：特別障害者を受益者とする信託財産について<strong>6,000万円</strong>まで非課税。\n・<strong>マル優</strong>：預貯金350万円まで・国債350万円まで利子非課税。'},
+  {title:'自動車税・軽自動車税の減免',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   text:'・<strong>内容</strong>：障害者の通院・通学・生業に使用する自家用車を<strong>障害者1人につき1台</strong>減免。\n・<strong>窓口</strong>：自動車税→東部県税事務所 ☎ 048-731-3030／軽自動車税→市役所課税課 ☎ 048-736-1111'},
+ ]},
+ {title:'公共料金等の割引・その他',icon:'🎫',page:'P.31-38',items:[
+  {title:'有料道路5割引 / 鉄道運賃割引',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   text:'・<strong>有料道路</strong>：障害者本人運転または重度障害者同乗で高速道路等<strong>5割引</strong>（事前登録要）。\n・<strong>鉄道</strong>：JR・私鉄各線で手帳の等級により運賃・定期券割引。'},
+  {title:'春バス無料 / タクシー10%割引',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   text:'・<strong>春バス</strong>：手帳提示により<strong>無料</strong>で乗車可能！\n・<strong>タクシー</strong>：身体・療育手帳提示により<strong>10%割引</strong>。'},
+  {title:'NHK受信料の免除 / 青い鳥はがき',tags:[{t:'s',g:['1','2','3','4']},{t:'r',g:['ma','a','b']},{t:'p',g:['1','2','3']}],
+   text:'・<strong>全額免除</strong>：世帯全員が市町村民税非課税の場合。\n・<strong>半額免除</strong>：障害者本人が世帯主かつNHK契約者の場合。\n・<strong>青い鳥はがき</strong>：重度障害者向けに無料はがきを春に配布。'},
+  {title:'シンボルマーク解説',tags:[{t:'all'}],
+   text:'・<strong>身体障害者標識（クローバー）</strong>：肢体不自由の条件付免許車。周囲の幅寄せ・割り込みは違反。\n・<strong>白杖SOSシグナル</strong>：白杖を頭上50cmに掲げたらSOSのサイン。進んで声をかけを！'},
+ ]},
+];
+
+// ================================================================
+//  ユーティリティ
+// ================================================================
+function tagHTML(tags) {
+  if (!tags||!tags.length) return '';
+  const map = {s:['itag-s','身体'],r:['itag-r','療育'],p:['itag-p','精神']};
+  const gradeLabel = {ma:'○A',a:'A',b:'B'};
+  return tags.map(t => {
+    if (t.t==='all') return '<span class="itag itag-a">全手帳対象</span>';
+    const [cls,name] = map[t.t]||['itag-a',''];
+    const gs = (t.g||[]).map(g=>gradeLabel[g]||g+'級').join('・');
+    return `<span class="itag ${cls}">${name} ${gs}</span>`;
+  }).join('');
+}
+
+function buildItems(items, containerEl, chColor) {
+  items.forEach(item => {
+    const d = document.createElement('div');
+    d.className = 'item';
+    const words = (item.title+' '+item.text).toLowerCase();
+    d.dataset.words = words;
+    d.dataset.tags = JSON.stringify(item.tags||[]);
+
+    const h = document.createElement('div');
+    h.className = 'item-head';
+    h.innerHTML = `<span class="item-prefix">└</span><span class="item-name">${item.title}</span><span class="item-chevron">▶</span>`;
+    d.appendChild(h);
+
+    const det = document.createElement('div');
+    det.className = 'item-detail';
+    const tg = tagHTML(item.tags);
+    const ul = item.text.split('\n').map(l=>`<li>${l.replace(/^・/,'')}</li>`).join('');
+    det.innerHTML = (tg?`<div class="item-tags">${tg}</div>`:'') + `<div class="item-text"><ul>${ul}</ul></div>`;
+    det.style.borderLeftColor = chColor;
+    d.appendChild(det);
+
+    h.addEventListener('click', () => {
+      const isOpen = d.classList.contains('open');
+      d.classList.toggle('open', !isOpen);
+      det.classList.toggle('open', !isOpen);
+    });
+
+    containerEl.appendChild(d);
+  });
+}
+
+function buildChapter(ch, i, rootEl) {
+  const col = COLORS[i % COLORS.length];
+  const node = document.createElement('div');
+  node.className = 'ch';
+
+  const dot = document.createElement('div');
+  dot.className = 'ch-dot';
+  dot.style.background = col;
+  node.appendChild(dot);
+
+  const head = document.createElement('div');
+  head.className = 'ch-head';
+  head.innerHTML = `<div class="ch-head-inner">
+    <span class="ch-icon">${ch.icon}</span>
+    <span class="ch-title">${ch.title}</span>
+    <span class="ch-badge" style="background:${col}22;color:${col};border:1px solid ${col}44">${ch.page}</span>
+    <span class="ch-chevron">▶</span>
+  </div>`;
+  node.appendChild(head);
+
+  const body = document.createElement('div');
+  body.className = 'ch-body';
+  buildItems(ch.items, body, col);
+  node.appendChild(body);
+
+  head.addEventListener('click', () => {
+    const isOpen = head.classList.contains('open');
+    head.classList.toggle('open', !isOpen);
+    body.classList.toggle('open', !isOpen);
+  });
+
+  rootEl.appendChild(node);
+}
+
+// リスト構築
+const listRoot = document.getElementById('list-root');
+const filterRoot = document.getElementById('filter-root');
+DATA.forEach((ch, i) => {
+  buildChapter(ch, i, listRoot);
+  buildChapter(ch, i, filterRoot);
+});
+
+// ================================================================
+//  検索
+// ================================================================
+const searchEl = document.getElementById('search');
+const clrEl = document.getElementById('clr');
+searchEl.addEventListener('input', () => {
+  const q = searchEl.value.trim().toLowerCase();
+  clrEl.style.display = q ? 'block' : 'none';
+  document.querySelectorAll('#list-root .ch').forEach(node => {
+    const items = node.querySelectorAll('.item');
+    let hit = 0;
+    items.forEach(item => {
+      const match = !q || item.dataset.words.includes(q);
+      item.classList.toggle('hidden', !match);
+      item.classList.toggle('hl', !!q && match);
+      if (match && q) { item.classList.add('open'); item.querySelector('.item-detail').classList.add('open'); }
+      if (match) hit++;
+    });
+    node.classList.toggle('hidden', hit === 0);
+    if (hit && q) { node.querySelector('.ch-head').classList.add('open'); node.querySelector('.ch-body').classList.add('open'); }
+  });
+});
+clrEl.addEventListener('click', () => { searchEl.value = ''; searchEl.dispatchEvent(new Event('input')); });
+
+// ================================================================
+//  フィルター
+// ================================================================
+const activeF = new Set();
+function tgF(btn) {
+  const key = btn.dataset.t + '_' + btn.dataset.g;
+  const onClass = 'on-' + btn.dataset.t;
+  if (btn.classList.contains(onClass)) { btn.classList.remove(onClass); activeF.delete(key); }
+  else { btn.classList.add(onClass); activeF.add(key); }
+  applyF();
+}
+function resetF() {
+  activeF.clear();
+  document.querySelectorAll('.fbtn').forEach(b => b.className = 'fbtn');
+  applyF();
+}
+function applyF() {
+  let total = 0;
+  document.querySelectorAll('#filter-root .ch').forEach(node => {
+    const items = node.querySelectorAll('.item');
+    let hit = 0;
+    items.forEach(item => {
+      if (!activeF.size) { item.classList.remove('hidden','hl'); hit++; return; }
+      let match = false;
+      try {
+        const tags = JSON.parse(item.dataset.tags||'[]');
+        for (const t of tags) {
+          if (t.t==='all') { match=true; break; }
+          for (const k of activeF) {
+            const [ft,fg] = k.split('_');
+            if (t.t===ft && (t.g||[]).includes(fg)) { match=true; break; }
+          }
+          if (match) break;
+        }
+      } catch(e){}
+      item.classList.toggle('hidden', !match);
+      item.classList.toggle('hl', match);
+      if (match) { item.classList.add('open'); item.querySelector('.item-detail').classList.add('open'); hit++; }
+    });
+    node.classList.toggle('hidden', hit===0);
+    if (hit) { node.querySelector('.ch-head').classList.add('open'); node.querySelector('.ch-body').classList.add('open'); }
+    total += hit;
+  });
+  document.getElementById('fcount').textContent = activeF.size ? `✅ 該当サービス ${total} 件` : '';
+}
+
+// ================================================================
+//  タブ
+// ================================================================
+function goTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('on'));
+  document.getElementById('tab-'+id).classList.add('on');
+  btn.classList.add('on');
+  if (id==='map') renderMap();
+}
+
+// ================================================================
+//  フォントサイズ
+// ================================================================
+function setFs(px, btn) {
+  document.body.style.fontSize = px+'px';
+  document.querySelectorAll('.fsbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+}
+
+// ================================================================
+//  ポップアップ
+// ================================================================
+function showPopup(title, html) {
+  document.getElementById('popup-title').textContent = title;
+  document.getElementById('popup-body').innerHTML = html;
+  document.getElementById('popup').classList.add('show');
+}
+function closePopup() { document.getElementById('popup').classList.remove('show'); }
+
+// ================================================================
+//  マインドマップ
+// ================================================================
+let mapDone = false;
+function renderMap() {
+  if (mapDone) return; mapDone = true;
+  var svg = document.getElementById('mm-svg');
+  var o = document.getElementById('mm-outer');
+  var NS = 'http://www.w3.org/2000/svg';
+  var W=560,H=560,cx=280,cy=280,R=118,SR=88,n=DATA.length;
+  svg.setAttribute('viewBox','0 0 560 560');
+
+  function mk(tag,a){var e=document.createElementNS(NS,tag);Object.keys(a||{}).forEach(function(k){e.setAttribute(k,a[k]);});return e;}
+  function tx(x,y,s,sz,f,anc,b){var e=mk('text',{x:x,y:y,'font-size':sz,fill:f,'text-anchor':anc||'middle','dominant-baseline':'central'});if(b)e.setAttribute('font-weight','700');e.textContent=s;return e;}
+
+  var defs=mk('defs');
+  var rg=mk('radialGradient',{id:'rg1',cx:'50%',cy:'50%',r:'50%'});
+  rg.innerHTML='<stop offset="0%" stop-color="#fde3b8"/><stop offset="100%" stop-color="#f9c87a"/>';
+  defs.appendChild(rg);svg.appendChild(defs);
+  svg.appendChild(mk('rect',{width:560,height:560,fill:'#fbf7f0'}));
+  svg.appendChild(mk('circle',{cx:cx,cy:cy,r:48,fill:'url(#rg1)',stroke:'#d97aa5','stroke-width':'1.5'}));
+  svg.appendChild(tx(cx,cy-9,'春日部市',13,'#d97aa5','middle',true));
+  svg.appendChild(tx(cx,cy+10,'障がい者福祉',10,'#b85a8a'));
+
+  var slot=2*Math.PI/n;
+  for(var i=0;i<DATA.length;i++){
+    var ch=DATA[i];
+    var angle=slot*i-Math.PI/2;
+    var catX=cx+R*Math.cos(angle),catY=cy+R*Math.sin(angle);
+    var col=COLORS[i%COLORS.length];
+
+    svg.appendChild(mk('line',{x1:cx,y1:cy,x2:catX,y2:catY,stroke:col,'stroke-width':'1.2',opacity:'0.4'}));
+
+    var vis=ch.items.slice(0,4),cnt=vis.length,fanW=slot*1.15;
+    for(var j=0;j<cnt;j++){
+      var sa=cnt===1?angle:angle-fanW/2+fanW*(j/(cnt-1));
+      var sx=catX+SR*Math.cos(sa),sy=catY+SR*Math.sin(sa);
+      svg.appendChild(mk('line',{x1:catX,y1:catY,x2:sx,y2:sy,stroke:col,'stroke-width':'0.7',opacity:'0.3'}));
+      var sg=document.createElementNS(NS,'g');sg.style.cursor='pointer';
+      var lbl=vis[j].title.length>8?vis[j].title.slice(0,7)+'…':vis[j].title;
+      sg.appendChild(mk('rect',{x:sx-30,y:sy-11,width:60,height:22,rx:5,fill:'#ffffff',stroke:col,'stroke-width':'0.9'}));
+      sg.appendChild(tx(sx,sy,lbl,8,'#3a3330'));
+      (function(it){sg.addEventListener('click',function(e){e.stopPropagation();var h='<ul>';it.text.split(String.fromCharCode(10)).forEach(function(l){h+='<li>'+l.replace(/^・/,'')+'</li>';});h+='</ul>';showPopup(it.title,h);});})(vis[j]);
+      svg.appendChild(sg);
+    }
+
+    var cg=document.createElementNS(NS,'g');cg.style.cursor='pointer';
+    cg.appendChild(mk('circle',{cx:catX,cy:catY,r:34,fill:'#ffffff',stroke:col,'stroke-width':'1.8'}));
+    var fo=document.createElementNS(NS,'foreignObject');
+    fo.setAttribute('x',catX-12);fo.setAttribute('y',catY-27);fo.setAttribute('width',24);fo.setAttribute('height',24);
+    fo.innerHTML='<div xmlns="http://www.w3.org/1999/xhtml" style="font-size:16px;text-align:center;line-height:24px">'+ch.icon+'</div>';
+    cg.appendChild(fo);
+    var t1=ch.title.slice(0,5),t2=ch.title.length>5?ch.title.slice(5):'';
+    cg.appendChild(tx(catX,catY+(t2?3:6),t1,8,'#3a3330'));
+    if(t2)cg.appendChild(tx(catX,catY+14,t2,8,'#3a3330'));
+    cg.appendChild(mk('rect',{x:catX-20,y:catY+22,width:40,height:13,rx:3,fill:'#fbf7f0',stroke:col,'stroke-width':'0.6'}));
+    cg.appendChild(tx(catX,catY+28,ch.page,7,col));
+    (function(c){cg.addEventListener('click',function(){var h='<ul>';c.items.forEach(function(it){h+='<li><strong>'+it.title+'</strong><br>'+it.text.replace(new RegExp(String.fromCharCode(10),'g'),'<br>').replace(/^・/gm,'')+'</li>';});h+='</ul>';showPopup(c.icon+' '+c.title+'  '+c.page,h);});})(ch);
+    svg.appendChild(cg);
+  }
+
+  var sc=1,ttx=0,tty=0,drag=false,dsx=0,dsy=0,dtx=0,dty=0,pinch=false,pd=0,ps=1,lt=0,moved=false,startX=0,startY=0;
+  function applyT(){svg.style.transform='translate('+ttx+'px,'+tty+'px) scale('+sc+')';svg.style.transformOrigin='center center';}
+
+  // マウス（PC）
+  o.addEventListener('mousedown',function(e){drag=true;moved=false;dsx=e.clientX;dsy=e.clientY;startX=e.clientX;startY=e.clientY;dtx=ttx;dty=tty;o.style.cursor='grabbing';});
+  window.addEventListener('mousemove',function(e){if(!drag)return;if(Math.abs(e.clientX-startX)>5||Math.abs(e.clientY-startY)>5)moved=true;ttx=dtx+(e.clientX-dsx);tty=dty+(e.clientY-dsy);applyT();});
+  window.addEventListener('mouseup',function(){drag=false;o.style.cursor='grab';});
+  o.addEventListener('wheel',function(e){e.preventDefault();sc=Math.min(4,Math.max(0.4,sc*(e.deltaY>0?0.9:1.1)));applyT();},{passive:false});
+
+  // タッチ（指が動いたらドラッグ、動かなければタップを通す）
+  o.addEventListener('touchstart',function(e){
+    if(e.touches.length===1){
+      drag=true;pinch=false;moved=false;
+      dsx=e.touches[0].clientX;dsy=e.touches[0].clientY;
+      startX=e.touches[0].clientX;startY=e.touches[0].clientY;
+      dtx=ttx;dty=tty;
+    }else if(e.touches.length===2){
+      drag=false;pinch=true;
+      pd=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);ps=sc;
+    }
+  },{passive:true});
+
+  o.addEventListener('touchmove',function(e){
+    if(drag&&e.touches.length===1){
+      var dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;
+      if(Math.abs(dx)>6||Math.abs(dy)>6){moved=true;e.preventDefault();ttx=dtx+(e.touches[0].clientX-dsx);tty=dty+(e.touches[0].clientY-dsy);applyT();}
+    }else if(pinch&&e.touches.length===2){
+      e.preventDefault();
+      var d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
+      sc=Math.min(4,Math.max(0.4,ps*(d/pd)));applyT();
+    }
+  },{passive:false});
+
+  o.addEventListener('touchend',function(e){
+    if(e.touches.length===0){drag=false;pinch=false;}
+    // ダブルタップでリセット（移動していない時のみ）
+    if(!moved){var now=Date.now();if(now-lt<300){sc=1;ttx=0;tty=0;applyT();}lt=now;}
+  },{passive:true});
+}
+</script>
+</body>
+</html>
