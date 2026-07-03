@@ -2000,6 +2000,7 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
           <li><strong>貯蓄・NISA</strong>：資産を増やす手段。管理の仕組みと組み合わせて使う</li>
         </ul>
       </div>
+      <div class="rc-note">📌 家族信託・遺言があっても、<a href="inkan.html" target="_blank" rel="noopener" style="color:#b85a8a;font-weight:800;text-decoration:underline;">子の印鑑証明が取れない問題</a>を知らないと、いざという時に手続きが止まることがあります。15〜17歳のうちに確認しておきましょう。</div>
       <!-- 将来のお金の準備コンテンツ -->
       <div style="margin:16px 0;">
 <!-- MONEY BODY -->
@@ -5899,7 +5900,7 @@ function mnSwitchTab(id) {
   </details>
 
   <!-- 遺言書カード -->
-  <details style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
+  <details id="yuigon-card" style="border:1.5px solid #c4a8d8;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#f3eef8,#faf7fc);box-shadow:var(--shadow);margin-bottom:20px;">
     <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
       <div class="rc-icon" style="background:linear-gradient(135deg,#9a3a3a,#6a1a1a);">📜</div>
       <div class="rc-htext">
@@ -7736,7 +7737,7 @@ function goTab(id, scrollTargetId){
       "seido-group-gakko":"gakko", "gakkoCard":"gakko",
       "seido-group-mirai":"okane",
       "kyosai-seido":"okane","nenkin-seido":"okane",
-      "tokubetsu-seido":"okane","shintaku-seido":"okane","koken-seido":"okane",
+      "tokubetsu-seido":"okane","shintaku-seido":"okane","koken-seido":"okane","yuigon-card":"okane",
       "tokubetsu-teate-seido":"okane",
       "discount-seido":"techo",
     };
@@ -8957,6 +8958,25 @@ function init(){
   });
 
   initSeidoNav();
+
+  // 外部ページ（inkan.htmlなど）からの#ハッシュ遷移対応
+  (function(){
+    const hash = window.location.hash.replace('#','');
+    if(!hash) return;
+    const hashMap = {
+      'seiken':   {tab:'seido', target:'koken-seido'},
+      'shintaku': {tab:'seido', target:'shintaku-seido'},
+      'yuigon':   {tab:'seido', target:'yuigon-card'},
+      'simulator':{href:'mirai-simulator.html'}
+    };
+    const dest = hashMap[hash];
+    if(!dest) return;
+    if(dest.href){
+      window.location.href = dest.href;
+      return;
+    }
+    setTimeout(()=>{ goTab(dest.tab, dest.target); }, 80);
+  })();
 }
 init();
 </script>
