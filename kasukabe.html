@@ -48,7 +48,7 @@
   --text:     var(--ink);
   --muted:    var(--ink-faint);
 
-  --fs:       14px;
+  --fs:       16px;
   --radius:   16px;
   --radius-sm:11px;
   --shadow:   0 2px 4px rgba(58,51,48,.04), 0 8px 24px rgba(58,51,48,.06);
@@ -357,9 +357,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="fsbtns">
       <button class="dark-btn" id="darkToggle" title="ダークモード切替">🌙</button>
       <button class="fav-btn" id="favBtn" title="しおりをつける">🔖</button>
-      <button class="fsbtn" onclick="setFs(12,this)">小</button>
-      <button class="fsbtn on" onclick="setFs(14,this)">中</button>
-      <button class="fsbtn" onclick="setFs(16,this)">大</button>
+      <button class="fsbtn" onclick="setFs('s',this)">小</button>
+      <button class="fsbtn on" onclick="setFs('m',this)">中</button>
+      <button class="fsbtn" onclick="setFs('l',this)">大</button>
     </div>
   </div>
   <div class="nav-tabs">
@@ -369,6 +369,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <button class="nav-tab" onclick="goTab('contact',this)">📞 窓口・連絡先</button>
   </div>
 </nav>
+
+<div style="padding:12px 16px 0;">
+  <button onclick="if(document.referrer){history.back();}else{window.location.href='index.html';}" style="display:inline-flex;align-items:center;gap:6px;background:var(--bg-card);border:1.5px solid var(--line);border-radius:22px;padding:8px 16px;font-size:.82rem;font-weight:700;color:var(--ink-soft);cursor:pointer;box-shadow:var(--shadow);">
+    ← 前のページに戻る
+  </button>
+</div>
 
 <!-- ① サービス一覧 -->
 <div class="panel on" id="tab-list">
@@ -842,11 +848,24 @@ function goTab(id, btn) {
 // ================================================================
 //  フォントサイズ
 // ================================================================
-function setFs(px, btn) {
-  document.body.style.fontSize = px+'px';
+function setFs(size, btn) {
+  const sizes = {s:'14px', m:'16px', l:'19px'};
+  document.body.style.fontSize = sizes[size];
   document.querySelectorAll('.fsbtn').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
+  try { localStorage.setItem('mirai-fs', size); } catch(e){}
 }
+try {
+  const savedFs = localStorage.getItem('mirai-fs') || 'm';
+  const sizes = {s:'14px', m:'16px', l:'19px'};
+  document.addEventListener('DOMContentLoaded', ()=>{
+    document.body.style.fontSize = sizes[savedFs];
+    document.querySelectorAll('.fsbtn').forEach(b => b.classList.remove('on'));
+    const idx = {s:0,m:1,l:2}[savedFs];
+    const btns = document.querySelectorAll('.fsbtn');
+    if(btns[idx]) btns[idx].classList.add('on');
+  });
+} catch(e){}
 
 // ダークモード
 (function(){
