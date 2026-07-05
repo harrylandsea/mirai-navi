@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>親なきあと お金の引き継ぎシミュレーター</title>
+<style>
+:root {
+  --pink: #c0587a; --pink-light: #fdeef3; --pink-border: #f0a8c0;
+  --purple: #6a2a98; --purple-light: #f3eef8; --purple-border: #c4a8d8;
+  --green: #2f855a; --green-light: #f0fff4; --green-border: #68d391;
+  --yellow: #8a6000; --yellow-light: #fff8e8; --yellow-border: #f0c060;
+  --red: #9b2c2c; --red-light: #fff5f5; --red-border: #fc8181;
+  --blue: #1a4a7a; --blue-light: #f0f6ff;
+  --bg: #fdf6f8; --card: #fff; --text: #2d1a25; --sub: #8a6070; --border: #f0d0dc;
+  --radius: 14px; --shadow: 0 2px 12px rgba(192,88,122,.08);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family:'Helvetica Neue',Arial,'Hiragino Kaku Gothic ProN',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; min-height:100vh; padding-bottom:40px; }
+.header { background:linear-gradient(135deg,#fdeef3,#f3eef8); border-bottom:1.5px solid var(--border); padding:18px 20px 14px; text-align:center; }
+.header-title { font-size:1.1rem; font-weight:800; color:var(--pink); margin-bottom:3px; }
+.header-sub { font-size:.78rem; color:var(--sub); }
+
+.wrap { max-width:640px; margin:0 auto; padding:16px; }
+
+.progress { display:flex; gap:4px; margin-bottom:16px; }
+.progress-seg { flex:1; height:5px; border-radius:3px; background:#f0d8e0; transition:background .2s; }
+.progress-seg.done, .progress-seg.current { background:var(--pink); }
+.progress-label { display:flex; justify-content:space-between; font-size:.68rem; color:var(--sub); margin-bottom:6px; }
+
+.step { display:none; }
+.step.active { display:block; animation:fadeIn .25s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
+
+.step-card { background:var(--card); border-radius:var(--radius); border:1.5px solid var(--border); overflow:hidden; margin-bottom:14px; }
+.step-head { padding:14px 16px 10px; border-bottom:1px solid var(--border); background:linear-gradient(135deg,#fdf8fa,#fff); }
+.step-num { display:inline-flex; align-items:center; justify-content:center; width:22px; height:22px; border-radius:50%; background:var(--pink); color:#fff; font-size:.72rem; font-weight:800; margin-right:7px; }
+.step-title { font-size:.95rem; font-weight:800; color:var(--text); }
+.step-body { padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
+
+.field label { display:block; font-size:.78rem; color:var(--sub); margin-bottom:4px; }
+.field select, .field input { width:100%; padding:9px 11px; border:1.5px solid var(--border); border-radius:8px; font-size:.9rem; background:#fafafa; color:var(--text); outline:none; }
+.field select:focus, .field input:focus { border-color:var(--pink); background:#fff; }
+.field-row { display:flex; gap:10px; }
+.field-row .field { flex:1; }
+
+.toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border:1.5px solid var(--border); border-radius:10px; background:#fafafa; }
+.toggle-label { font-size:.85rem; color:var(--text); flex:1; }
+.toggle-switch { position:relative; width:44px; height:24px; flex-shrink:0; }
+.toggle-switch input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; inset:0; background:#ddd; border-radius:24px; cursor:pointer; transition:.2s; }
+.toggle-slider::before { content:''; position:absolute; width:18px; height:18px; left:3px; top:3px; background:#fff; border-radius:50%; transition:.2s; }
+input:checked + .toggle-slider { background:var(--pink); }
+input:checked + .toggle-slider::before { transform:translateX(20px); }
+
+.check-item { display:flex; align-items:flex-start; gap:10px; padding:12px; border:1.5px solid var(--border); border-radius:10px; background:#fafafa; margin-bottom:8px; }
+.check-item input[type=checkbox] { width:18px; height:18px; accent-color:var(--pink); flex-shrink:0; margin-top:2px; }
+.check-item-body { flex:1; }
+.check-item-title { font-size:.85rem; font-weight:800; color:var(--text); margin-bottom:3px; }
+.check-item-desc { font-size:.76rem; color:var(--sub); line-height:1.7; }
+
+.nav-btns { display:flex; gap:10px; margin-top:4px; }
+.btn { flex:1; padding:13px; border-radius:var(--radius); font-size:.92rem; font-weight:800; cursor:pointer; border:none; transition:opacity .2s; }
+.btn:hover { opacity:.9; }
+.btn-primary { background:linear-gradient(135deg,#d4698a,#c0587a); color:#fff; }
+.btn-secondary { background:#f0e8ea; color:var(--text); }
+
+.summary-block { background:var(--card); border:1.5px solid var(--border); border-radius:var(--radius); margin-bottom:12px; overflow:hidden; }
+.summary-head { background:linear-gradient(135deg,#fdeef3,#f3eef8); padding:10px 14px; font-size:.82rem; font-weight:800; color:var(--pink); border-bottom:1px solid var(--border); }
+.summary-body { padding:12px 14px; font-size:.82rem; line-height:1.9; }
+.summary-row { display:flex; justify-content:space-between; padding:4px 0; border-bottom:1px solid #f5e8ee; }
+.summary-row:last-child { border-bottom:none; }
+.summary-row-label { color:var(--sub); }
+.summary-row-val { font-weight:700; color:var(--text); }
+
+.route-box { border-radius:10px; padding:12px; border:1.5px solid; margin-bottom:12px; }
+.route-box.green { border-color:var(--green-border); background:var(--green-light); }
+.route-box.blue { border-color:#a8c8e8; background:var(--blue-light); }
+.route-box.yellow { border-color:var(--yellow-border); background:var(--yellow-light); }
+.route-box.purple { border-color:var(--purple-border); background:var(--purple-light); }
+.route-title { font-size:.88rem; font-weight:800; margin-bottom:8px; }
+.route-title.green { color:var(--green); } .route-title.blue { color:var(--blue); }
+.route-title.yellow { color:var(--yellow); } .route-title.purple { color:var(--purple); }
+.route-item { font-size:.8rem; line-height:1.8; }
+.route-item::before { content:'・'; }
+
+.warn-box { border-radius:10px; padding:10px 12px; border:1.5px solid var(--red-border); background:var(--red-light); font-size:.78rem; line-height:1.8; margin-bottom:12px; }
+.warn-title { font-weight:800; color:var(--red); margin-bottom:4px; }
+
+.print-btn { display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:14px; border-radius:var(--radius); background:linear-gradient(135deg,#2f855a,#1a5a38); color:#fff; font-weight:800; font-size:.95rem; border:none; cursor:pointer; margin-top:8px; }
+
+@media print {
+  .header, .progress, .progress-label, .nav-btns, .no-print, button { display:none !important; }
+  body { background:#fff; padding:0; }
+  .wrap { max-width:100%; padding:20px; }
+  .step { display:none !important; }
+  .step.print-active { display:block !important; }
+  .summary-block, .route-box, .warn-box { border:1px solid #999 !important; box-shadow:none !important; break-inside:avoid; }
+}
+</style>
+</head>
+<body>
+<div style="position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid #e8e2d8;padding:10px 16px;" class="no-print">
+  <button onclick="try{sessionStorage.setItem('mirai-last-tab','tools')}catch(e){}; window.location.href='index.html';" style="display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:linear-gradient(135deg,#d97aa5,#e8896b);color:#fff;font-weight:800;font-size:.82rem;border:none;cursor:pointer;">← みらいナビに戻る</button>
+</div>
+
+<div class="header no-print">
+  <div class="header-title">📝 親なきあと お金の引き継ぎシミュレーター</div>
+  <div class="header-sub">誰に、いくら、どう遺すか——スライダーで試算</div>
+</div>
+
+<div class="wrap">
+
+  <div class="progress no-print">
+    <div class="progress-seg" data-seg="1"></div>
+    <div class="progress-seg" data-seg="2"></div>
+    <div class="progress-seg" data-seg="3"></div>
+    <div class="progress-seg" data-seg="4"></div>
+    <div class="progress-seg" data-seg="5"></div>
+  </div>
+  <div class="progress-label no-print"><span id="stepLabel">STEP1 / 5</span><span id="stepName">家族構成</span></div>
+
+  <!-- STEP1 家族構成 -->
+  <div class="step active" data-step="1">
+    <div class="step-card">
+      <div class="step-head"><span class="step-num">1</span><span class="step-title">家族構成</span></div>
+      <div class="step-body">
+        <div class="toggle-row">
+          <span class="toggle-label">配偶者（もう一方の親）は健在</span>
+          <label class="toggle-switch"><input type="checkbox" id="spouseAlive" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>障がいのあるお子さんの人数</label>
+            <select id="disabledCount"><option value="1">1人</option><option value="2">2人</option></select>
+          </div>
+          <div class="field"><label>きょうだい（障がいのない子）の人数</label>
+            <select id="siblingCount"><option value="0">0人</option><option value="1">1人</option><option value="2">2人</option><option value="3">3人以上</option></select>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">その他の相続人がいる（兄弟姉妹・甥姪など）</span>
+          <label class="toggle-switch"><input type="checkbox" id="hasOther"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="field" id="otherDetailField" style="display:none;">
+          <label>その他の相続人について（続柄など・任意）</label>
+          <input type="text" id="otherDetail" placeholder="例：亡き妻の弟">
+        </div>
+        <div class="toggle-row">
+          <span class="toggle-label">心身障害者扶養共済に加入している（予定含む）</span>
+          <label class="toggle-switch"><input type="checkbox" id="hasKyosai"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="field" id="kyosaiField" style="display:none;">
+          <label>共済からの月額給付</label>
+          <select id="kyosaiMonthly">
+            <option value="20000">1口・月2万円</option>
+            <option value="40000" selected>2口・月4万円</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>本人が受け取る障害年金・手当（月額の合計）</label>
+          <select id="pensionMonthly">
+            <option value="0">未定・スキップ</option>
+            <option value="59000">障害基礎年金2級（約5.9万円）</option>
+            <option value="73000">障害基礎年金1級（約7.3万円）</option>
+            <option value="87000">2級＋特別障害者手当（約8.7万円）</option>
+            <option value="101000">1級＋特別障害者手当（約10.1万円）</option>
+            <option value="130000">その他手当込み・月13万円</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>障がいのあるお子さんに将来必要と考える生活費</label>
+          <select id="livingCost">
+            <option value="0">未定・スキップ</option>
+            <option value="100000">月10万円</option>
+            <option value="120000">月12万円</option>
+            <option value="150000" selected>月15万円</option>
+            <option value="180000">月18万円</option>
+            <option value="200000">月20万円</option>
+            <option value="250000">月25万円</option>
+            <option value="300000">月30万円</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns"><button class="btn btn-primary" onclick="goStep(2)">次へ →</button></div>
+  </div>
+
+  <!-- STEP2 財産 -->
+  <div class="step" data-step="2">
+    <div class="step-card">
+      <div class="step-head"><span class="step-num">2</span><span class="step-title">財産（概算でOK）</span></div>
+      <div class="step-body">
+        <div class="field"><label>🏠 自宅（評価額の目安）</label>
+          <select id="assetHome">
+            <option value="0">なし</option>
+            <option value="500">500万円</option>
+            <option value="1000">1,000万円</option>
+            <option value="1500">1,500万円</option>
+            <option value="2000" selected>2,000万円</option>
+            <option value="2500">2,500万円</option>
+            <option value="3000">3,000万円</option>
+            <option value="4000">4,000万円</option>
+            <option value="5000">5,000万円</option>
+            <option value="6000">6,000万円</option>
+            <option value="8000">8,000万円</option>
+            <option value="10000">1億円</option>
+          </select>
+        </div>
+        <div class="field"><label>💰 預貯金</label>
+          <select id="assetCash">
+            <option value="0">なし</option>
+            <option value="100">100万円</option>
+            <option value="300">300万円</option>
+            <option value="500">500万円</option>
+            <option value="700">700万円</option>
+            <option value="1000" selected>1,000万円</option>
+            <option value="1500">1,500万円</option>
+            <option value="2000">2,000万円</option>
+            <option value="3000">3,000万円</option>
+            <option value="5000">5,000万円</option>
+          </select>
+        </div>
+        <div class="field"><label>📈 投資信託・株式</label>
+          <select id="assetFund">
+            <option value="0" selected>なし</option>
+            <option value="100">100万円</option>
+            <option value="300">300万円</option>
+            <option value="500">500万円</option>
+            <option value="1000">1,000万円</option>
+            <option value="2000">2,000万円</option>
+            <option value="3000">3,000万円</option>
+            <option value="4000">4,000万円</option>
+            <option value="5000">5,000万円</option>
+            <option value="6000">6,000万円</option>
+            <option value="8000">8,000万円</option>
+            <option value="10000">1億円</option>
+          </select>
+        </div>
+        <div class="field"><label>🛡️ 保険（死亡保険金など）</label>
+          <select id="assetInsurance">
+            <option value="0">なし</option>
+            <option value="100">100万円</option>
+            <option value="300">300万円</option>
+            <option value="500" selected>500万円</option>
+            <option value="1000">1,000万円</option>
+            <option value="2000">2,000万円</option>
+            <option value="3000">3,000万円</option>
+            <option value="4000">4,000万円</option>
+            <option value="5000">5,000万円</option>
+            <option value="6000">6,000万円</option>
+            <option value="8000">8,000万円</option>
+            <option value="10000">1億円</option>
+          </select>
+        </div>
+        <div class="field"><label>📦 その他（賃貸不動産・車など）</label>
+          <select id="assetOther">
+            <option value="0" selected>なし</option>
+            <option value="100">100万円</option>
+            <option value="300">300万円</option>
+            <option value="500">500万円</option>
+            <option value="1000">1,000万円</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns"><button class="btn btn-secondary" onclick="goStep(1)">← 戻る</button><button class="btn btn-primary" onclick="goStep(3)">次へ →</button></div>
+  </div>
+
+  <!-- STEP3 配分 -->
+  <div class="step" data-step="3">
+    <div class="step-card">
+      <div class="step-head"><span class="step-num">3</span><span class="step-title">誰に、どれくらい渡すか</span></div>
+      <div class="step-body">
+        <div style="text-align:center;font-size:1.3rem;font-weight:800;color:var(--pink);" id="totalAssetDisplay">総資産 0万円</div>
+        <div class="field">
+          <label>🧑‍🦽 障がいのあるお子さんへの配分額（直接指定）</label>
+          <select id="allocDisabledYenSelect">
+            <option value="">スライダーで調整</option>
+            <option value="500">500万円</option>
+            <option value="800">800万円</option>
+            <option value="1000">1,000万円</option>
+            <option value="1500">1,500万円</option>
+            <option value="2000">2,000万円</option>
+            <option value="2500">2,500万円</option>
+            <option value="3000">3,000万円</option>
+            <option value="4000">4,000万円</option>
+            <option value="5000">5,000万円</option>
+            <option value="6000">6,000万円</option>
+            <option value="8000">8,000万円</option>
+            <option value="10000">1億円</option>
+            <option value="all">全額</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>障がいのあるお子さんへの配分：<strong id="allocPctLabel" style="color:var(--pink);">50%</strong></label>
+          <input type="range" id="allocSlider" min="0" max="100" value="50" style="width:100%;accent-color:var(--pink);height:28px;">
+        </div>
+        <div id="allocLiveResult" style="display:flex;flex-direction:column;gap:8px;"></div>
+        <div class="field"><label>👤 財産の管理を任せたいのは誰か</label>
+          <select id="managerWish">
+            <option value="sibling">きょうだい</option>
+            <option value="relative">その他の親族（甥・姪など）</option>
+            <option value="professional">専門家（司法書士・弁護士など）</option>
+            <option value="undecided">まだ決めていない</option>
+          </select>
+        </div>
+        <div class="field"><label>🏠 自宅は誰に住んでほしいか</label>
+          <select id="homeWish">
+            <option value="disabled">障がいのある子に住み続けてほしい</option>
+            <option value="sibling">きょうだいに住んでほしい</option>
+            <option value="sell">売却して分配したい</option>
+            <option value="undecided">まだ決めていない</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns"><button class="btn btn-secondary" onclick="goStep(2)">← 戻る</button><button class="btn btn-primary" onclick="goStep(4)">次へ →</button></div>
+  </div>
+
+  <!-- STEP4 注意点 -->
+  <div class="step" data-step="4">
+    <div class="step-card">
+      <div class="step-head"><span class="step-num">4</span><span class="step-title">このケースで確認したいこと</span></div>
+      <div class="step-body" id="checklistBody"></div>
+    </div>
+    <div class="nav-btns"><button class="btn btn-secondary" onclick="goStep(3)">← 戻る</button><button class="btn btn-primary" onclick="goStep(5)">診断結果を見る →</button></div>
+  </div>
+
+  <!-- STEP5 まとめ -->
+  <div class="step" data-step="5">
+    <div id="resultArea"></div>
+    <div class="nav-btns no-print"><button class="btn btn-secondary" onclick="goStep(4)">← 戻る</button><button class="btn print-btn" onclick="window.print()">🖨️ この内容をPDF・印刷する</button></div>
+    <div style="font-size:.7rem;color:var(--sub);text-align:center;margin-top:10px;line-height:1.7;" class="no-print">📌 印刷したメモは、司法書士・弁護士など専門家への初回相談時にお使いください。</div>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 1;
+
+function goStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.querySelector(`.step[data-step="${n}"]`).classList.add('active');
+  currentStep = n;
+  updateProgress();
+  if (n === 3) updateAllocLive();
+  if (n === 4) buildChecklist();
+  if (n === 5) buildResult();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+const stepNames = {1:'家族構成', 2:'財産', 3:'希望', 4:'確認したいこと', 5:'まとめ・相談メモ'};
+function updateProgress() {
+  document.querySelectorAll('.progress-seg').forEach(seg => {
+    const n = parseInt(seg.dataset.seg);
+    seg.classList.toggle('done', n < currentStep);
+    seg.classList.toggle('current', n === currentStep);
+  });
+  document.getElementById('stepLabel').textContent = `STEP${currentStep} / 5`;
+  document.getElementById('stepName').textContent = stepNames[currentStep];
+}
+
+document.getElementById('hasOther').addEventListener('change', function(){
+  document.getElementById('otherDetailField').style.display = this.checked ? 'block' : 'none';
+});
+document.getElementById('hasKyosai').addEventListener('change', function(){
+  document.getElementById('kyosaiField').style.display = this.checked ? 'block' : 'none';
+});
+
+function fmtMan(num) {
+  if (isNaN(num) || num === 0) return '0';
+  return Math.round(num).toLocaleString();
+}
+
+function getInputs() {
+  return {
+    spouseAlive: document.getElementById('spouseAlive').checked,
+    disabledCount: parseInt(document.getElementById('disabledCount').value),
+    siblingCount: parseInt(document.getElementById('siblingCount').value),
+    hasOther: document.getElementById('hasOther').checked,
+    otherDetail: document.getElementById('otherDetail').value,
+    hasKyosai: document.getElementById('hasKyosai').checked,
+    kyosaiMonthly: parseFloat(document.getElementById('kyosaiMonthly').value) || 0,
+    pensionMonthly: parseFloat(document.getElementById('pensionMonthly').value) || 0,
+    livingCost: parseFloat(document.getElementById('livingCost').value) || 0,
+    assetHome: parseFloat(document.getElementById('assetHome').value) || 0,
+    assetCash: parseFloat(document.getElementById('assetCash').value) || 0,
+    assetFund: parseFloat(document.getElementById('assetFund').value) || 0,
+    assetInsurance: parseFloat(document.getElementById('assetInsurance').value) || 0,
+    assetOther: parseFloat(document.getElementById('assetOther').value) || 0,
+    allocPct: parseInt(document.getElementById('allocSlider').value),
+    homeWish: document.getElementById('homeWish').value,
+    managerWish: document.getElementById('managerWish').value,
+  };
+}
+
+// STEP3 スライダーのリアルタイム表示
+function updateAllocLive() {
+  const total = (parseFloat(document.getElementById('assetHome').value)||0)
+    + (parseFloat(document.getElementById('assetCash').value)||0)
+    + (parseFloat(document.getElementById('assetFund').value)||0)
+    + (parseFloat(document.getElementById('assetInsurance').value)||0)
+    + (parseFloat(document.getElementById('assetOther').value)||0);
+  const pct = parseInt(document.getElementById('allocSlider').value);
+  const siblingCount = parseInt(document.getElementById('siblingCount').value);
+  const hasKyosai = document.getElementById('hasKyosai').checked;
+  const kyosaiMonthly = parseFloat(document.getElementById('kyosaiMonthly').value) || 0;
+
+  document.getElementById('totalAssetDisplay').textContent = `総資産 ${fmtMan(total)}万円`;
+  document.getElementById('allocPctLabel').textContent = pct + '%';
+
+  const disabledYen = Math.round(total * pct / 100);
+  const restYen = total - disabledYen;
+  const siblingEachYen = siblingCount > 0 ? Math.round(restYen / siblingCount) : 0;
+
+  let html = `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--green-light);border:1.5px solid var(--green-border);border-radius:10px;">
+    <span style="font-size:.85rem;font-weight:700;color:var(--green);">🧑‍🦽 障がいのあるお子さん</span>
+    <span style="font-size:.9rem;font-weight:800;color:var(--green);">${fmtMan(disabledYen)}万円${hasKyosai ? ' <span style="font-size:.72rem;font-weight:600;">＋共済 月'+fmtMan(kyosaiMonthly/10000)+'万円</span>' : ''}</span>
+  </div>`;
+  if (siblingCount > 0) {
+    html += `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--blue-light);border:1.5px solid #a8c8e8;border-radius:10px;">
+      <span style="font-size:.85rem;font-weight:700;color:var(--blue);">🧑‍🤝‍🧑 きょうだい（1人あたり）</span>
+      <span style="font-size:.9rem;font-weight:800;color:var(--blue);">${fmtMan(siblingEachYen)}万円</span>
+    </div>`;
+  }
+  document.getElementById('allocLiveResult').innerHTML = html;
+}
+// 金額プルダウン→スライダーへ反映
+document.getElementById('allocDisabledYenSelect').addEventListener('change', function(){
+  const val = this.value;
+  if (val === '') return; // スライダーで調整のまま
+  const total = (parseFloat(document.getElementById('assetHome').value)||0)
+    + (parseFloat(document.getElementById('assetCash').value)||0)
+    + (parseFloat(document.getElementById('assetFund').value)||0)
+    + (parseFloat(document.getElementById('assetInsurance').value)||0)
+    + (parseFloat(document.getElementById('assetOther').value)||0);
+  let pct;
+  if (val === 'all') {
+    pct = 100;
+  } else {
+    pct = total > 0 ? Math.min(100, Math.round((parseFloat(val) / total) * 100)) : 0;
+  }
+  document.getElementById('allocSlider').value = pct;
+  updateAllocLive();
+});
+// スライダーを直接動かしたら金額プルダウンは「スライダーで調整」に戻す
+document.getElementById('allocSlider').addEventListener('input', function(){
+  document.getElementById('allocDisabledYenSelect').value = '';
+});
+document.getElementById('allocSlider').addEventListener('input', updateAllocLive);
+['assetHome','assetCash','assetFund','assetInsurance','assetOther','siblingCount','hasKyosai','kyosaiMonthly'].forEach(id => {
+  document.getElementById(id).addEventListener('input', resyncFromYenSelect);
+  document.getElementById(id).addEventListener('change', resyncFromYenSelect);
+});
+function resyncFromYenSelect(){
+  const sel = document.getElementById('allocDisabledYenSelect');
+  if (sel.value !== '') {
+    sel.dispatchEvent(new Event('change'));
+  } else {
+    updateAllocLive();
+  }
+}
+
+function buildChecklist() {
+  const d = getInputs();
+  const hasSiblings = d.siblingCount > 0;
+  const total = d.assetHome + d.assetCash + d.assetFund + d.assetInsurance + d.assetOther;
+
+  const items = [];
+  if (hasSiblings) {
+    items.push({title:'✅ 遺留分', desc:'きょうだいがいるため、法律上「最低限もらえる権利（遺留分）」があります。障がいのある子に多く遺す場合は、この金額を下回らないよう配慮が必要です。'});
+  }
+  items.push({title:'✅ 公正証書遺言がおすすめ', desc:'自筆証書遺言より、公証役場で作成する公正証書遺言の方が、形式ミスによる無効リスクがなく確実です。'});
+  if (d.managerWish === 'relative' || d.managerWish === 'professional' || total > 1000) {
+    items.push({title:'✅ 家族信託も検討', desc:'管理を人に託したい場合や資産が多い場合、遺言だけでなく家族信託を組み合わせることで、親の生前からの認知症対策と死後の財産管理を一体で設計できます。'});
+  }
+  items.push({title:'✅ 成年後見との関係', desc:'障がいのある子に判断能力がない場合、相続手続きに成年後見人が必要になることがあります。後見人がつくと財産管理の自由度は下がるため、事前の設計が重要です。'});
+  if (d.hasKyosai) {
+    items.push({title:'✅ 心身障害者扶養共済との組み合わせ', desc:'毎月一定額を受け取れる公的な共済制度です。相続財産と組み合わせることで、生活費をより長くまかなえます。'});
+  } else {
+    items.push({title:'✅ 心身障害者扶養共済も検討を', desc:'まだ加入していない場合、月々の終身年金として財産と組み合わせられる制度です。掛金は親の年齢によって変わるため、早めの検討がおすすめです。'});
+  }
+  if (d.homeWish !== 'undecided' && d.assetHome > 0) {
+    items.push({title:'✅ 自宅の名義・住み続ける権利', desc:'自宅を誰に遺すかによって、他の相続人との差が大きくなることがあります。配偶者居住権や代償分割なども選択肢に入れて専門家に相談を。'});
+  }
+
+  const body = document.getElementById('checklistBody');
+  body.innerHTML = items.map((it, i) => `
+    <div class="check-item">
+      <input type="checkbox" id="chk${i}" checked>
+      <div class="check-item-body">
+        <div class="check-item-title">${it.title}</div>
+        <div class="check-item-desc">${it.desc}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function buildDiagram(patternKey, manager, allocDisabledYen, allocSiblingEachYen, siblingCount) {
+  const W = 340;
+  let H = 320;
+  const cx = W/2;
+  const showYen = (allocDisabledYen > 0 || allocSiblingEachYen > 0);
+  const yenLabel = (yen) => showYen ? `約${fmtMan(yen)}万円` : '';
+
+  function node(x, y, r, emoji, label, sub, color, fill) {
+    let s = `<circle cx="${x}" cy="${y}" r="${r}" fill="${fill}" stroke="${color}" stroke-width="2.5"/>`;
+    s += `<text x="${x}" y="${y - r/6}" text-anchor="middle" font-size="${r*0.95}" dominant-baseline="middle">${emoji}</text>`;
+    s += `<text x="${x}" y="${y + r + 17}" text-anchor="middle" font-size="14" font-weight="800" fill="${color}">${label}</text>`;
+    if (sub) s += `<text x="${x}" y="${y + r + 32}" text-anchor="middle" font-size="12" fill="#6a5a60">${sub}</text>`;
+    return s;
+  }
+  function link(x1, y1, x2, y2, color, label, t) {
+    t = t===undefined ? 0.5 : t;
+    let s = `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="2.5" stroke-dasharray="5,4"/>`;
+    if (label) {
+      const mx = x1 + (x2-x1)*t, my = y1 + (y2-y1)*t;
+      const w = Math.max(50, label.length*13+14);
+      s += `<rect x="${mx-w/2}" y="${my-11}" width="${w}" height="22" rx="11" fill="#fff" stroke="${color}" stroke-width="1.5"/>`;
+      s += `<text x="${mx}" y="${my+4}" text-anchor="middle" font-size="12" font-weight="700" fill="${color}">${label}</text>`;
+    }
+    return s;
+  }
+
+  let svg = '', title = '';
+  if (patternKey === 'A') {
+    H = 400;
+    title = '🖼️ 財産の流れ（帰属先指定型）';
+    const parentY=55,b1x=cx-72,b2x=cx+72,midY=215,finalY=350;
+    svg += link(cx,parentY+34,b1x,midY-31,'#2f855a','遺言',0.78);
+    svg += link(cx,parentY+34,b2x,midY-31,'#a8a8a8','万一に備え',0.78);
+    svg += link(b1x,midY+63,b1x,finalY-30,'#68d391','その後',0.5);
+    svg += node(cx,parentY,30,'👴👵','親','委託者・遺言者','#c0587a','#fdf8fa');
+    svg += node(b1x,midY,29,'🧑‍🦽','障がいのある子',showYen?yenLabel(allocDisabledYen):'受け取る人','#2f855a','#f0fff4');
+    svg += node(b2x,midY,26,'📜','遺言書','内容を明記','#8a8a8a','#f7f7f7');
+    svg += node(b1x,finalY,28,'👨‍👩‍👧','指定した親族','子の死後に引き継ぐ','#1a4a7a','#f0f6ff');
+  } else if (patternKey === 'D') {
+    const managerLabel = manager==='relative' ? '親族（甥・姪）' : '専門家';
+    title = '🖼️ 財産の流れ（家族信託併用型）';
+    const parentY=52,mgrY=165,b1x=cx-72,b2x=cx+72,benY=270;
+    H = 340;
+    svg += link(cx,parentY+34,cx,mgrY-32,'#c0587a','信託',0.7);
+    svg += link(cx,mgrY+32,b1x,benY-28,'#8a6000','',0.5);
+    svg += link(cx,mgrY+32,b2x,benY-28,'#2f855a','',0.5);
+    svg += node(cx,parentY,30,'👴👵','親','委託者','#c0587a','#fdf8fa');
+    svg += node(cx,mgrY,30,'🧑‍💼',managerLabel,'受託者（管理する人）','#6a2a98','#f3eef8');
+    svg += node(b1x,benY,26,'👴👵','親（存命中）','受益者①','#8a6000','#fff8e8');
+    svg += node(b2x,benY,26,'🧑‍🦽','障がいのある子',showYen?`受益者②・${yenLabel(allocDisabledYen)}`:'受益者②','#2f855a','#f0fff4');
+  } else if (patternKey === 'B') {
+    title = '🖼️ 財産の流れ（遺留分配慮型）';
+    const parentY=58,b1x=cx-72,b2x=cx+72,childY=225;
+    H = 340;
+    svg += link(cx,parentY+34,b1x,childY-31,'#2f855a','子に多め',0.72);
+    svg += link(cx,parentY+34,b2x,childY-31,'#1a4a7a','遺留分を確保',0.72);
+    svg += node(cx,parentY,32,'👴👵','親','遺言者','#c0587a','#fdf8fa');
+    svg += node(b1x,childY,29,'🧑‍🦽','障がいのある子',showYen?yenLabel(allocDisabledYen):'多めに配分','#2f855a','#f0fff4');
+    svg += node(b2x,childY,29,'🧑‍🤝‍🧑',`きょうだい${siblingCount}人`,showYen?`1人 ${yenLabel(allocSiblingEachYen)}`:'遺留分は確保','#1a4a7a','#f0f6ff');
+  } else {
+    title = '🖼️ 財産の流れ（きょうだいサポート型）';
+    const parentY=52,b1x=cx-72,b2x=cx+72,midY=215;
+    H = 340;
+    svg += link(cx,parentY+34,b1x,midY-31,'#8a6000','多めに相続',0.7);
+    svg += link(cx,parentY+34,b2x,midY-31,'#2f855a','見守り対象',0.7);
+    svg += link(b1x+20,midY+24,b2x-20,midY+24,'#c4a8d8','生活費として',0.5);
+    svg += node(cx,parentY,30,'👴👵','親','遺言者','#c0587a','#fdf8fa');
+    svg += node(b1x,midY,29,'🧑‍🤝‍🧑','きょうだい',showYen?`${yenLabel(allocSiblingEachYen)}/人`:'管理・サポート役','#8a6000','#fff8e8');
+    svg += node(b2x,midY,29,'🧑‍🦽','障がいのある子',showYen?yenLabel(allocDisabledYen):'サポートを受ける','#2f855a','#f0fff4');
+  }
+
+  return `<div style="background:#fff;border-radius:10px;padding:12px 6px;border:1px solid var(--border);">
+    <div style="font-size:.74rem;font-weight:800;color:var(--text);text-align:center;margin-bottom:6px;">${title}</div>
+    <svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:380px;display:block;margin:0 auto;">${svg}</svg>
+  </div>`;
+}
+
+function buildResult() {
+  const d = getInputs();
+  const total = d.assetHome + d.assetCash + d.assetFund + d.assetInsurance + d.assetOther;
+  const hasSiblings = d.siblingCount > 0;
+  const childrenCount = d.disabledCount + d.siblingCount;
+  let childShare = d.spouseAlive ? (total*0.5)/childrenCount : total/childrenCount;
+  const legalReserve = childShare * 0.5;
+
+  // スライダーによる実際の配分
+  const allocDisabledYen = Math.round(total * d.allocPct / 100);
+  const restYen = total - allocDisabledYen;
+  const allocSiblingEachYen = hasSiblings ? Math.round(restYen / d.siblingCount) : 0;
+
+  // パターン判定（管理者の希望ベース）
+  let patternKey, patternTitle, patternColor, patternItems = [];
+  if (!hasSiblings) {
+    patternKey='A'; patternColor='green'; patternTitle='🟢 パターンA：シンプル遺言＋帰属先指定型';
+    patternItems = [
+      'きょうだいがいないため、遺留分を気にする必要はありません',
+      '「全財産を子どもに相続させる」という遺言で問題なく渡せます',
+      'その子が亡くなった後の財産の帰属先（親族など）まで指定しておくと、国庫帰属を避けられます'
+    ];
+  } else if (d.managerWish==='professional' || d.managerWish==='relative') {
+    patternKey='D'; patternColor='purple'; patternTitle='🟣 パターンD：家族信託併用型';
+    patternItems = [
+      d.managerWish==='relative' ? '甥・姪など信頼できる親族に管理を託す「家族信託」の活用が向いています' : '専門家（司法書士・弁護士）に管理を託す仕組みが向いています',
+      '遺言だけでなく、生前から家族信託を組んでおくことで、認知症対策も同時にできます',
+      '「誰が管理するか」「最終的にどこへ渡すか」の両方を、契約の中で決めておけます'
+    ];
+  } else if (allocSiblingEachYen >= legalReserve) {
+    patternKey='B'; patternColor='blue'; patternTitle='🔵 パターンB：遺留分配慮型';
+    patternItems = [
+      `きょうだい1人あたり約${fmtMan(allocSiblingEachYen)}万円の配分で、遺留分の目安（約${Math.round(legalReserve)}万円）を満たしています`,
+      '公正証書遺言で作成し、なぜこの配分にしたか「付言事項」で気持ちを伝えておくと納得感が高まります'
+    ];
+  } else {
+    patternKey='C'; patternColor='yellow'; patternTitle='🟡 パターンC：要注意（遺留分を下回る可能性）';
+    patternItems = [
+      `きょうだい1人あたり約${fmtMan(allocSiblingEachYen)}万円は、遺留分の目安（約${Math.round(legalReserve)}万円）を下回っています`,
+      'このままだと後できょうだいから遺留分侵害額請求をされる可能性があります。配分の見直しか、専門家への相談をおすすめします'
+    ];
+  }
+
+  const homeWishLabel = {disabled:'障がいのある子に住み続けてほしい', sibling:'きょうだいに住んでほしい', sell:'売却して分配したい', undecided:'まだ決めていない'}[d.homeWish];
+  const managerWishLabel = {sibling:'きょうだい', relative:'その他の親族（甥・姪など）', professional:'専門家（司法書士・弁護士など）', undecided:'まだ決めていない'}[d.managerWish];
+
+  const checkedItems = Array.from(document.querySelectorAll('#checklistBody .check-item')).map((el,i) => {
+    const cb = document.getElementById('chk'+i);
+    return (cb && cb.checked) ? el.querySelector('.check-item-title').textContent : null;
+  }).filter(Boolean);
+
+  // 生活費充当年数の計算
+  const kyosaiMonthly = d.hasKyosai ? d.kyosaiMonthly : 0;
+  const pensionMonthly = d.pensionMonthly || 0;
+  const monthlyIncomeYen = kyosaiMonthly + pensionMonthly;
+  const monthlyGapYen = d.livingCost - monthlyIncomeYen; // 円
+  const disabledAssetYen = allocDisabledYen * 10000; // 万円→円
+  let durationHtml = '';
+  if (d.livingCost > 0) {
+    const incomeNote = [];
+    if (pensionMonthly > 0) incomeNote.push(`年金・手当 月${fmtMan(pensionMonthly/10000)}万円`);
+    if (kyosaiMonthly > 0) incomeNote.push(`共済 月${fmtMan(kyosaiMonthly/10000)}万円`);
+    const incomeText = incomeNote.length > 0 ? `（${incomeNote.join('＋')}を差し引くと不足分は月${fmtMan(Math.max(monthlyGapYen,0)/10000)}万円）` : '';
+    if (monthlyGapYen <= 0) {
+      durationHtml = `<div class="route-box green"><div class="route-title green">🟢 生活費について</div><div class="route-item">年金・手当・共済からの収入だけで、想定する生活費（月${fmtMan(d.livingCost/10000)}万円）をまかなえる計算です。相続財産はそのまま将来への備えとして残せます。</div></div>`;
+    } else {
+      const years = disabledAssetYen / (monthlyGapYen * 12);
+      durationHtml = `<div class="route-box green"><div class="route-title green">🟢 生活費について</div><div class="route-item">生活費は月${fmtMan(d.livingCost/10000)}万円${incomeText}なら、配分した財産で約${years.toFixed(1)}年間相当をまかなえる計算です。</div></div>`;
+    }
+  }
+
+  let html = '';
+
+  html += `<div class="summary-block"><div class="summary-head">👪 STEP1：家族構成</div><div class="summary-body">`;
+  html += `<div class="summary-row"><span class="summary-row-label">配偶者</span><span class="summary-row-val">${d.spouseAlive?'健在':'他界済み'}</span></div>`;
+  html += `<div class="summary-row"><span class="summary-row-label">障がいのあるお子さん</span><span class="summary-row-val">${d.disabledCount}人</span></div>`;
+  html += `<div class="summary-row"><span class="summary-row-label">きょうだい</span><span class="summary-row-val">${d.siblingCount}人</span></div>`;
+  if (d.hasOther) html += `<div class="summary-row"><span class="summary-row-label">その他の相続人</span><span class="summary-row-val">${d.otherDetail || 'あり'}</span></div>`;
+  if (d.hasKyosai) html += `<div class="summary-row"><span class="summary-row-label">心身障害者扶養共済</span><span class="summary-row-val">月${fmtMan(d.kyosaiMonthly/10000)}万円</span></div>`;
+  if (d.pensionMonthly > 0) html += `<div class="summary-row"><span class="summary-row-label">障害年金・手当</span><span class="summary-row-val">月${fmtMan(d.pensionMonthly/10000)}万円</span></div>`;
+  if (d.livingCost > 0) html += `<div class="summary-row"><span class="summary-row-label">想定生活費</span><span class="summary-row-val">月${fmtMan(d.livingCost/10000)}万円</span></div>`;
+  html += `</div></div>`;
+
+  html += `<div class="summary-block"><div class="summary-head">💰 総資産 ${fmtMan(total)}万円 の配分</div><div class="summary-body">`;
+  html += `<div class="summary-row"><span class="summary-row-label">🧑‍🦽 障がいのあるお子さん（${d.allocPct}%）</span><span class="summary-row-val">${fmtMan(allocDisabledYen)}万円${d.hasKyosai ? ' ＋共済月'+fmtMan(d.kyosaiMonthly/10000)+'万円' : ''}</span></div>`;
+  if (hasSiblings) html += `<div class="summary-row"><span class="summary-row-label">🧑‍🤝‍🧑 きょうだい（1人あたり）</span><span class="summary-row-val">${fmtMan(allocSiblingEachYen)}万円</span></div>`;
+  html += `<div class="summary-row"><span class="summary-row-label">🏠 自宅は誰に</span><span class="summary-row-val">${homeWishLabel}</span></div>`;
+  html += `<div class="summary-row"><span class="summary-row-label">👤 管理を任せたい人</span><span class="summary-row-val">${managerWishLabel}</span></div>`;
+  html += `</div></div>`;
+
+  html += durationHtml;
+
+  html += `<div class="route-box ${patternColor}"><div class="route-title ${patternColor}">${patternTitle}</div>`;
+  patternItems.forEach(it => html += `<div class="route-item">${it}</div>`);
+  html += `</div>`;
+
+  html += `<div class="route-box blue"><div class="route-title blue">🔵 公正証書遺言がおすすめです</div><div class="route-item">この配分内容を、司法書士・公証人と一緒に公正証書遺言として形にしておくと、確実に希望が反映されます。</div></div>`;
+
+  html += buildDiagram(patternKey, d.managerWish, allocDisabledYen, allocSiblingEachYen, d.siblingCount);
+
+  if (checkedItems.length > 0) {
+    html += `<div class="summary-block" style="margin-top:12px;"><div class="summary-head">✅ STEP4：確認したいこと</div><div class="summary-body">`;
+    checkedItems.forEach(it => html += `<div style="padding:4px 0;">${it}</div>`);
+    html += `</div></div>`;
+  }
+
+  // 現時点の希望メモ（相談用たたき台）
+  const siblingPctEach = hasSiblings ? Math.round((100 - d.allocPct) / d.siblingCount) : 0;
+  html += `<div class="summary-block" style="margin-top:16px;border-color:var(--pink);">`;
+  html += `<div class="summary-head" style="background:linear-gradient(135deg,#fdeef3,#f9e0ea);">📝 現時点の希望メモ</div>`;
+  html += `<div class="summary-body">`;
+  html += `<div class="summary-row"><span class="summary-row-label">🧑‍🦽 障がいのある子</span><span class="summary-row-val">${fmtMan(allocDisabledYen)}万円（${d.allocPct}%）</span></div>`;
+  if (hasSiblings) {
+    if (d.siblingCount === 1) {
+      html += `<div class="summary-row"><span class="summary-row-label">🧑‍🤝‍🧑 きょうだい</span><span class="summary-row-val">残りの${100-d.allocPct}%（${fmtMan(allocSiblingEachYen)}万円）</span></div>`;
+    } else {
+      html += `<div class="summary-row"><span class="summary-row-label">🧑‍🤝‍🧑 きょうだい${d.siblingCount}人</span><span class="summary-row-val">残りを均等に・1人あたり${siblingPctEach}%（${fmtMan(allocSiblingEachYen)}万円）</span></div>`;
+    }
+  }
+  if (d.assetHome > 0) html += `<div class="summary-row"><span class="summary-row-label">🏠 自宅</span><span class="summary-row-val">${homeWishLabel}</span></div>`;
+  html += `<div class="summary-row"><span class="summary-row-label">👤 財産管理</span><span class="summary-row-val">${managerWishLabel}にお願いしたい</span></div>`;
+  if (d.hasKyosai) html += `<div class="summary-row"><span class="summary-row-label">🛡️ 心身障害者扶養共済</span><span class="summary-row-val">月${fmtMan(d.kyosaiMonthly/10000)}万円 加入済み・予定</span></div>`;
+  if (d.pensionMonthly > 0) html += `<div class="summary-row"><span class="summary-row-label">💴 障害年金・手当</span><span class="summary-row-val">月${fmtMan(d.pensionMonthly/10000)}万円</span></div>`;
+  html += `</div>`;
+  html += `<div style="padding:10px 14px;font-size:.74rem;color:var(--sub);border-top:1px solid #f5e8ee;line-height:1.7;">📌 これは家族で話し合う・専門家に相談するときのたたき台メモです。正式には公正証書遺言や信託契約として作成してください。</div>`;
+  html += `</div>`;
+
+  html += `<div style="font-size:.72rem;color:var(--sub);line-height:1.7;padding:10px 12px;background:#faf7f8;border-radius:8px;margin-top:10px;">📌 この内容は「現時点の希望」を整理するためのものです。実際の相続や遺言の内容は、家族構成や財産状況、遺留分などによって異なります。遺言を作成する際は、公証人や司法書士、弁護士などの専門家へご相談ください。</div>`;
+
+  document.getElementById('resultArea').innerHTML = html;
+}
+
+updateProgress();
+</script>
+</body>
+</html>
