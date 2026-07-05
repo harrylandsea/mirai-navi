@@ -118,7 +118,7 @@ body {
 </head>
 <body>
 <div style="position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid #e8e2d8;padding:10px 16px;">
-  <button onclick="history.back()" style="display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:linear-gradient(135deg,#d97aa5,#e8896b);color:#fff;font-weight:800;font-size:.82rem;border:none;cursor:pointer;">← みらいナビに戻る</button>
+  <button onclick="try{sessionStorage.setItem('mirai-last-tab','tools')}catch(e){}; window.location.href='index.html';" style="display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:20px;background:linear-gradient(135deg,#d97aa5,#e8896b);color:#fff;font-weight:800;font-size:.82rem;border:none;cursor:pointer;">← みらいナビに戻る</button>
 </div>
 
 <div class="header">
