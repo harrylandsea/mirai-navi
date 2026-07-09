@@ -707,14 +707,18 @@ details.facilities[open] .fac-chev{transform:rotate(90deg)}
 .respite-card[open] .rc-chev{transform:rotate(90deg)}
 .respite-card .rc-body{padding:0 18px 18px;border-top:1px solid #80ccaa}
 .respite-card .rc-lead{font-size:.88rem;color:var(--ink-soft);line-height:1.85;margin:14px 0 16px}
-.rc-block{margin-bottom:15px}
-.rc-block h5{font-size:.85rem;font-weight:800;color:#34807b;margin-bottom:7px}
-.rc-block ul{list-style:none;display:flex;flex-direction:column;gap:5px}
-.rc-block li{font-size:.85rem;color:var(--ink-soft);line-height:1.7;padding-left:18px;position:relative}
+/* グローバル共通の余白（各カード内側にゆとりを持たせる） */
+details > .rc-body{padding:4px 18px 20px}
+.rc-lead{font-size:.88rem;color:var(--ink-soft);line-height:1.9;margin:16px 0 18px}
+.respite-card .rc-lead{margin:14px 0 16px}
+.rc-block{margin-bottom:20px}
+.rc-block h5{font-size:.85rem;font-weight:800;color:#34807b;margin-bottom:10px}
+.rc-block ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.rc-block li{font-size:.85rem;color:var(--ink-soft);line-height:1.8;padding-left:18px;position:relative}
 .rc-block li::before{content:"・";position:absolute;left:3px;color:#5fb3b3;font-weight:800}
-.rc-block p{font-size:.85rem;color:var(--ink-soft);line-height:1.8}
+.rc-block p{font-size:.85rem;color:var(--ink-soft);line-height:1.9}
 .rc-steps{counter-reset:rcs;list-style:none;display:flex;flex-direction:column;gap:8px}
-.rc-steps li{font-size:.85rem;color:var(--ink-soft);line-height:1.65;padding-left:30px;position:relative}
+.rc-steps li{font-size:.85rem;color:var(--ink-soft);line-height:1.75;padding-left:30px;position:relative}
 .rc-steps li::before{counter-increment:rcs;content:counter(rcs);position:absolute;left:0;top:0;width:21px;height:21px;border-radius:50%;background:#5fb3b3;color:#fff;font-size:.72rem;font-weight:800;display:grid;place-items:center}
 .rc-note{font-size:.78rem;color:var(--ink-faint);line-height:1.7;background:rgba(255,255,255,.65);border-radius:var(--radius-sm);padding:11px 13px;margin-top:6px}
 .rc-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px}
@@ -1400,11 +1404,28 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
 .seido-stab .st-icon{font-size:1.4rem;flex:none}
 .seido-stab:hover{background:#fdf0e8;border-color:var(--c-act)}
 .seido-stab.active{
-  background:linear-gradient(135deg,rgba(217,122,165,.12),rgba(232,137,107,.08));
+  background:#fdf0f5;
   border-color:var(--c-act);color:var(--c-act);
   box-shadow:0 2px 8px rgba(217,122,165,.2);
 }
 .seido-stab.active::after{content:"✕";color:var(--c-act);}
+
+/* カテゴリごとの色分け（お金の備え方タブと統一感を持たせる） */
+.seido-stab[data-seido="hajimete"]:not(.active){background:#f2fbf5;border-color:#8fd9ac;}
+.seido-stab[data-seido="hajimete"]:not(.active) .st-icon{filter:none;}
+.seido-stab[data-seido="techo"]:not(.active){background:#f0f7ff;border-color:#a8c8e8;}
+.seido-stab[data-seido="seikatsu"]:not(.active){background:#fff8f0;border-color:#f0b878;}
+.seido-stab[data-seido="gakko"]:not(.active){background:#fff2f0;border-color:#f0a090;}
+.seido-stab[data-seido="okane"]:not(.active){background:#fdf0f5;border-color:#f0a8c0;}
+.seido-stab[data-seido="otona"]:not(.active){background:#f6f0fc;border-color:#c4a8d8;}
+.seido-stab:not(.active){box-shadow:0 2px 8px rgba(0,0,0,.05);}
+
+/* お金の備え方タブのカードを、制度タブのリストと同じ「白背景＋枠線色のみ」に統一 */
+#tab-okane > details,
+#tab-okane > details > .rc-body,
+#tab-okane > a{
+  background:var(--bg-card) !important;
+}
 .seido-subcontent{display:none}
 .seido-subcontent.active{display:block;animation:fade .25s ease}
 
@@ -3938,6 +3959,22 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body">
       <p class="rc-lead">重度の障がいがある方のおむつ代を軽減する制度が2つあります。<strong>紙おむつ配付事業（春日部市社会福祉協議会）</strong>と、<strong>日常生活用具給付（市の障がい福祉制度）</strong>です。手帳を持っていれば申請できる可能性があります。</p>
+
+      <div style="display:flex;gap:8px;margin-bottom:14px;">
+        <div style="flex:1;background:#fff8f0;border:1.5px solid #f0c080;border-radius:12px;padding:12px 10px;text-align:center;">
+          <div style="font-size:1.6em;">📦</div>
+          <div style="font-size:.8rem;font-weight:800;color:#a06010;margin-top:4px;">紙おむつ配付事業</div>
+          <div style="font-size:.68rem;color:#8a7060;margin-top:4px;">社会福祉協議会が窓口</div>
+        </div>
+        <div style="display:flex;align-items:center;font-size:1.2em;color:#c8bcae;">＋</div>
+        <div style="flex:1;background:#f0f8ff;border:1.5px solid #a8c8e8;border-radius:12px;padding:12px 10px;text-align:center;">
+          <div style="font-size:1.6em;">🩺</div>
+          <div style="font-size:.8rem;font-weight:800;color:#2a5a8a;margin-top:4px;">日常生活用具給付</div>
+          <div style="font-size:.68rem;color:#8a7060;margin-top:4px;">市の障がい福祉制度</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:1.2em;color:#c8bcae;margin-bottom:6px;">▼ どちらも対象になり得る</div>
+      <div style="background:#f0fff4;border:1.5px solid #68d391;border-radius:10px;padding:10px 12px;margin-bottom:14px;text-align:center;font-size:.8rem;font-weight:700;color:#1a5a38;">両方使えば、おむつ代の負担をさらに軽減できます</div>
       <div class="rc-block">
         <h5>📦 紙おむつ配付事業（春日部市社会福祉協議会）</h5>
         <ul>
@@ -4012,13 +4049,44 @@ function mnSwitchTab(id) {
 
       <div class="rc-block">
         <h5>📝 申請の流れ</h5>
-        <ol class="rc-steps">
-          <li><strong>市区町村の窓口（障がい者支援課）に相談・申請。</strong>まずここへ。業者に先に行くと補助が出ないことがある</li>
-          <li><strong>主治医・専門医に意見書を書いてもらう。</strong>整形外科・耳鼻科・リハビリ科など</li>
-          <li><strong>更生相談所での判定を受ける（必要な場合）。</strong>車いす・装具などは判定が必要なことが多い</li>
-          <li><strong>指定補装具製作事業者と試着・製作。</strong>「指定」を受けた事業者に限られる</li>
-          <li><strong>適合確認後、自己負担分のみ支払い。</strong>市区町村から残りが支給される</li>
-        </ol>
+        <div style="background:#fff;border-radius:10px;padding:14px 8px;border:1px solid var(--border,#e8dcd0);margin-bottom:10px;">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;">1</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:24px;"></div>
+              </div>
+              <div style="padding-bottom:16px;font-size:.82rem;line-height:1.6;"><strong>市区町村の窓口（障がい者支援課）に相談・申請</strong><br><span style="color:#8a8078;font-size:.78rem;">まずここへ。業者に先に行くと補助が出ないことがある</span></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;">2</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:24px;"></div>
+              </div>
+              <div style="padding-bottom:16px;font-size:.82rem;line-height:1.6;"><strong>主治医・専門医に意見書を書いてもらう</strong><br><span style="color:#8a8078;font-size:.78rem;">整形外科・耳鼻科・リハビリ科など</span></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;">3</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:24px;"></div>
+              </div>
+              <div style="padding-bottom:16px;font-size:.82rem;line-height:1.6;"><strong>更生相談所での判定を受ける（必要な場合）</strong><br><span style="color:#8a8078;font-size:.78rem;">車いす・装具などは判定が必要なことが多い</span></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;">4</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:24px;"></div>
+              </div>
+              <div style="padding-bottom:16px;font-size:.82rem;line-height:1.6;"><strong>指定補装具製作事業者と試着・製作</strong><br><span style="color:#8a8078;font-size:.78rem;">「指定」を受けた事業者に限られる</span></div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:32px;height:32px;border-radius:50%;background:#2f9e5c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;">5</div>
+              </div>
+              <div style="font-size:.82rem;line-height:1.6;"><strong>適合確認後、自己負担分のみ支払い</strong><br><span style="color:#8a8078;font-size:.78rem;">市区町村から残りが支給される（原則1割負担）</span></div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div class="rc-note">⚠️ <strong>支給決定前に購入すると補助の対象外になります。</strong>必ず先に申請を。修理も同様です。</div>
@@ -4041,6 +4109,20 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body">
       <p class="rc-lead">手帳を取ったら、これだけ使えます。種類・等級・所得によって条件が変わるので、詳細は各窓口に確認を。知らずに使っていない割引がある家族も多いです。</p>
+
+      <div style="background:#fff;border:1px solid var(--border,#e8dcd0);border-radius:12px;padding:14px 10px;margin-bottom:14px;">
+        <div style="text-align:center;font-size:.78rem;font-weight:800;color:#7a3a9a;margin-bottom:10px;">🎫 手帳提示ひとつで、これだけ広がる</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+          <div style="background:#fdeef3;border:1px solid #f0a8c0;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#a83a60;">🚃 交通機関</div>
+          <div style="background:#f0f6ff;border:1px solid #a8c8e8;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#1a4a7a;">🛣️ 高速道路</div>
+          <div style="background:#fff8e8;border:1px solid #f0c060;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#8a6000;">📺 NHK受信料</div>
+          <div style="background:#f0fff4;border:1px solid #68d391;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#1a7a4a;">📱 携帯電話</div>
+          <div style="background:#f3eef8;border:1px solid #c4a8d8;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#6a2a98;">🎬 映画・施設</div>
+          <div style="background:#fff0f0;border:1px solid #f0a0a0;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#a83a3a;">🚗 自動車税</div>
+          <div style="background:#f5f0e8;border:1px solid #d0b890;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#7a5a2a;">💴 所得税・住民税</div>
+          <div style="background:#eef0f4;border:1px solid #b0b8c8;border-radius:20px;padding:6px 12px;font-size:.72rem;font-weight:700;color:#4a5470;">🅿️ 駐車禁止除外</div>
+        </div>
+      </div>
 
       <div class="rc-block">
         <h5>🚃 交通機関</h5>
@@ -4134,6 +4216,28 @@ function mnSwitchTab(id) {
 
   <div class="seido-subcontent" id="seido-sub-seikatsu">
   <div class="seido-cat-head"><span class="seido-cat-num">2</span>🌱 生活を支える制度</div>
+
+  <div style="background:#fff;border:1px solid var(--border,#e8dcd0);border-radius:12px;padding:14px 10px;margin-bottom:16px;">
+    <div style="text-align:center;font-size:.78rem;font-weight:800;color:#7a3a9a;margin-bottom:12px;">🗺️ 生活を支える制度、全体マップ</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="background:#f0fff4;border:1.5px solid #68d391;border-radius:8px;padding:6px 10px;font-size:.7rem;font-weight:800;color:#1a7a4a;white-space:nowrap;">🏫 通所系</div>
+        <div style="font-size:.68rem;color:#5a5450;line-height:1.5;">児童発達支援・保育所等訪問支援</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:8px;padding:6px 10px;font-size:.7rem;font-weight:800;color:#1a4a7a;white-space:nowrap;">🏠 訪問系</div>
+        <div style="font-size:.68rem;color:#5a5450;line-height:1.5;">訪問看護・居宅介護・重度訪問介護・訪問入浴</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="background:#fff8e8;border:1.5px solid #f0c060;border-radius:8px;padding:6px 10px;font-size:.7rem;font-weight:800;color:#8a6000;white-space:nowrap;">🛏️ 短期利用</div>
+        <div style="font-size:.68rem;color:#5a5450;line-height:1.5;">ショートステイ・レスパイト入院</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="background:#fdeef3;border:1.5px solid #f0a8c0;border-radius:8px;padding:6px 10px;font-size:.7rem;font-weight:800;color:#a83a60;white-space:nowrap;">🔄 移行</div>
+        <div style="font-size:.68rem;color:#5a5450;line-height:1.5;">移行期医療（小児科→成人科）</div>
+      </div>
+    </div>
+  </div>
   <div class="rc-note" style="margin-bottom:16px;">
     <p style="font-weight:800;margin-bottom:8px;">💡 障害支援区分とは？</p>
     <p style="margin-bottom:10px;">障害福祉サービスを利用するために必要な認定です。区分1〜6があり、数字が大きいほど支援の必要度が高いとされます。区分によって使えるサービスや時間数が変わります。</p>
@@ -4271,6 +4375,35 @@ function mnSwitchTab(id) {
       </div>
       <div class="rc-block">
         <h5>📅 年齢と助成の変わり目</h5>
+        <div style="background:#fff;border:1px solid var(--border,#e8dcd0);border-radius:10px;padding:12px 8px;margin-bottom:10px;overflow-x:auto;">
+          <div style="display:flex;min-width:560px;">
+            <div style="flex:1;text-align:center;">
+              <div style="background:#f0fff4;border:1.5px solid #68d391;border-radius:8px;padding:8px 4px;margin:0 3px;">
+                <div style="font-size:.7rem;font-weight:800;color:#1a7a4a;">0歳〜18歳</div>
+                <div style="font-size:.62rem;color:#5a5450;margin-top:3px;">子ども医療費助成</div>
+              </div>
+            </div>
+            <div style="flex:1;text-align:center;">
+              <div style="background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:8px;padding:8px 4px;margin:0 3px;">
+                <div style="font-size:.7rem;font-weight:800;color:#1a4a7a;">〜18歳(20歳)</div>
+                <div style="font-size:.62rem;color:#5a5450;margin-top:3px;">小児慢性特定疾病</div>
+              </div>
+            </div>
+            <div style="flex:1;text-align:center;">
+              <div style="background:#fff8e8;border:1.5px solid #f0c060;border-radius:8px;padding:8px 4px;margin:0 3px;">
+                <div style="font-size:.7rem;font-weight:800;color:#8a6000;">20歳〜65歳</div>
+                <div style="font-size:.62rem;color:#5a5450;margin-top:3px;">重度心身障害者医療費助成・指定難病</div>
+              </div>
+            </div>
+            <div style="flex:1;text-align:center;">
+              <div style="background:#fdeef3;border:1.5px solid #f0a8c0;border-radius:8px;padding:8px 4px;margin:0 3px;">
+                <div style="font-size:.7rem;font-weight:800;color:#a83a60;">65歳〜</div>
+                <div style="font-size:.62rem;color:#5a5450;margin-top:3px;">介護保険へ切替</div>
+              </div>
+            </div>
+          </div>
+          <div style="text-align:center;font-size:.66rem;color:#9a8f87;margin-top:6px;">← 横にスクロールできます</div>
+        </div>
         <ul>
           <li><strong>〜18歳</strong>：子ども医療費助成が使える（自治体により「高校卒業まで」など上限あり）</li>
           <li><strong>〜18歳（〜20歳）</strong>：小児慢性特定疾病医療費助成。継続治療中なら20歳未満まで延長可能</li>
@@ -4303,6 +4436,20 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body" style="border-top:1px solid #a0d8bc;">
       <p class="rc-lead">居宅介護は、障がいのある方の自宅にヘルパーが訪問して、日常生活をサポートする障害福祉サービスです。子どもから大人まで利用できます。</p>
+
+      <div style="background:#fff;border:1px solid #a0d8bc;border-radius:12px;padding:12px 10px;margin-bottom:14px;">
+        <div style="text-align:center;font-size:.74rem;font-weight:800;color:#1a5a38;margin-bottom:8px;">🔍 「重度訪問介護」との違い</div>
+        <div style="display:flex;gap:8px;">
+          <div style="flex:1;background:#f0fff4;border:1.5px solid #68d391;border-radius:8px;padding:8px 6px;text-align:center;">
+            <div style="font-size:.72rem;font-weight:800;color:#1a7a4a;">居宅介護</div>
+            <div style="font-size:.62rem;color:#5a5450;margin-top:4px;line-height:1.5;">短時間の訪問<br>身体介護・家事援助中心</div>
+          </div>
+          <div style="flex:1;background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:8px;padding:8px 6px;text-align:center;">
+            <div style="font-size:.72rem;font-weight:800;color:#1a4a7a;">重度訪問介護</div>
+            <div style="font-size:.62rem;color:#5a5450;margin-top:4px;line-height:1.5;">長時間・見守り含む<br>常時の支援が必要な方向け</div>
+          </div>
+        </div>
+      </div>
       <div class="rc-block">
         <h5 style="color:#1a5a38;">📋 サービス内容</h5>
         <ul>
@@ -4578,6 +4725,29 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body">
       <p class="rc-lead">障がいのある子どもが通える学校は大きく3つ。重症心身障がい・医療的ケア児の多くは<strong>特別支援学校（肢体不自由・病弱）</strong>に進みます。<strong>年中〜年長で「就学相談」</strong>に申し込み、専門家と一緒に選んでいきます。</p>
+
+      <div style="background:#fff;border:1px solid var(--border,#e8dcd0);border-radius:12px;padding:14px 10px;margin-bottom:14px;">
+        <div style="text-align:center;font-size:.78rem;font-weight:800;color:#7a3a9a;margin-bottom:12px;">🎒 通える学校、大きく3つ</div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:#f0f8ff;border:1.5px solid #a8c8e8;border-radius:10px;padding:10px 6px;text-align:center;">
+            <div style="font-size:1.5em;">🏫</div>
+            <div style="font-size:.72rem;font-weight:800;color:#1a4a7a;margin-top:4px;">特別支援学校</div>
+            <div style="font-size:.64rem;color:#8a7060;margin-top:3px;">医療的ケア児の多くはここ</div>
+          </div>
+          <div style="flex:1;background:#f0fff4;border:1.5px solid #68d391;border-radius:10px;padding:10px 6px;text-align:center;">
+            <div style="font-size:1.5em;">🏠</div>
+            <div style="font-size:.72rem;font-weight:800;color:#1a7a4a;margin-top:4px;">特別支援学級</div>
+            <div style="font-size:.64rem;color:#8a7060;margin-top:3px;">地域の学校内のクラス</div>
+          </div>
+          <div style="flex:1;background:#fff8e8;border:1.5px solid #f0c060;border-radius:10px;padding:10px 6px;text-align:center;">
+            <div style="font-size:1.5em;">👥</div>
+            <div style="font-size:.72rem;font-weight:800;color:#8a6000;margin-top:4px;">通常学級</div>
+            <div style="font-size:.64rem;color:#8a7060;margin-top:3px;">合理的配慮のもとで</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:1.1em;color:#c8bcae;margin:8px 0 4px;">▼</div>
+        <div style="background:#faf5ff;border:1px solid #d8c0e8;border-radius:8px;padding:8px 10px;text-align:center;font-size:.74rem;color:#6a3a8a;">年中〜年長で<strong>就学相談</strong>を通じて、本人・保護者・専門家で決める</div>
+      </div>
       <div class="rc-block">
         <h5>🏫 特別支援学校の5種類</h5>
         <ul>
@@ -4676,6 +4846,21 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body">
       <p class="rc-lead">放課後等デイサービスは、障がいのある子どもが放課後や長期休暇に通う福祉サービスです。事業所によって対象・専門性・雰囲気が大きく異なります。受給者証を取得してから利用できます。</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:10px;background:#fff5f0;border:1.5px solid #f0b090;border-radius:10px;padding:10px 12px;">
+          <div style="font-size:1.5em;flex-shrink:0;">🏥</div>
+          <div><div style="font-size:.78rem;font-weight:800;color:#a04a20;">重症心身障がい児型</div><div style="font-size:.68rem;color:#8a7060;">看護師常駐・医療的ケア対応・少人数制</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#f0fff4;border:1.5px solid #68d391;border-radius:10px;padding:10px 12px;">
+          <div style="font-size:1.5em;flex-shrink:0;">🌱</div>
+          <div><div style="font-size:.78rem;font-weight:800;color:#1a7a4a;">発達支援型</div><div style="font-size:.68rem;color:#8a7060;">知的・発達障がい向け・ソーシャルスキル支援</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:10px;padding:10px 12px;">
+          <div style="font-size:1.5em;flex-shrink:0;">🤝</div>
+          <div><div style="font-size:.78rem;font-weight:800;color:#1a4a7a;">共生型・混合型</div><div style="font-size:.68rem;color:#8a7060;">障がいの種類を問わず受け入れ</div></div>
+        </div>
+      </div>
       <div class="rc-block">
         <h5>🏥 重症心身障がい児型（医療的ケア対応）</h5>
         <ul>
@@ -4729,6 +4914,38 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body">
       <p class="rc-lead">特別支援学校を卒業する18歳以降は、日中の居場所が<strong>学校から福祉サービスへ</strong>移ります。重症心身障がい・医療的ケア児は<strong>生活介護</strong>が主な選択肢です。卒業の2〜3年前から見学を始めましょう。</p>
+
+      <div style="background:#fff;border:1px solid var(--border,#e8dcd0);border-radius:12px;padding:14px 10px;margin-bottom:14px;">
+        <div style="text-align:center;font-size:.78rem;font-weight:800;color:#7a3a9a;margin-bottom:10px;">🎓 18歳、2つの軸で選ぶ</div>
+        <div style="font-size:.72rem;font-weight:700;color:#8a6070;margin-bottom:6px;">① 日中どこで過ごす？</div>
+        <div style="display:flex;gap:6px;margin-bottom:12px;">
+          <div style="flex:1.3;background:#fff8e8;border:1.5px solid #f0c060;border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:1.3em;">🏠</div>
+            <div style="font-size:.68rem;font-weight:800;color:#8a6000;margin-top:2px;">生活介護</div>
+            <div style="font-size:.6rem;color:#8a7060;">医療的ケア児の多くはここ</div>
+          </div>
+          <div style="flex:1;background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:1.3em;">💼</div>
+            <div style="font-size:.68rem;font-weight:800;color:#1a4a7a;margin-top:2px;">就労支援</div>
+            <div style="font-size:.6rem;color:#8a7060;">B型・A型・移行</div>
+          </div>
+        </div>
+        <div style="font-size:.72rem;font-weight:700;color:#8a6070;margin-bottom:6px;">② どこで暮らす？</div>
+        <div style="display:flex;gap:6px;">
+          <div style="flex:1;background:#f0fff4;border:1.5px solid #68d391;border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:1.3em;">🏡</div>
+            <div style="font-size:.65rem;font-weight:800;color:#1a7a4a;margin-top:2px;">在宅</div>
+          </div>
+          <div style="flex:1;background:#fdeef3;border:1.5px solid #f0a8c0;border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:1.3em;">🏘️</div>
+            <div style="font-size:.65rem;font-weight:800;color:#a83a60;margin-top:2px;">グループホーム</div>
+          </div>
+          <div style="flex:1;background:#f3eef8;border:1.5px solid #c4a8d8;border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:1.3em;">🏢</div>
+            <div style="font-size:.65rem;font-weight:800;color:#6a2a98;margin-top:2px;">施設入所</div>
+          </div>
+        </div>
+      </div>
       <div class="rc-block">
         <h5>🏠 生活介護（重症心身・医療的ケア児に多い）</h5>
         <ul>
@@ -4784,13 +5001,44 @@ function mnSwitchTab(id) {
       </div>
       <div class="rc-block">
         <h5>📝 申請の流れ</h5>
-        <ol class="rc-steps">
-          <li>市区町村の障がい者支援課に相談・申請</li>
-          <li>障害支援区分の認定調査（訪問調査＋審査会）</li>
-          <li>相談支援専門員とサービス等利用計画を作成</li>
-          <li>候補の事業所を見学・体験利用</li>
-          <li>受給者証の交付→事業所と契約→利用開始</li>
-        </ol>
+        <div style="background:#fff;border-radius:10px;padding:14px 8px;border:1px solid var(--border,#e8dcd0);margin-bottom:10px;">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#e08020;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">1</div>
+                <div style="width:2px;flex:1;background:#f0d0a0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">市区町村の障がい者支援課に相談・申請</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#e08020;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">2</div>
+                <div style="width:2px;flex:1;background:#f0d0a0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">障害支援区分の認定調査（訪問調査＋審査会）</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#e08020;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">3</div>
+                <div style="width:2px;flex:1;background:#f0d0a0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">相談支援専門員とサービス等利用計画を作成</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#e08020;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">4</div>
+                <div style="width:2px;flex:1;background:#f0d0a0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">候補の事業所を見学・体験利用</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#2f9e5c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">5</div>
+              </div>
+              <div style="font-size:.8rem;line-height:1.6;">受給者証の交付→事業所と契約→利用開始</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="rc-block">
         <h5>🔍 事業所選びのポイント</h5>
@@ -4857,6 +5105,22 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body" style="border-top:1px solid #d4a8c8;">
       <p class="rc-lead">特別障害者手当は、精神または身体に著しく重度の障がいがあり、日常生活で常時特別の介護を必要とする在宅の20歳以上の方に支給される国の手当です。</p>
+
+      <div style="background:#fff;border:1px solid #d4a8c8;border-radius:12px;padding:12px 8px;margin-bottom:14px;">
+        <div style="text-align:center;font-size:.74rem;font-weight:800;color:#8a3a6a;margin-bottom:8px;">🔄 20歳で手当が切り替わる</div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div style="flex:1;background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:.68rem;font-weight:800;color:#1a4a7a;">〜20歳未満</div>
+            <div style="font-size:.66rem;color:#5a5450;margin-top:3px;">特別児童扶養手当</div>
+          </div>
+          <div style="font-size:1.1em;color:#c8bcae;">━▶</div>
+          <div style="flex:1;background:#fdeef3;border:1.5px solid #f0a8c0;border-radius:10px;padding:8px 6px;text-align:center;">
+            <div style="font-size:.68rem;font-weight:800;color:#a83a60;">20歳以降</div>
+            <div style="font-size:.66rem;color:#5a5450;margin-top:3px;">特別障害者手当</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:.66rem;color:#8a7060;margin-top:8px;">⚠️ 自動で切り替わらない。20歳の誕生日前後に自分で申請が必要</div>
+      </div>
       <div class="rc-block">
         <h5>📋 支給額・条件</h5>
         <ul>
@@ -4892,6 +5156,23 @@ function mnSwitchTab(id) {
     </summary>
     <div class="rc-body">
       <p class="rc-lead"><strong>カルテは最終受診から5年で廃棄される場合があります。</strong>障害年金の申請に必要な「初診日の証明」が、カルテがないためにできないケースは珍しくありません。記録は今から少しずつ残しておくことが、20歳の申請をスムーズにする一番の近道です。</p>
+
+      <div style="background:#fff;border:1px solid var(--border,#e8dcd0);border-radius:12px;padding:14px 10px;margin-bottom:14px;">
+        <div style="text-align:center;font-size:.78rem;font-weight:800;color:#7a3a9a;margin-bottom:10px;">📁 カルテがなくても大丈夫、代わりになる書類</div>
+        <div style="text-align:center;margin-bottom:10px;">
+          <div style="background:#fff5f0;border:1.5px solid #f0a080;border-radius:10px;padding:8px 12px;display:inline-block;">
+            <div style="font-size:.74rem;font-weight:800;color:#a04a20;">⚠️ カルテ（5年で廃棄の可能性）</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:1.1em;color:#c8bcae;margin-bottom:8px;">▼ なければこれで代替できることも</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+          <div style="background:#f0fff4;border:1px solid #68d391;border-radius:20px;padding:6px 12px;font-size:.7rem;font-weight:700;color:#1a7a4a;">📓 お薬手帳</div>
+          <div style="background:#f0f6ff;border:1px solid #a8c8e8;border-radius:20px;padding:6px 12px;font-size:.7rem;font-weight:700;color:#1a4a7a;">🎫 診察券</div>
+          <div style="background:#fff8e8;border:1px solid #f0c060;border-radius:20px;padding:6px 12px;font-size:.7rem;font-weight:700;color:#8a6000;">🧾 領収書</div>
+          <div style="background:#f3eef8;border:1px solid #c4a8d8;border-radius:20px;padding:6px 12px;font-size:.7rem;font-weight:700;color:#6a2a98;">✉️ 紹介状</div>
+          <div style="background:#fdeef3;border:1px solid #f0a8c0;border-radius:20px;padding:6px 12px;font-size:.7rem;font-weight:700;color:#a83a60;">👤 第三者証明</div>
+        </div>
+      </div>
       <div class="rc-block">
         <h5>⚠️ なぜ記録が大事か</h5>
         <ul>
@@ -4972,13 +5253,44 @@ function mnSwitchTab(id) {
       </div>
       <div class="rc-block">
         <h5>📝 申請の流れ（5ステップ）</h5>
-        <ol class="rc-steps">
-          <li><strong>20歳の誕生日の3か月前ごろから準備。</strong>市区町村の国民年金窓口か年金事務所へ相談する</li>
-          <li><strong>初診日を確認する。</strong>最初に医療機関を受診した日。先天性疾患・脳性麻痺・発達障がい・知的障がいなどは「20歳前初診」として扱われることが多い</li>
-          <li><strong>診断書を医師に作成してもらう。</strong>障がいの種類によって書式が異なる（肢体不自由・知的障がい・精神障がい・内部障がい・呼吸器障がい など）</li>
-          <li><strong>必要書類を集める。</strong>年金請求書・診断書・本人確認書類・通帳・戸籍や住民票関係書類・病歴就労状況等申立書 など</li>
-          <li><strong>市役所または年金事務所へ提出。</strong>提出後は審査（数か月かかることがある）</li>
-        </ol>
+        <div style="background:#fff;border-radius:10px;padding:14px 8px;border:1px solid var(--border,#e8dcd0);margin-bottom:10px;">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">1</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">20歳の誕生日の3か月前ごろから準備。市区町村の国民年金窓口か年金事務所へ相談</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">2</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">初診日を確認する（先天性疾患・脳性麻痺などは「20歳前初診」）</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">3</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">診断書を医師に作成してもらう（障がいの種類で書式が異なる）</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#3a7ec8;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">4</div>
+                <div style="width:2px;flex:1;background:#c8dcf0;min-height:20px;"></div>
+              </div>
+              <div style="padding-bottom:14px;font-size:.8rem;line-height:1.6;">必要書類を集める（年金請求書・本人確認書類・戸籍関係など）</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:30px;height:30px;border-radius:50%;background:#2f9e5c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;">5</div>
+              </div>
+              <div style="font-size:.8rem;line-height:1.6;">市役所または年金事務所へ提出。審査（数か月かかることがある）</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="rc-block">
         <h5>🏥 医療的ケア児のケース</h5>
@@ -5806,6 +6118,28 @@ function mnSwitchTab(id) {
     <div class="rc-body">
       <p class="rc-lead">障がいのある方を扶養している保護者が毎月掛金を払い、<strong>保護者が死亡または重度障害になったとき、障がいのある方に終身で年金が支給される</strong>制度です。「親なき後」の備えとして、できるだけ早い加入が推奨されます。</p>
 
+      <div style="background:#fff;border:1px solid var(--border,#e8dcd0);border-radius:12px;padding:14px 10px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;">
+          <div style="text-align:center;">
+            <div style="font-size:1.5em;">👴👵</div>
+            <div style="font-size:.68rem;font-weight:800;color:#6a5a20;margin-top:2px;">保護者</div>
+            <div style="font-size:.6rem;color:#8a7060;">毎月掛金を払う</div>
+          </div>
+          <div style="font-size:1.2em;color:#c8bcae;">━━▶</div>
+          <div style="text-align:center;">
+            <div style="font-size:1.5em;">🏦</div>
+            <div style="font-size:.68rem;font-weight:800;color:#6a5a20;margin-top:2px;">埼玉県</div>
+            <div style="font-size:.6rem;color:#8a7060;">制度を運営</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:1.1em;color:#c8bcae;margin:6px 0;">▼ 死亡・重度障害になったとき</div>
+        <div style="text-align:center;">
+          <div style="font-size:1.5em;">🧑‍🦽</div>
+          <div style="font-size:.7rem;font-weight:800;color:#1a7a4a;margin-top:2px;">障がいのある子</div>
+          <div style="font-size:.64rem;color:#8a7060;">終身で年金を受け取る</div>
+        </div>
+      </div>
+
       <div class="rc-block">
         <h5>🧩 加入できる保護者の条件（すべて該当）</h5>
         <ul>
@@ -5878,13 +6212,38 @@ function mnSwitchTab(id) {
     <div class="rc-body" style="border-top:1px solid #c4a8d8;">
       <p class="rc-lead">特定障害者扶養信託とは、親や祖父母が障がいのある子のために財産を信託銀行に預け、生活費として定期的に給付される制度です。通常なら課税される贈与でも、一定額まで非課税になります。</p>
 
-      <div class="rc-block">
-        <h5>💰 最大のメリット：贈与税が非課税</h5>
-        <ul>
-          <li>特別障害者（重度）：<strong>6,000万円まで</strong>贈与税非課税</li>
-          <li>特別障害者以外：<strong>3,000万円まで</strong>贈与税非課税</li>
-          <li>通常の贈与税の基礎控除（年110万円）とは別枠で使える</li>
-        </ul>
+      <div style="background:#fff;border:1px solid #c4a8d8;border-radius:12px;padding:14px 10px;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;">
+          <div style="text-align:center;">
+            <div style="font-size:1.5em;">👴👵</div>
+            <div style="font-size:.66rem;font-weight:800;color:#6a2a98;margin-top:2px;">親・祖父母</div>
+          </div>
+          <div style="font-size:1.1em;color:#c8bcae;">━▶</div>
+          <div style="text-align:center;">
+            <div style="font-size:1.5em;">🏦</div>
+            <div style="font-size:.66rem;font-weight:800;color:#6a2a98;margin-top:2px;">信託銀行</div>
+          </div>
+          <div style="font-size:1.1em;color:#c8bcae;">━▶</div>
+          <div style="text-align:center;">
+            <div style="font-size:1.5em;">🧑‍🦽</div>
+            <div style="font-size:.66rem;font-weight:800;color:#1a7a4a;margin-top:2px;">障がいのある子</div>
+            <div style="font-size:.6rem;color:#8a7060;">定期的に生活費を受給</div>
+          </div>
+        </div>
+        <div style="border-top:1px dashed #d8c0e8;padding-top:10px;">
+          <div style="text-align:center;font-size:.7rem;font-weight:700;color:#6a2a98;margin-bottom:6px;">💰 贈与税の非課税枠</div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:#fdeef3;border:1.5px solid #f0a8c0;border-radius:8px;padding:8px 6px;text-align:center;">
+              <div style="font-size:.66rem;font-weight:800;color:#a83a60;">特別障害者（重度）</div>
+              <div style="font-size:.82rem;font-weight:800;color:#a83a60;margin-top:2px;">6,000万円まで</div>
+            </div>
+            <div style="flex:1;background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:8px;padding:8px 6px;text-align:center;">
+              <div style="font-size:.66rem;font-weight:800;color:#1a4a7a;">特別障害者以外</div>
+              <div style="font-size:.82rem;font-weight:800;color:#1a4a7a;margin-top:2px;">3,000万円まで</div>
+            </div>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:.66rem;color:#8a7060;margin-top:8px;">※ 通常の贈与税の基礎控除（年110万円）とは別枠で使えます</div>
       </div>
 
       <div class="rc-block">
@@ -6181,21 +6540,61 @@ function mnSwitchTab(id) {
       <p class="rc-lead">成年後見制度は、判断能力が十分でない方の財産管理や契約を、後見人がサポートする制度です。親が高齢になる前に準備しておくと安心です。</p>
       <div class="rc-block">
         <h5>📋 3つの種類（2026年6月現在）</h5>
-        <ul>
-          <li><strong>後見</strong>：判断能力がほとんどない方。後見人が代理で契約・財産管理（利用者の約8割）</li>
-          <li><strong>保佐</strong>：判断能力が著しく不十分な方。重要な契約に同意・取消権</li>
-          <li><strong>補助</strong>：判断能力が不十分な方。特定の行為をサポート</li>
-        </ul>
+        <div style="background:#fff;border:1px solid #c8a8d8;border-radius:10px;padding:12px 8px;margin-bottom:10px;">
+          <div style="text-align:center;font-size:.68rem;color:#8a7060;margin-bottom:8px;">判断能力の程度で決まる</div>
+          <div style="display:flex;gap:6px;">
+            <div style="flex:1;background:#f3eef8;border:1.5px solid #c4a8d8;border-radius:8px;padding:8px 4px;text-align:center;">
+              <div style="font-size:.7rem;font-weight:800;color:#6a2a98;">後見</div>
+              <div style="font-size:.6rem;color:#8a7060;margin-top:3px;">ほとんどない<br>（利用者の約8割）</div>
+            </div>
+            <div style="flex:1;background:#f0f6ff;border:1.5px solid #a8c8e8;border-radius:8px;padding:8px 4px;text-align:center;">
+              <div style="font-size:.7rem;font-weight:800;color:#1a4a7a;">保佐</div>
+              <div style="font-size:.6rem;color:#8a7060;margin-top:3px;">著しく不十分</div>
+            </div>
+            <div style="flex:1;background:#f0fff4;border:1.5px solid #68d391;border-radius:8px;padding:8px 4px;text-align:center;">
+              <div style="font-size:.7rem;font-weight:800;color:#1a7a4a;">補助</div>
+              <div style="font-size:.6rem;color:#8a7060;margin-top:3px;">不十分</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:.6rem;color:#9a8f87;margin-top:4px;padding:0 2px;">
+            <span>← 重い</span><span>軽い →</span>
+          </div>
+        </div>
       </div>
 
       <div class="rc-block">
         <h5>📝 申立ての流れ</h5>
-        <ol class="rc-steps">
-          <li>家庭裁判所に申立て（本人・配偶者・4親等内の親族など）</li>
-          <li>医師の診断書・鑑定（必要な場合）</li>
-          <li>審判（2〜4か月程度）</li>
-          <li>後見人が選任され、支援開始</li>
-        </ol>
+        <div style="background:#fff;border:1px solid #c8a8d8;border-radius:10px;padding:12px 8px;margin-bottom:10px;">
+          <div style="display:flex;flex-direction:column;gap:0;">
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:28px;height:28px;border-radius:50%;background:#6c3483;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;">1</div>
+                <div style="width:2px;flex:1;background:#d8b8e8;min-height:18px;"></div>
+              </div>
+              <div style="padding-bottom:12px;font-size:.78rem;line-height:1.6;">家庭裁判所に申立て（本人・配偶者・4親等内の親族など）</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:28px;height:28px;border-radius:50%;background:#6c3483;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;">2</div>
+                <div style="width:2px;flex:1;background:#d8b8e8;min-height:18px;"></div>
+              </div>
+              <div style="padding-bottom:12px;font-size:.78rem;line-height:1.6;">医師の診断書・鑑定（必要な場合）</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:28px;height:28px;border-radius:50%;background:#6c3483;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;">3</div>
+                <div style="width:2px;flex:1;background:#d8b8e8;min-height:18px;"></div>
+              </div>
+              <div style="padding-bottom:12px;font-size:.78rem;line-height:1.6;">審判（2〜4か月程度）</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:10px;">
+              <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;">
+                <div style="width:28px;height:28px;border-radius:50%;background:#2f9e5c;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;">4</div>
+              </div>
+              <div style="font-size:.78rem;line-height:1.6;">後見人が選任され、支援開始</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="rc-block">
         <h5>✅ メリット</h5>
@@ -6345,6 +6744,19 @@ function mnSwitchTab(id) {
       <p class="rc-lead">エンディングノートは遺言書と違い、法的効力はありませんが、親しか知らない情報を支援者・家族に伝えるための大切な記録です。障がいのある子どもを支える人が困らないよう、できるだけ具体的に残しておきましょう。</p>
       <div class="rc-block">
         <h5>📝 残しておきたい情報</h5>
+        <div style="background:#fff;border:1px solid #b8c8a8;border-radius:12px;padding:12px 10px;margin-bottom:10px;">
+          <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+            <div style="background:#fdeef3;border:1px solid #f0a8c0;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#a83a60;">🧑 その子のこと</div>
+            <div style="background:#f0f6ff;border:1px solid #a8c8e8;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#1a4a7a;">💬 コミュニケーション</div>
+            <div style="background:#fff5f0;border:1px solid #f0b090;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#a04a20;">🏥 医療情報</div>
+            <div style="background:#f3eef8;border:1px solid #c4a8d8;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#6a2a98;">💉 医療的ケア</div>
+            <div style="background:#f0fff4;border:1px solid #68d391;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#1a7a4a;">🏢 福祉サービス</div>
+            <div style="background:#fff8e8;border:1px solid #f0c060;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#8a6000;">🕐 日常生活</div>
+            <div style="background:#fff0f0;border:1px solid #f0a0a0;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#a83a3a;">📞 緊急連絡先</div>
+            <div style="background:#eef0f4;border:1px solid #b0b8c8;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#4a5470;">💰 財産・お金</div>
+            <div style="background:#faf5ec;border:1px solid #d8c0a0;border-radius:20px;padding:6px 11px;font-size:.7rem;font-weight:700;color:#7a5a2a;">💌 親の想い</div>
+          </div>
+        </div>
         <ul>
           <li><strong>その子のこと</strong>：好きなこと・苦手なこと・安心する場所・人・もの</li>
           <li><strong>コミュニケーション</strong>：伝え方・受け取り方・パニック時の対応</li>
@@ -8553,6 +8965,10 @@ function bindSgChecks(listSel, progSel, total, label){
    ===================================================================== */
 function renderNenkinCard(){
   bindSgChecks("#nenkinCheckList","#nenkinProg",5,"今からできること");
+}
+function toggle(btn){
+  const item = btn.closest('.acc-item');
+  if(item) item.classList.toggle('open');
 }
 function renderEtcCard(){
   bindSgChecks("#etcCheckList","#etcProg",4,"準備リスト");
