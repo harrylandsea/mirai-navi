@@ -85,11 +85,11 @@ header{
 /* ── アラートバナー ── */
 .alert{
   background:linear-gradient(135deg,#fdece6,#fff6ef);
-  border:1.5px solid #f3c9b8;border-radius:var(--radius);
-  padding:18px 20px;margin-bottom:20px;
+  border:1px solid #f3c9b8;border-radius:var(--radius);
+  padding:18px 20px 18px 22px;margin-bottom:20px;
   box-shadow:var(--shadow);position:relative;overflow:hidden;
 }
-.alert::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--c-live);}
+.alert::before{content:"";position:absolute;top:0;left:0;bottom:0;width:4px;background:var(--c-live);}
 .alert-label{font-size:.7rem;font-weight:800;letter-spacing:.12em;color:var(--c-live);margin-bottom:4px;}
 .alert-title{font-size:1.05rem;font-weight:800;margin-bottom:6px;}
 .alert-body{font-size:.86rem;color:var(--ink-soft);line-height:1.85;}
@@ -300,7 +300,7 @@ html.dark{
   </div>
 
   <!-- 自治体注記 -->
-  <div class="note" style="margin-bottom:16px;background:rgba(91,155,213,.07);border:1px solid rgba(91,155,213,.2);">
+  <div class="note" style="margin-bottom:16px;background:rgba(91,155,213,.07);border:1px solid rgba(91,155,213,.2);border-radius:var(--radius);padding:13px 16px;">
     📌 <strong style="color:#2a6aaa;">このページを読む前に：</strong>印鑑登録制度の運用は自治体ごとに異なります。本ページの情報は一般的な説明であり、お住まいの自治体の窓口で必ずご確認ください。
   </div>
 
