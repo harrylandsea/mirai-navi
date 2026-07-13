@@ -1525,7 +1525,7 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   <div class="sp-title">みらいナビ</div>
   <div class="sp-sub">その子らしく生きるナビ</div>
   <div class="sp-concept">
-    <p>医療的ケアや障がいのあるお子さんと<br>家族のための、<strong>福祉ナビゲーション</strong>。<br><br>制度・手帳・通いはじめる・進路——<br>必要な情報を、必要なときに。<br>春日部市とその周辺エリアに対応。</p>
+    <p>医療的ケアや障がいのあるお子さんと<br>家族のための、<strong>福祉ナビゲーション</strong>。<br><br>制度・手帳・通いはじめる・進路——<br>必要な情報を、必要なときに。<br>制度の解説は全国共通、相談窓口や事業所情報は春日部市を中心に掲載しています。</p>
   </div>
   <button class="sp-btn" id="splashBtn" onclick="closeSplash()">はじめる →</button>
   <div class="sp-note">タップするとアプリが開きます</div>
@@ -7746,14 +7746,28 @@ function mnSwitchTab(id) {
       <div class="ss-inner">
         <div class="kojin-card">
           <div class="kc-title">📋 個別避難計画に書く内容</div>
-          <ul>
-            <li>どんな障がいか・医療ケアの内容</li>
-            <li>避難方法（自力・車・要支援など）</li>
-            <li>支援してくれる人の連絡先</li>
-            <li>避難先（一般避難所・福祉避難所）</li>
-            <li>使っている機器と電源の必要量</li>
-            <li>かかりつけ医・訪問看護の連絡先</li>
-          </ul>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;align-items:center;gap:10px;background:#f7f0fa;border:1px solid #d8bce8;border-radius:10px;padding:8px 10px;">
+              <div style="font-size:.78rem;font-weight:800;color:#6a3a8a;white-space:nowrap;">🏥 障がい・医療ケアの内容</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#f7f0fa;border:1px solid #d8bce8;border-radius:10px;padding:8px 10px;">
+              <div style="font-size:.78rem;font-weight:800;color:#6a3a8a;white-space:nowrap;">🚗 避難方法</div>
+              <div style="font-size:.68rem;color:#8a6a9a;">自力・車・要支援など</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#f7f0fa;border:1px solid #d8bce8;border-radius:10px;padding:8px 10px;">
+              <div style="font-size:.78rem;font-weight:800;color:#6a3a8a;white-space:nowrap;">🤝 支援してくれる人の連絡先</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#f7f0fa;border:1px solid #d8bce8;border-radius:10px;padding:8px 10px;">
+              <div style="font-size:.78rem;font-weight:800;color:#6a3a8a;white-space:nowrap;">🏫 避難先</div>
+              <div style="font-size:.68rem;color:#8a6a9a;">一般避難所・福祉避難所</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#f7f0fa;border:1px solid #d8bce8;border-radius:10px;padding:8px 10px;">
+              <div style="font-size:.78rem;font-weight:800;color:#6a3a8a;white-space:nowrap;">🔌 機器と電源の必要量</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;background:#f7f0fa;border:1px solid #d8bce8;border-radius:10px;padding:8px 10px;">
+              <div style="font-size:.78rem;font-weight:800;color:#6a3a8a;white-space:nowrap;">📞 かかりつけ医・訪問看護の連絡先</div>
+            </div>
+          </div>
         </div>
         <div style="font-size:.88rem;color:var(--ink-soft);line-height:1.85;margin-top:4px">
           お住まいの市区町村の<strong style="color:var(--ink)">福祉課・防災課</strong>で相談できます。国も個別避難計画の作成を推進しています。相談支援専門員と一緒に作るのもおすすめです。
@@ -8455,6 +8469,12 @@ const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
    タブ切替
    ===================================================================== */
 function goTab(id, scrollTargetId){
+  // 制度タブの全画面オーバーレイ（詳細・一覧）が開いていたら閉じる
+  const seidoDetailView = document.getElementById('seidoDetailView');
+  const seidoListView = document.getElementById('seidoListView');
+  if(seidoDetailView) seidoDetailView.classList.remove('open');
+  if(seidoListView) seidoListView.classList.remove('open');
+
   $$(".panel").forEach(p=>p.classList.remove("on"));
   $$(".tab").forEach(t=>t.classList.remove("on"));
   const panel = $(`#tab-${id}`);
@@ -8935,7 +8955,7 @@ const CHECK_PLAN = [
   {q:"避難所の場所を確認した",hint:"ハザードマップで自宅の危険度も一緒に確認を"},
   {q:"車での避難ルートを決めた",hint:"医療機器があるため徒歩より車避難が多い"},
   {q:"福祉避難所の場所を確認した",hint:"市に問い合わせると一覧を教えてもらえる"},
-  {q:"避難行動要支援者名簿に登録した",hint:"市区町村の福祉課・防災課に申し出ると登録できる。避難支援を受けやすくなる制度"},
+  {q:"避難行動要支援者名簿に登録した",hint:"春日部市は希望登録制。危機管理防災課（048-739-6830）に登録届出書を提出すると、地域の支援者に情報が共有される。<a href='https://www.city.kasukabe.lg.jp/soshikikarasagasu/bosaitaisakuka/gyomuannai/3/2/25077.html' target='_blank' rel='noopener' onclick='event.stopPropagation()' style='color:#1a4a7a;text-decoration:underline;'>春日部市公式ページ →</a>"},
   {q:"家族との連絡方法を決めた",hint:"災害用伝言ダイヤル171・Web171・SNS等、複数の手段を確認しておく"},
   {q:"誰が子どもを抱えて動くか決めた",hint:"保護者が1人の場合は近隣の支援者も"},
   {q:"停電時の対応手順を決めた",hint:"機器メーカーの緊急連絡先も控えておく"},
