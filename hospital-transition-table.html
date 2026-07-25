@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+<title>受診科・病院 整理シート | みらいナビ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;800&family=Kosugi&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:        #fbf7f0;
+  --bg-card:   #ffffff;
+  --bg-soft:   #fdf3e8;
+  --ink:       #3a3330;
+  --ink-soft:  #6b625c;
+  --ink-faint: #9a8f87;
+  --line:      #ece2d4;
+  --c-live:   #e8896b;
+  --c-grow:   #7bb274;
+  --c-connect:#5b9bd5;
+  --c-act:    #d97aa5;
+  --c-support:#5fb3b3;
+  --p-know:   #c8901a;
+  --radius:   18px;
+  --radius-sm:13px;
+  --shadow:   0 2px 4px rgba(58,51,48,.04), 0 8px 24px rgba(58,51,48,.06);
+  --maxw: 980px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px 90px}
+
+.mini-brand{display:flex;align-items:center;gap:9px;font-family:"Kosugi",sans-serif;font-size:15px;letter-spacing:.06em;padding:18px 0 0;color:var(--ink-soft)}
+.mini-brand .star{width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:14px;background:linear-gradient(135deg,#fde3b8,#f7c873);box-shadow:0 4px 12px rgba(240,177,62,.35)}
+
+.hero{text-align:center;padding:16px 0 8px}
+.hero .eyebrow{display:inline-block;font-size:.74rem;font-weight:700;letter-spacing:.14em;color:var(--c-act);background:rgba(217,122,165,.10);padding:5px 15px;border-radius:30px;margin-bottom:14px}
+.hero h1{font-size:clamp(1.5rem,5vw,2.1rem);font-weight:800;line-height:1.32;margin-bottom:11px}
+.hero p{font-size:.92rem;color:var(--ink-soft);max-width:600px;margin:0 auto}
+
+section{padding:26px 0 6px}
+.sec-head{margin-bottom:16px}
+.sec-head .kicker{font-size:.7rem;font-weight:800;letter-spacing:.16em;color:var(--ink-faint);text-transform:uppercase;margin-bottom:5px}
+.sec-head p{color:var(--ink-soft);font-size:.86rem;margin-top:4px;line-height:1.75}
+
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px}
+.tb-btn{border:1.5px solid var(--c-support);background:var(--bg-card);color:var(--c-support);padding:9px 16px;border-radius:100px;font-size:.85rem;font-weight:700;transition:.16s}
+.tb-btn:hover{background:var(--c-support);color:#fff}
+.tb-btn.primary{background:var(--c-act);border-color:var(--c-act);color:#fff}
+.tb-btn.primary:hover{background:#c85f8a}
+.tb-btn.ghost{border-color:var(--line);color:var(--ink-faint)}
+.tb-btn.ghost:hover{background:var(--bg-soft);color:var(--ink)}
+
+.table-scroll{overflow-x:auto;background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:6px}
+table{border-collapse:collapse;width:100%;min-width:920px}
+thead th{background:var(--c-support);color:#fff;font-weight:800;font-size:.78rem;text-align:left;padding:10px}
+thead th:first-child{border-top-left-radius:11px}
+thead th:last-child{border-top-right-radius:11px}
+tbody td{border-bottom:1px solid var(--line);padding:6px;vertical-align:top}
+tbody tr:nth-child(even){background:var(--bg-soft)}
+td textarea,td input{width:100%;border:1px solid transparent;background:transparent;font-family:inherit;font-size:.82rem;color:var(--ink);padding:6px 8px;border-radius:8px;resize:vertical;min-height:44px;overflow:hidden;line-height:1.5}
+td textarea:focus,td input:focus{outline:none;border-color:var(--c-support);background:#fff}
+td.status-cell select{width:100%;border:1px solid transparent;background:transparent;font-family:inherit;font-size:.82rem;padding:6px;border-radius:8px;color:var(--ink)}
+td.status-cell select:focus{outline:none;border-color:var(--c-support);background:#fff}
+.row-del{background:none;border:none;color:#b56;cursor:pointer;font-size:16px;padding:4px 8px}
+.row-del:hover{color:var(--c-live)}
+col.col-dept{width:11%}col.col-hosp{width:14%}col.col-care{width:15%}
+col.col-window{width:14%}col.col-status{width:11%}col.col-q{width:19%}
+col.col-memo{width:14%}col.col-del{width:34px}
+
+.note-box{background:var(--bg-soft);border-radius:var(--radius-sm);padding:14px 16px;font-size:.8rem;color:var(--ink-soft);margin-top:18px;line-height:1.75}
+.note-box b{color:var(--ink)}
+
+.linkback{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:var(--c-support);margin-top:4px}
+
+footer{text-align:center;font-size:.74rem;color:var(--ink-faint);padding:24px 0 8px}
+
+@media print{
+  .mini-brand,.toolbar,.linkback,footer{display:none !important}
+  body{background:#fff}
+  .table-scroll{box-shadow:none;padding:0;border:1px solid #ccc}
+  thead th{background:#e9e4d6 !important;color:#26332f !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  td textarea,td input{border:1px solid #ccc !important;background:#fff !important}
+  .row-del{display:none}
+  .wrap{max-width:100%;padding:0 8px}
+  section{padding:10px 0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mini-brand"><span class="star">🧭</span>みらいナビ</div>
+
+  <header class="hero">
+    <div class="eyebrow">医療引き継ぎシミュレーター・付録</div>
+    <h1>受診科・病院 整理シート</h1>
+    <p>科や病院がいくつも分かれている場合、1枚にまとめておくと、先生と話すときも家族の中で共有するときも整理しやすくなります。印刷して診察に持っていくこともできます。</p>
+  </header>
+
+  <section>
+    <div class="sec-head">
+      <div class="kicker">使い方</div>
+      <p>今かかっている科・病院を1行ずつ入力してください。「確認したいこと」にはシミュレーターの質問例を書き写すと便利です。診察のあとに「先生と話したメモ」を書き足していけば、そのまま記録として残せます。</p>
+    </div>
+
+    <div class="toolbar">
+      <button class="tb-btn primary" onclick="addRow()">＋ 行を追加</button>
+      <button class="tb-btn" onclick="window.print()">印刷する / PDFで保存</button>
+      <button class="tb-btn ghost" onclick="resetExample()">例を消して空にする</button>
+    </div>
+
+    <div class="table-scroll">
+      <table id="sheet-table">
+        <colgroup>
+          <col class="col-dept"><col class="col-hosp"><col class="col-care">
+          <col class="col-window"><col class="col-status"><col class="col-q">
+          <col class="col-memo"><col class="col-del">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>診療科</th><th>病院・医療機関</th><th>担当している内容</th>
+            <th>成人移行の窓口</th><th>移行の状況</th><th>確認したいこと</th>
+            <th>先生と話したメモ</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="sheet-body"></tbody>
+      </table>
+    </div>
+
+    <div class="note-box">
+      <b>メモ：</b>この表はブラウザ内だけで保持され、ページを閉じると内容は消えます。書き終えたら印刷（PDF保存）するか、内容を控えておいてください。
+    </div>
+    <a href="iryo-transition-simulator.html" class="linkback">← 医療引き継ぎシミュレーターに戻る</a>
+  </section>
+</div>
+<footer>みらいナビ　医療引き継ぎシミュレーター・付録</footer>
+
+<script>
+  const STATUS_OPTIONS = ['未確認','確認中','継続予定','移行済み','わからない'];
+  const EXAMPLE_ROWS = [
+    { dept:'歯科', hosp:'◯◯病院（例：小児医療センター）', care:'歯科治療・管理', window:'', status:'未確認', q:'成人歯科への移行時期は？', memo:'' },
+    { dept:'耳鼻科', hosp:'◯◯病院（例：小児医療センター）', care:'', window:'', status:'未確認', q:'', memo:'' },
+    { dept:'眼科', hosp:'◯◯病院（例：小児医療センター）', care:'', window:'', status:'未確認', q:'', memo:'' },
+    { dept:'小児外科', hosp:'◯◯病院（例：小児医療センター）', care:'胃ろう交換など', window:'', status:'確認中', q:'胃ろう交換は今後もお願いできますか？／経腸栄養の管理はどこが担当しますか？', memo:'' },
+    { dept:'小児科', hosp:'△△病院（例：地域の医療センター）', care:'全体の健康管理', window:'', status:'確認中', q:'他の科との情報共有はどうなっていますか？／紹介状はまとめて出せますか？', memo:'' },
+  ];
+
+  function statusSelectHtml(current){
+    return STATUS_OPTIONS.map(s=>`<option value="${s}" ${s===current?'selected':''}>${s}</option>`).join('');
+  }
+  function autoGrow(el){
+    el.style.height='auto';
+    el.style.height=(el.scrollHeight)+'px';
+  }
+  function makeRow(data){
+    data = data || { dept:'', hosp:'', care:'', window:'', status:'未確認', q:'', memo:'' };
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><textarea rows="1">${data.dept}</textarea></td>
+      <td><textarea rows="1">${data.hosp}</textarea></td>
+      <td><textarea rows="1">${data.care}</textarea></td>
+      <td><textarea rows="1">${data.window}</textarea></td>
+      <td class="status-cell"><select>${statusSelectHtml(data.status)}</select></td>
+      <td><textarea rows="1">${data.q}</textarea></td>
+      <td><textarea rows="1">${data.memo}</textarea></td>
+      <td><button class="row-del" onclick="this.closest('tr').remove()" title="この行を削除">✕</button></td>
+    `;
+    tr.querySelectorAll('textarea').forEach(ta=>{
+      ta.addEventListener('input', ()=>autoGrow(ta));
+    });
+    return tr;
+  }
+  function addRow(data){
+    const tr = makeRow(data);
+    document.getElementById('sheet-body').appendChild(tr);
+    tr.querySelectorAll('textarea').forEach(ta=>autoGrow(ta));
+  }
+  function loadExample(){
+    document.getElementById('sheet-body').innerHTML='';
+    EXAMPLE_ROWS.forEach(r=>addRow(r));
+  }
+  function resetExample(){
+    if(confirm('入力内容を消して空の行に戻しますか？')){
+      document.getElementById('sheet-body').innerHTML='';
+      for(let i=0;i<3;i++) addRow();
+    }
+  }
+  loadExample();
+</script>
+</body>
+</html>
