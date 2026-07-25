@@ -3838,8 +3838,8 @@ function mnSwitchTab(id) {
 
       <div style="background:#fff;border:1px solid #bfe3de;border-radius:12px;padding:16px 12px;margin-bottom:14px;">
         <div style="text-align:center;font-size:.7rem;font-weight:800;color:#8a7060;letter-spacing:.06em;margin-bottom:10px;">法律の対象範囲がどう変わったか</div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
-          <div style="text-align:center;flex:1;min-width:120px;background:#fdf3e8;border-radius:12px;padding:12px 8px;">
+        <div style="display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap;">
+          <div style="text-align:center;flex:1;min-width:120px;background:#fdf3e8;border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;justify-content:flex-start;">
             <div style="font-size:.68rem;font-weight:800;color:#a3501f;margin-bottom:6px;">これまで（2021年法）</div>
             <div style="font-size:1.6em;">🧒</div>
             <div style="font-size:.72rem;color:#6b625c;margin-top:4px;">医療的ケア<strong>児</strong><br>（18歳未満）</div>
@@ -3847,8 +3847,8 @@ function mnSwitchTab(id) {
             <div style="font-size:1.4em;">🚧</div>
             <div style="font-size:.68rem;color:#a3501f;font-weight:700;">支援の対象から外れがち<br>（18歳の壁）</div>
           </div>
-          <div style="font-size:1.4em;color:#5fb3b3;font-weight:800;">→</div>
-          <div style="text-align:center;flex:1;min-width:120px;background:#e6f5f3;border-radius:12px;padding:12px 8px;">
+          <div style="font-size:1.4em;color:#5fb3b3;font-weight:800;align-self:center;">→</div>
+          <div style="text-align:center;flex:1;min-width:120px;background:#e6f5f3;border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;justify-content:flex-start;">
             <div style="font-size:.68rem;font-weight:800;color:#1a7a6e;margin-bottom:6px;">改正後（2026年法）</div>
             <div style="font-size:1.6em;">🧒→🧑</div>
             <div style="font-size:.72rem;color:#6b625c;margin-top:4px;">医療的ケア児<strong>等</strong><br>＋重症心身障害者</div>
@@ -3861,17 +3861,57 @@ function mnSwitchTab(id) {
 
       <div class="rc-block">
         <h5 style="color:#1a7a6e;">🧩 主な変更点（4つ）</h5>
-        <ul>
-          <li><strong>①「18歳の壁」の解消：</strong>成人後の医療的ケア者・重症心身障害者も法律の対象に。就労・住まい・生涯学習まで、国や自治体が支える責務を負う</li>
-          <li><strong>②学校の付き添い負担の軽減：</strong>授業や修学旅行への参加に、保護者の付き添いを前提としない体制づくりを法律上明記。看護師不足を補う介護従事者（痰の吸引等）の配置も推進。対象は大学・高専にも拡大</li>
-          <li><strong>③レスパイト（息抜き・夜間支援）の強化：</strong>一時預かりの拡充と、夜間に自宅で受けられる医療・福祉サービスの体制整備</li>
-          <li><strong>④ピアサポートの法定化：</strong>家族同士の交流・支え合いへの支援が法律に位置づけられる</li>
-        </ul>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px;">
+          <div style="background:#fff;border:1px solid #bfe3de;border-radius:12px;padding:12px 10px;text-align:center;">
+            <div style="font-size:1.5em;">🚪</div>
+            <div style="font-size:.72rem;font-weight:800;color:#1a7a6e;margin:6px 0 3px;">①「18歳の壁」の解消</div>
+            <div style="font-size:.68rem;color:var(--ink-soft);line-height:1.6;">成人後も対象に。就労・住まい・生涯学習まで国や自治体が支える責務</div>
+          </div>
+          <div style="background:#fff;border:1px solid #bfe3de;border-radius:12px;padding:12px 10px;text-align:center;">
+            <div style="font-size:1.5em;">🎒</div>
+            <div style="font-size:.72rem;font-weight:800;color:#1a7a6e;margin:6px 0 3px;">②付き添い負担の軽減</div>
+            <div style="font-size:.68rem;color:var(--ink-soft);line-height:1.6;">授業・修学旅行に付き添い不要な体制を明記。大学・高専にも対象拡大</div>
+          </div>
+          <div style="background:#fff;border:1px solid #bfe3de;border-radius:12px;padding:12px 10px;text-align:center;">
+            <div style="font-size:1.5em;">🌙</div>
+            <div style="font-size:.72rem;font-weight:800;color:#1a7a6e;margin:6px 0 3px;">③レスパイトの強化</div>
+            <div style="font-size:.68rem;color:var(--ink-soft);line-height:1.6;">一時預かりの拡充と、夜間に自宅で受けられる医療・福祉サービス</div>
+          </div>
+          <div style="background:#fff;border:1px solid #bfe3de;border-radius:12px;padding:12px 10px;text-align:center;">
+            <div style="font-size:1.5em;">🤝</div>
+            <div style="font-size:.72rem;font-weight:800;color:#1a7a6e;margin:6px 0 3px;">④ピアサポート法定化</div>
+            <div style="font-size:.68rem;color:var(--ink-soft);line-height:1.6;">家族同士の交流・支え合いへの支援が法律に位置づけられる</div>
+          </div>
+        </div>
       </div>
 
       <div class="rc-block">
         <h5 style="color:#1a7a6e;">🏛️ 相談窓口も変わります</h5>
-        <p style="font-size:.85rem;color:var(--ink-soft);">「医療的ケア児支援センター」は<strong>「医療的ケア児等支援センター」</strong>に改称され、対象年齢の壁なく相談できる窓口になります。あわせて、医療・福祉・教育の関係者が連携する<strong>「地域協議会」</strong>が新設され、家族だけで複数の病院・機関を調整しなくてよい体制づくりが進められます。</p>
+        <div style="background:#fff;border:1px solid #bfe3de;border-radius:12px;padding:14px 10px;margin:10px 0;">
+          <div style="display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap;">
+            <div style="text-align:center;flex:1;min-width:120px;background:#fdf3e8;border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;justify-content:flex-start;">
+              <div style="font-size:.66rem;font-weight:800;color:#a3501f;margin-bottom:6px;">これまで</div>
+              <div style="font-size:1.5em;">👪</div>
+              <div style="font-size:.68rem;color:#6b625c;margin-top:4px;line-height:1.6;">家族が病院・学校・福祉を<br>それぞれ個別に調整</div>
+            </div>
+            <div style="font-size:1.4em;color:#5fb3b3;font-weight:800;align-self:center;">→</div>
+            <div style="text-align:center;flex:1;min-width:120px;background:#e6f5f3;border-radius:12px;padding:12px 8px;display:flex;flex-direction:column;justify-content:flex-start;">
+              <div style="font-size:.66rem;font-weight:800;color:#1a7a6e;margin-bottom:6px;">改正後</div>
+              <div style="font-size:1.5em;">🏛️🤝</div>
+              <div style="font-size:.68rem;color:#6b625c;margin-top:4px;line-height:1.6;">センター＋地域協議会が<br>関係機関をつなぐ場になる</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px;">
+          <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #bfe3de;border-radius:10px;padding:10px 12px;">
+            <span style="font-size:1.2em;flex:none;">🏥</span>
+            <div style="font-size:.76rem;color:var(--ink-soft);"><strong style="color:#1a7a6e;">名称変更：</strong>「医療的ケア児支援センター」→「医療的ケア児<strong>等</strong>支援センター」。対象年齢の壁なく相談できる</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #bfe3de;border-radius:10px;padding:10px 12px;">
+            <span style="font-size:1.2em;flex:none;">🆕</span>
+            <div style="font-size:.76rem;color:var(--ink-soft);"><strong style="color:#1a7a6e;">新設：</strong>医療・福祉・教育の関係者が連携する「地域協議会」ができる</div>
+          </div>
+        </div>
         <button class="rc-btn" style="width:100%;background:#fff;color:#1a7a6e;border:1.5px solid #5fb3b3;border-radius:var(--radius-sm);padding:11px 14px;font-size:.85rem;font-weight:800;cursor:pointer;text-align:left;margin-top:10px;" onclick="goTab('links')">📞 埼玉県医療的ケア児等支援センターの連絡先を見る →</button>
       </div>
 
@@ -3881,7 +3921,6 @@ function mnSwitchTab(id) {
         <a href="https://www.cfa.go.jp/policies/shougaijishien/care-ji-shien" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 こども家庭庁：医療的ケア児支援施策</a>
       </div>
     </div>
-  </div>
   </div>
 
   <!-- サブタブナビ -->
