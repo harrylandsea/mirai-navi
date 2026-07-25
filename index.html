@@ -1488,6 +1488,9 @@ footer .fn{font-size:.76rem;color:var(--ink-faint);margin-top:12px;max-width:540
   display:none !important;
 }
 
+/* 法改正バナーカードの開閉（detailsに依存しない独自トグル） */
+.lawcard.collapsed > .rc-body{display:none !important}
+
 /* 制度一覧カード */
 .seido-list-card{
   display:flex;align-items:center;gap:12px;
@@ -3818,6 +3821,67 @@ function mnSwitchTab(id) {
 
   <div style="background:#f0f4f7;border-radius:12px;padding:10px 14px;margin-bottom:14px;font-size:11.5px;color:#5a6a7a;line-height:1.7;">
     ℹ️ 制度の内容・金額・対象条件は<strong>自治体や障がいの状態によって異なります</strong>。申請の前に必ずお住まいの自治体窓口でご確認ください。
+  </div>
+
+  <!-- 医療的ケア児支援法 改正（2026年7月）-->
+  <div class="lawcard" style="border:1.5px solid #5fb3b3;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#e6f5f3,#f6fdfc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <div onclick="var c=this.closest('.lawcard');c.classList.toggle('collapsed');this.querySelector('.lc-chev').textContent=c.classList.contains('collapsed')?'▶':'▼';" style="cursor:pointer;display:flex;align-items:center;gap:13px;padding:16px 18px;">
+      <div class="rc-icon" style="background:linear-gradient(135deg,#2f9d94,#1a7a6e);box-shadow:0 5px 14px rgba(47,157,148,.4);">📜</div>
+      <div class="rc-htext">
+        <div class="rc-tag" style="color:#1a7a6e;">🆕 2026年7月成立・法改正</div>
+        <div class="rc-title">医療的ケア児支援法が変わります</div>
+      </div>
+      <span class="lc-chev" style="margin-left:auto;color:#1a7a6e;font-size:.85rem;flex:none;">▼</span>
+    </div>
+    <div class="rc-body" style="border-top:1px solid #bfe3de;display:block;padding:4px 18px 20px;">
+      <p class="rc-lead" style="color:#1a7a6e;">2021年に成立した「医療的ケア児支援法」が2026年7月24日に改正され、対象が<strong>「子どものときだけ」から「大人になっても、生涯にわたって」</strong>に広がりました。長年の課題だった「18歳の壁」を解消するための改正です。</p>
+
+      <div style="background:#fff;border:1px solid #bfe3de;border-radius:12px;padding:16px 12px;margin-bottom:14px;">
+        <div style="text-align:center;font-size:.7rem;font-weight:800;color:#8a7060;letter-spacing:.06em;margin-bottom:10px;">法律の対象範囲がどう変わったか</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;">
+          <div style="text-align:center;flex:1;min-width:120px;background:#fdf3e8;border-radius:12px;padding:12px 8px;">
+            <div style="font-size:.68rem;font-weight:800;color:#a3501f;margin-bottom:6px;">これまで（2021年法）</div>
+            <div style="font-size:1.6em;">🧒</div>
+            <div style="font-size:.72rem;color:#6b625c;margin-top:4px;">医療的ケア<strong>児</strong><br>（18歳未満）</div>
+            <div style="font-size:.9em;color:#c85f2f;margin:8px 0;">▼ 18歳になると…</div>
+            <div style="font-size:1.4em;">🚧</div>
+            <div style="font-size:.68rem;color:#a3501f;font-weight:700;">支援の対象から外れがち<br>（18歳の壁）</div>
+          </div>
+          <div style="font-size:1.4em;color:#5fb3b3;font-weight:800;">→</div>
+          <div style="text-align:center;flex:1;min-width:120px;background:#e6f5f3;border-radius:12px;padding:12px 8px;">
+            <div style="font-size:.68rem;font-weight:800;color:#1a7a6e;margin-bottom:6px;">改正後（2026年法）</div>
+            <div style="font-size:1.6em;">🧒→🧑</div>
+            <div style="font-size:.72rem;color:#6b625c;margin-top:4px;">医療的ケア児<strong>等</strong><br>＋重症心身障害者</div>
+            <div style="font-size:.9em;color:#1a7a6e;margin:8px 0;">▼ 年齢の壁なく</div>
+            <div style="font-size:1.4em;">🏠</div>
+            <div style="font-size:.68rem;color:#1a7a6e;font-weight:700;">生涯、地域で<br>切れ目なく支援</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rc-block">
+        <h5 style="color:#1a7a6e;">🧩 主な変更点（4つ）</h5>
+        <ul>
+          <li><strong>①「18歳の壁」の解消：</strong>成人後の医療的ケア者・重症心身障害者も法律の対象に。就労・住まい・生涯学習まで、国や自治体が支える責務を負う</li>
+          <li><strong>②学校の付き添い負担の軽減：</strong>授業や修学旅行への参加に、保護者の付き添いを前提としない体制づくりを法律上明記。看護師不足を補う介護従事者（痰の吸引等）の配置も推進。対象は大学・高専にも拡大</li>
+          <li><strong>③レスパイト（息抜き・夜間支援）の強化：</strong>一時預かりの拡充と、夜間に自宅で受けられる医療・福祉サービスの体制整備</li>
+          <li><strong>④ピアサポートの法定化：</strong>家族同士の交流・支え合いへの支援が法律に位置づけられる</li>
+        </ul>
+      </div>
+
+      <div class="rc-block">
+        <h5 style="color:#1a7a6e;">🏛️ 相談窓口も変わります</h5>
+        <p style="font-size:.85rem;color:var(--ink-soft);">「医療的ケア児支援センター」は<strong>「医療的ケア児等支援センター」</strong>に改称され、対象年齢の壁なく相談できる窓口になります。あわせて、医療・福祉・教育の関係者が連携する<strong>「地域協議会」</strong>が新設され、家族だけで複数の病院・機関を調整しなくてよい体制づくりが進められます。</p>
+        <button class="rc-btn" style="width:100%;background:#fff;color:#1a7a6e;border:1.5px solid #5fb3b3;border-radius:var(--radius-sm);padding:11px 14px;font-size:.85rem;font-weight:800;cursor:pointer;text-align:left;margin-top:10px;" onclick="goTab('links')">📞 埼玉県医療的ケア児等支援センターの連絡先を見る →</button>
+      </div>
+
+      <div class="rc-note">⚠️ <strong>施行は令和9年4月1日（2027年4月1日）</strong>の予定です。成立はしましたが、今すぐ体制が変わるわけではありません。今後の自治体の動きは、埼玉県・春日部市の発表を確認してください。</div>
+
+      <div class="rc-actions">
+        <a href="https://www.cfa.go.jp/policies/shougaijishien/care-ji-shien" target="_blank" rel="noopener" class="rc-btn rc-btn-web">🌐 こども家庭庁：医療的ケア児支援施策</a>
+      </div>
+    </div>
+  </div>
   </div>
 
   <!-- サブタブナビ -->
@@ -7908,6 +7972,31 @@ function mnSwitchTab(id) {
         <ul>
           <li><a href="https://www.pref.saitama.lg.jp/a0705/nanbyo/ichijinyuin.html" target="_blank" rel="noopener" style="color:#1a4a9a;">埼玉県：難病患者一時入院事業 →</a></li>
           <li><a href="https://www.pref.saitama.lg.jp/a0604/fukusiguide/guide2_7.html" target="_blank" rel="noopener" style="color:#1a4a9a;">埼玉県：福祉ガイド →</a></li>
+        </ul>
+      </div>
+      <div class="rc-block">
+        <h5 style="color:#1a4a9a;">🏥 埼玉県医療的ケア児等支援センター</h5>
+        <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:8px;">困りごとや、保育園・学校・福祉サービスの利用相談があるときは、まずお近くの地域センターか本庁に電話すると、コーディネーターが状況に応じて案内してくれます。</p>
+        <ul>
+          <li><a href="tel:048-857-1001" style="color:#1a4a9a;">本庁（さいたま市新都心・県立小児医療センター内）：048-857-1001</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">受付：月〜金 9:00〜17:00（土日祝・年末年始除く）</div>
+          <li><a href="tel:048-748-5059" style="color:#1a4a9a;">東部地域センター「ともに」（春日部・越谷・草加・久喜など）：048-748-5059</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">春日部市谷原3-12-6 メゾンローリエ102</div>
+          <li><a href="tel:049-225-5770" style="color:#1a4a9a;">西部地域センター「かけはし」（川越・所沢・坂戸など）：049-225-5770</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">川越市鴨田1930-1（カルガモの家 内）</div>
+          <li><a href="tel:0493-39-1114" style="color:#1a4a9a;">北部地域センター「たいよう」（熊谷・深谷・秩父など）：0493-39-1114</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">熊谷市津田1855-1（太陽の園 内）</div>
+          <li><a href="tel:048-796-0160" style="color:#1a4a9a;">南部地域センター「カリヨンの杜」（さいたま・川口・上尾など）：048-796-0160</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 0 1.2em;">さいたま市岩槻区馬込2100（カリヨンの杜 内）</div>
+        </ul>
+        <div style="font-size:.78rem;color:var(--ink-soft);margin-top:10px;padding-top:10px;border-top:1px dashed #b8d4f0;">春日部市在住の場合は、地域的には<strong>東部地域センター「ともに」</strong>が窓口になります。</div>
+      </div>
+      <div class="rc-block">
+        <h5 style="color:#1a4a9a;">👶 さいたま市 医療的ケア児保育支援センター</h5>
+        <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:6px;">さいたま市在住の未就学児を対象とした専用窓口（上記の県センターとは別）。</p>
+        <ul>
+          <li><a href="tel:048-854-0055" style="color:#1a4a9a;">すまいるスポットさいたま：048-854-0055</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 0 1.2em;">さいたま市中央区本町東7-4-19</div>
         </ul>
       </div>
       <div class="rc-block">
