@@ -3743,15 +3743,15 @@ function mnSwitchTab(id) {
 
   <!-- 春日部の事業所 -->
   <details class="facilities" id="facilitiesDetail">
-    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:#c47898;color:#fff;border-radius:var(--radius);box-shadow:0 2px 8px rgba(196,120,152,.25);margin-bottom:2px;">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:1.2rem">🏫</span>
+    <summary style="list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--bg-card);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:2px;">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:40px;height:40px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:1.15rem;background:#fdf0f4;color:#c47898;">🏫</div>
         <div>
           <div style="font-weight:800;font-size:.92rem">春日部市周辺の事業所（一部）</div>
-          <div style="font-size:.76rem;opacity:.85;margin-top:2px">タップで開閉</div>
+          <div style="font-size:.76rem;color:var(--ink-faint);margin-top:2px">タップで開閉</div>
         </div>
       </div>
-      <span class="fac-chev" style="color:#fff;font-size:.8rem;transition:.25s;">▶</span>
+      <span class="fac-chev" style="color:#c47898;font-size:.8rem;transition:.25s;">▶</span>
     </summary>
     <div style="padding-top:10px">
       <p class="fac-note">医療的ケア・重症心身に対応する通所事業所を中心に、在宅の居宅介護も一部挙げています。空き・送迎・対応の可否は変わるので、必ず各事業所に直接ご確認ください。市の一覧や検索サイトも下に載せています。</p>
@@ -3760,13 +3760,13 @@ function mnSwitchTab(id) {
     </div>
   </details>
 
-  <button onclick="goTab('seido','gakkoCard')" style="width:100%;margin-top:10px;padding:16px 20px;background:#c88040;color:#fff;border:none;border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:0 2px 8px rgba(200,128,64,.25);text-align:left;">
-    <span style="font-size:1.2rem;flex:none">🏫</span>
+  <button onclick="goTab('seido','gakkoCard')" style="width:100%;margin-top:10px;padding:14px 18px;background:var(--bg-card);color:var(--ink);border:1px solid var(--line);border-radius:var(--radius);cursor:pointer;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow);text-align:left;">
+    <div style="width:40px;height:40px;border-radius:12px;flex:none;display:grid;place-items:center;font-size:1.15rem;background:#fdf3e8;color:#c88040;">🏫</div>
     <div style="flex:1">
       <div style="font-size:.92rem;font-weight:800">就学先を探している方へ</div>
-      <div style="font-size:.76rem;opacity:.85;margin-top:2px">特別支援学校の種類・春日部から通える学校・就学相談の流れ</div>
+      <div style="font-size:.76rem;color:var(--ink-faint);margin-top:2px">特別支援学校の種類・春日部から通える学校・就学相談の流れ</div>
     </div>
-    <span style="font-size:1rem;font-weight:800">→</span>
+    <span style="font-size:1rem;font-weight:800;color:#c88040;">→</span>
   </button>
 
   <!-- 探す入口 -->
@@ -3782,6 +3782,11 @@ function mnSwitchTab(id) {
         <span class="fc-emoji">🔎</span>
         <div class="fc-title">LITALICO発達ナビ（春日部）</div>
         <div class="fc-desc">事業所を地図・特色・口コミで検索</div>
+      </a>
+      <a href="https://www.wam.go.jp/sfkohyoout/COP000100E0000.do" target="_blank" rel="noopener" class="find-card">
+        <span class="fc-emoji">🏛️</span>
+        <div class="fc-title">WAM NET 障害福祉サービス事業所検索</div>
+        <div class="fc-desc">国が管理する全国の指定事業所の公式データベース</div>
       </a>
     </div>
   </div>
@@ -8013,8 +8018,10 @@ function mnSwitchTab(id) {
         <ul>
           <li><a href="https://www.pref.saitama.lg.jp/a0705/nanbyo/ichijinyuin.html" target="_blank" rel="noopener" style="color:#1a4a9a;">埼玉県：難病患者一時入院事業 →</a></li>
           <li><a href="https://www.pref.saitama.lg.jp/a0604/fukusiguide/guide2_7.html" target="_blank" rel="noopener" style="color:#1a4a9a;">埼玉県：福祉ガイド →</a></li>
+          <li><a href="https://www.wam.go.jp/" target="_blank" rel="noopener" style="color:#1a4a9a;">WAM NET（独立行政法人福祉医療機構）→</a></li>
         </ul>
       </div>
+      <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:-6px 0 8px 0;">国の福祉・保健・医療の総合情報サイト。全国の障害福祉サービス事業所・病院検索や、制度・施策の動向まで幅広く網羅しています。</div>
       <div class="rc-block">
         <h5 style="color:#1a4a9a;">🏥 埼玉県医療的ケア児等支援センター</h5>
         <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:8px;">困りごとや、保育園・学校・福祉サービスの利用相談があるときは、まずお近くの地域センターか本庁に電話すると、コーディネーターが状況に応じて案内してくれます。</p>
