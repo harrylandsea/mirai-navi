@@ -463,8 +463,8 @@ details.facilities[open] .fac-chev{transform:rotate(90deg)}
 .find-card{background:var(--bg-card);border:1px solid var(--line);border-radius:var(--radius-sm);padding:11px 13px;box-shadow:var(--shadow);text-decoration:none;transition:.2s;display:flex;align-items:center;gap:10px}
 .find-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg);border-color:var(--c-connect)}
 .find-card .fc-emoji{font-size:1.3rem;flex:none}
-.find-card .fc-title{font-weight:800;font-size:.88rem;margin-bottom:2px}
-.find-card .fc-desc{font-size:.74rem;color:var(--ink-soft);line-height:1.5}
+.find-card .fc-title{font-weight:800;font-size:.88rem;margin-bottom:2px;flex:0 0 40%;min-width:0;}
+.find-card .fc-desc{font-size:.74rem;color:var(--ink-soft);line-height:1.5;flex:1;min-width:0;}
 
 /* ===== ロードマップ ===== */
 .rm-legend{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:18px;padding:12px 16px;background:var(--bg-card);border:1px solid var(--line);border-radius:14px}
@@ -3779,13 +3779,13 @@ function mnSwitchTab(id) {
         <div class="fc-title">春日部市「障害児通所支援」</div>
         <div class="fc-desc">対象者・利用者負担・申請の公式案内</div>
       </a>
-      <a href="https://h-navi.jp/support_facility/saitama/cities/338" target="_blank" rel="noopener" class="find-card">
-        <span class="fc-emoji">🔎</span>
-        <div class="fc-title">LITALICO発達ナビ（春日部）</div>
-        <div class="fc-desc">事業所を地図・特色・口コミで検索</div>
+      <a href="https://h-navi.jp/support_facility/" target="_blank" rel="noopener" class="find-card">
+        <span class="fc-emoji">🔍</span>
+        <div class="fc-title">LITALICO発達ナビ</div>
+        <div class="fc-desc">全国の事業所を地図・特色・口コミで検索</div>
       </a>
       <a href="https://www.wam.go.jp/sfkohyoout/COP000100E0000.do" target="_blank" rel="noopener" class="find-card">
-        <span class="fc-emoji">🏛️</span>
+        <span class="fc-emoji">🔍</span>
         <div class="fc-title">WAM NET 障害福祉サービス事業所検索</div>
         <div class="fc-desc">国が管理する全国の指定事業所の公式データベース</div>
       </a>
@@ -7975,6 +7975,41 @@ function mnSwitchTab(id) {
     <p>みらいナビの中で紹介している、公式サイト・相談窓口・電話番号をひとつにまとめました。困ったときはここから。</p>
   </div>
 
+  <!-- 医療的ケア児等支援センター（最重要・最上部に固定） -->
+  <div style="border:1.5px solid #5fb3b3;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#e6f5f3,#f6fdfc);box-shadow:var(--shadow);margin-bottom:20px;">
+    <div style="display:flex;align-items:center;gap:13px;padding:16px 18px;">
+      <div class="rc-icon" style="background:linear-gradient(135deg,#2f9d94,#1a7a6e);box-shadow:0 5px 14px rgba(47,157,148,.4);">📞</div>
+      <div class="rc-htext">
+        <div class="rc-tag" style="color:#1a7a6e;">まず困ったらここ</div>
+        <div class="rc-title">埼玉県医療的ケア児等支援センター</div>
+      </div>
+    </div>
+    <div class="rc-body" style="border-top:1px solid #bfe3de;display:block;padding:4px 18px 20px;">
+      <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:8px;">困りごとや、保育園・学校・福祉サービスの利用相談があるときは、まずお近くの地域センターか本庁に電話すると、コーディネーターが状況に応じて案内してくれます。</p>
+      <ul>
+        <li><a href="tel:048-857-1001" style="color:#1a7a6e;">本庁（さいたま市新都心・県立小児医療センター内）：048-857-1001</a></li>
+        <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">受付：月〜金 9:00〜17:00（土日祝・年末年始除く）</div>
+        <li><a href="tel:048-748-5059" style="color:#1a7a6e;">東部地域センター「ともに」（春日部・越谷・草加・久喜など）：048-748-5059</a></li>
+        <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">春日部市谷原3-12-6 メゾンローリエ102</div>
+        <li><a href="tel:049-225-5770" style="color:#1a7a6e;">西部地域センター「かけはし」（川越・所沢・坂戸など）：049-225-5770</a></li>
+        <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">川越市鴨田1930-1（カルガモの家 内）</div>
+        <li><a href="tel:0493-39-1114" style="color:#1a7a6e;">北部地域センター「たいよう」（熊谷・深谷・秩父など）：0493-39-1114</a></li>
+        <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">熊谷市津田1855-1（太陽の園 内）</div>
+        <li><a href="tel:048-796-0160" style="color:#1a7a6e;">南部地域センター「カリヨンの杜」（さいたま・川口・上尾など）：048-796-0160</a></li>
+        <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 0 1.2em;">さいたま市岩槻区馬込2100（カリヨンの杜 内）</div>
+      </ul>
+      <div style="font-size:.78rem;color:var(--ink-soft);margin-top:10px;padding-top:10px;border-top:1px dashed #bfe3de;">春日部市在住の場合は、地域的には<strong>東部地域センター「ともに」</strong>が窓口になります。</div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid #bfe3de;">
+        <div style="font-size:.82rem;font-weight:800;color:#1a7a6e;margin-bottom:6px;">👶 さいたま市 医療的ケア児保育支援センター</div>
+        <p style="font-size:.78rem;color:var(--ink-soft);margin-bottom:6px;">さいたま市在住の未就学児を対象とした専用窓口（上記の県センターとは別）。</p>
+        <ul>
+          <li><a href="tel:048-854-0055" style="color:#1a7a6e;">すまいるスポットさいたま：048-854-0055</a></li>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 0 1.2em;">さいたま市中央区本町東7-4-19</div>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <!-- 管理人おすすめサイト -->
   <div style="border:1.5px solid #f0a8c0;border-radius:var(--radius);overflow:hidden;background:linear-gradient(135deg,#fdeef3,#fff8fa);box-shadow:var(--shadow);margin-bottom:20px;">
     <div style="display:flex;align-items:center;gap:13px;padding:16px 18px;">
@@ -8025,32 +8060,7 @@ function mnSwitchTab(id) {
           <li><a href="https://www.pref.saitama.lg.jp/a0705/nanbyo/ichijinyuin.html" target="_blank" rel="noopener" style="color:#1a4a9a;">埼玉県：難病患者一時入院事業 →</a></li>
           <li><a href="https://www.pref.saitama.lg.jp/a0604/fukusiguide/guide2_7.html" target="_blank" rel="noopener" style="color:#1a4a9a;">埼玉県：福祉ガイド →</a></li>
           <li><a href="https://www.wam.go.jp/" target="_blank" rel="noopener" style="color:#1a4a9a;">WAM NET（独立行政法人福祉医療機構）→</a></li>
-        </ul>
-      </div>
-      <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:-6px 0 8px 0;">国の福祉・保健・医療の総合情報サイト。全国の障害福祉サービス事業所・病院検索や、制度・施策の動向まで幅広く網羅しています。</div>
-      <div class="rc-block">
-        <h5 style="color:#1a4a9a;">🏥 埼玉県医療的ケア児等支援センター</h5>
-        <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:8px;">困りごとや、保育園・学校・福祉サービスの利用相談があるときは、まずお近くの地域センターか本庁に電話すると、コーディネーターが状況に応じて案内してくれます。</p>
-        <ul>
-          <li><a href="tel:048-857-1001" style="color:#1a4a9a;">本庁（さいたま市新都心・県立小児医療センター内）：048-857-1001</a></li>
-          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">受付：月〜金 9:00〜17:00（土日祝・年末年始除く）</div>
-          <li><a href="tel:048-748-5059" style="color:#1a4a9a;">東部地域センター「ともに」（春日部・越谷・草加・久喜など）：048-748-5059</a></li>
-          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">春日部市谷原3-12-6 メゾンローリエ102</div>
-          <li><a href="tel:049-225-5770" style="color:#1a4a9a;">西部地域センター「かけはし」（川越・所沢・坂戸など）：049-225-5770</a></li>
-          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">川越市鴨田1930-1（カルガモの家 内）</div>
-          <li><a href="tel:0493-39-1114" style="color:#1a4a9a;">北部地域センター「たいよう」（熊谷・深谷・秩父など）：0493-39-1114</a></li>
-          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 8px 1.2em;">熊谷市津田1855-1（太陽の園 内）</div>
-          <li><a href="tel:048-796-0160" style="color:#1a4a9a;">南部地域センター「カリヨンの杜」（さいたま・川口・上尾など）：048-796-0160</a></li>
-          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 0 1.2em;">さいたま市岩槻区馬込2100（カリヨンの杜 内）</div>
-        </ul>
-        <div style="font-size:.78rem;color:var(--ink-soft);margin-top:10px;padding-top:10px;border-top:1px dashed #b8d4f0;">春日部市在住の場合は、地域的には<strong>東部地域センター「ともに」</strong>が窓口になります。</div>
-      </div>
-      <div class="rc-block">
-        <h5 style="color:#1a4a9a;">👶 さいたま市 医療的ケア児保育支援センター</h5>
-        <p style="font-size:.82rem;color:var(--ink-soft);margin-bottom:6px;">さいたま市在住の未就学児を対象とした専用窓口（上記の県センターとは別）。</p>
-        <ul>
-          <li><a href="tel:048-854-0055" style="color:#1a4a9a;">すまいるスポットさいたま：048-854-0055</a></li>
-          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 0 1.2em;">さいたま市中央区本町東7-4-19</div>
+          <div style="font-size:0.78em;color:#7a8088;line-height:1.7;margin:2px 0 0 1.2em;">国の福祉・保健・医療の総合情報サイト。全国の障害福祉サービス事業所・病院検索や、制度・施策の動向まで幅広く網羅しています。</div>
         </ul>
       </div>
       <div class="rc-block">
